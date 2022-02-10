@@ -1,9 +1,6 @@
 package clients.db;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 
 public class DBTools {
@@ -31,11 +28,7 @@ public class DBTools {
         try {
             connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            /*
-            for (Map.Entry<Integer,Object> item:params.entrySet()){
-            }
-            */
-            //lambda expression
+
             params.forEach((key, value) -> {
                 try {
                     if (value instanceof Integer) {
@@ -64,6 +57,22 @@ public class DBTools {
         }
 
         return false;
+    }
+
+    public static ResultSet runQueryForResult(String sql) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            return preparedStatement.executeQuery();
+
+        } catch (SQLException | InterruptedException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+
+            ConnectionPool.getInstance().restoreConnection(connection);
+        }
     }
 
 }

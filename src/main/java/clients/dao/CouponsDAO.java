@@ -13,7 +13,7 @@ public interface CouponsDAO {
 
     public void deleteCoupon(int couponID) throws SQLException;
 
-    public ArrayList<Coupon> getAllCoupons();
+    public ArrayList<Coupon> getAllCoupons() throws SQLException;
 
     public Coupon getOneCoupon (int couponID);
 

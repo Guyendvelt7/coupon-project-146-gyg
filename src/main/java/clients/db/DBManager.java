@@ -81,6 +81,10 @@ public class DBManager {
           "WHERE id=?";
 
   public static final String DELETE_COUPON  = "DELETE FROM `coupon_project`.`coupons` WHERE id=?";
+
+  public static final String GET_ALL_COUPONS = "SELECT* FROM `coupon_project`.`coupons` ";
+
+  public static final String GET_ONE_COUPON = "SELECT* FROM `coupon_project`.`coupons` WHERE id=?";
 }
 
 //Todo: CREATE_NEW_COMPANY

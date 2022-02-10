@@ -1,14 +1,17 @@
 package clients.dbDao;
 
+import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.dao.CouponsDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
 
 import java.net.Inet4Address;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
@@ -18,15 +21,15 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public void addCoupon(Coupon coupon) throws SQLException {
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1,coupon.getCompanyId());
-        values.put(2,coupon.getCategory());
-        values.put(3,coupon.getTitle());
-        values.put(4,coupon.getDescription());
-        values.put(5,coupon.getStartDate());
-        values.put(6,coupon.getEndDate());
-        values.put(7,coupon.getAmount());
-        values.put(8,coupon.getPrice());
-        values.put(9,coupon.getImage());
+        values.put(1, coupon.getCompanyId());
+        values.put(2, coupon.getCategory());
+        values.put(3, coupon.getTitle());
+        values.put(4, coupon.getDescription());
+        values.put(5, coupon.getStartDate());
+        values.put(6, coupon.getEndDate());
+        values.put(7, coupon.getAmount());
+        values.put(8, coupon.getPrice());
+        values.put(9, coupon.getImage());
 
         DBTools.runQuery(DBManager.CREATE_NEW_COUPON, values);
 
@@ -35,15 +38,15 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public void updateCoupon(Coupon coupon) throws SQLException {
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1,coupon.getCompanyId());
-        values.put(2,coupon.getCategory());
-        values.put(3,coupon.getTitle());
-        values.put(4,coupon.getDescription());
-        values.put(5,coupon.getStartDate());
-        values.put(6,coupon.getEndDate());
-        values.put(7,coupon.getAmount());
-        values.put(8,coupon.getPrice());
-        values.put(9,coupon.getImage());
+        values.put(1, coupon.getCompanyId());
+        values.put(2, coupon.getCategory());
+        values.put(3, coupon.getTitle());
+        values.put(4, coupon.getDescription());
+        values.put(5, coupon.getStartDate());
+        values.put(6, coupon.getEndDate());
+        values.put(7, coupon.getAmount());
+        values.put(8, coupon.getPrice());
+        values.put(9, coupon.getImage());
         values.put(10, coupon.getId());
 
         DBTools.runQuery(DBManager.UPDATE_COUPON, values);
@@ -52,14 +55,36 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public void deleteCoupon(int couponID) throws SQLException {
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1,couponID);
+        values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
     }
 
     @Override
-    public ArrayList<Coupon> getAllCoupons() {
-        return null;
+    public ArrayList<Coupon> getAllCoupons() throws SQLException {
+    ArrayList<Coupon> coupons = new ArrayList<>();
+    ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+        try {
+            while (resultSet.next()) {
+                Coupon coupon = new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        resultSet.getInt("category_id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
+                coupons.add(coupon);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return coupons;
     }
+
+
 
     @Override
     public Coupon getOneCoupon(int couponID) {
