@@ -1,5 +1,7 @@
 package clients.db;
 
+import java.security.PublicKey;
+
 public class DBManager {
 
     public static final String URL = "jdbc:mysql://localhost:3306";
@@ -68,4 +70,18 @@ public class DBManager {
     "ON DELETE NO ACTION" +
     "ON UPDATE NO ACTION);";
 
+  public static final String CREATE_NEW_COUPON = "INSERT INTO `coupon_project`.`coupons` " +
+    "(`company_id`, `category_id`, `title`, `description`, " +
+    "`start_date`, `end_date`, `amount`, `price`, `image`)" +
+    "VALUES (?,?,?,?,?,?,?,?,?)";
+
+  public static final String UPDATE_COUPON = "UPDATE `coupon_project`.`coupons` " +
+          "SET company_id=?, category_id=?, title=?, description=?, " +
+          "start_date=?, end_date=?, amount=?, price=?, image=?" +
+          "WHERE id=?";
+
+  public static final String DELETE_COUPON  = "DELETE FROM `coupon_project`.`coupons` WHERE id=?";
 }
+
+//Todo: CREATE_NEW_COMPANY
+//Todo: CREATE_NEW_CUSTOMER

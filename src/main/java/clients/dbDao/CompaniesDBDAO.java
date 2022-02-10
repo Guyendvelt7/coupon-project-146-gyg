@@ -11,6 +11,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
     @Override
     public boolean isCompanyExists(String email, String password) {
+
+        //todo: check Cheat Sheet boolean Query
         return false;
     }
 

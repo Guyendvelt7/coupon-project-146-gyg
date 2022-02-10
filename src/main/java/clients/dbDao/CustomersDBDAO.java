@@ -11,6 +11,8 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public boolean isCustomerExist(String name, String password) {
+        //todo: check Cheat Sheet boolean Query
+
         return false;
     }
 
