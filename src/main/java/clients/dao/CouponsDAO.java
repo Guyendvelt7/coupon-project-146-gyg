@@ -4,6 +4,7 @@ import clients.beans.Coupon;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface CouponsDAO {
 
@@ -13,12 +14,10 @@ public interface CouponsDAO {
 
     public void deleteCoupon(int couponID) throws SQLException;
 
-    public ArrayList<Coupon> getAllCoupons() throws SQLException;
+    public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws SQLException;
 
-    public Coupon getOneCoupon (int couponID);
+    public void addCouponPurchase(int customerID, int couponID) throws SQLException;
 
-    public void addCouponPurchase(int customerID, int couponID);
-
-    public void deleteCouponPurchase(int customerID, int couponID);
+    public void deleteCouponPurchase(int customerID, int couponID) throws SQLException;
 
 }

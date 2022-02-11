@@ -60,15 +60,15 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
-    public ArrayList<Coupon> getAllCoupons() throws SQLException {
+    public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws SQLException {
     ArrayList<Coupon> coupons = new ArrayList<>();
-    ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+    ResultSet resultSet = DBTools.runQueryForResult(sql, values);
         try {
             while (resultSet.next()) {
                 Coupon coupon = new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
-                        resultSet.getInt("category_id"),
+                        Category.valueOf(resultSet.getString("category_id")),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
                         resultSet.getDate("start_date"),
@@ -84,20 +84,19 @@ public class CouponsDBDAO implements CouponsDAO {
         return coupons;
     }
 
-
-
     @Override
-    public Coupon getOneCoupon(int couponID) {
-        return null;
+    public void addCouponPurchase(int customerID, int couponID) throws SQLException {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1,customerID);
+        values.put(2,couponID);
+        DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
     }
 
     @Override
-    public void addCouponPurchase(int customerID, int couponID) {
-
-    }
-
-    @Override
-    public void deleteCouponPurchase(int customerID, int couponID) {
-
+    public void deleteCouponPurchase(int customerID, int couponID) throws SQLException {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1,customerID);
+        values.put(2,couponID);
+        DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
     }
 }
