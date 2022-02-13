@@ -13,8 +13,7 @@ public enum Category {
     OUTDOOR,
     PERSONAL_CARE,
     PETS,
-    OTHER
-
+    OTHER;
 
 
 

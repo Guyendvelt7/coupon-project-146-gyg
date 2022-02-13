@@ -1,5 +1,7 @@
 package clients.dbDao;
 
+import clients.EnumExceptions;
+import clients.Exceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.dao.CouponsDAO;
@@ -30,7 +32,6 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(7, coupon.getAmount());
         values.put(8, coupon.getPrice());
         values.put(9, coupon.getImage());
-
         DBTools.runQuery(DBManager.CREATE_NEW_COUPON, values);
 
     }
@@ -57,6 +58,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
+       // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
     @Override
@@ -90,6 +92,8 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(1,customerID);
         values.put(2,couponID);
         DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
+        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
+
     }
 
     @Override
@@ -98,5 +102,6 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(1,customerID);
         values.put(2,couponID);
         DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
+        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 }
