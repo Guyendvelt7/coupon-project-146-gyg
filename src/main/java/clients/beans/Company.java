@@ -1,5 +1,8 @@
 package clients.beans;
 
+import clients.db.DBManager;
+import clients.dbDao.CouponsDBDAO;
+
 import java.util.ArrayList;
 
 public class Company {
@@ -8,6 +11,7 @@ public class Company {
     private String email;
     private String password;
     private ArrayList<Coupon> coupons;
+    CouponsDBDAO couponsDBDAO;
 
     public Company(int id, String name, String email, String password, ArrayList<Coupon> coupons) {
         this.id = id;
@@ -50,6 +54,7 @@ public class Company {
     }
 
     public ArrayList<Coupon> getCoupons() {
+
         return coupons;
     }
 

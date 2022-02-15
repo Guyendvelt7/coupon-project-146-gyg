@@ -83,15 +83,27 @@ public class DBManager {
 
     public static final String DELETE_COUPON = "DELETE FROM `coupon_project`.`coupons` WHERE id=?;";
 
-    public static final String GET_ALL_COUPONS = "SELECT* FROM `coupon_project`.`coupons`;";
+    public static final String GET_ALL_COUPONS = "SELECT * FROM `coupon_project`.`coupons`;";
 
-    public static final String GET_ONE_COUPON = "SELECT* FROM `coupon_project`.`coupons` WHERE id=?;";
+    public static final String GET_ONE_COUPON = "SELECT * FROM `coupon_project`.`coupons` WHERE id=?;";
 
     public static final String ADD_PURCHASED_COUPON = "INSERT INTO `coupon_project`.`customers_vs_coupons` " +
             "(`customer_id`, `coupon_id`) VALUES (?,?);";
 
     public static final String DELETE_PURCHASED_COUPON = "DELETE FROM `coupon_project`.`customers_vs_coupons` " +
             "(`customer_id`, `coupon_id`) VALUES (?,?);";
+
+    public static final String GET_COUPONS_BY_COMPANIES = "SELECT * FROM `coupon_project`.`coupons` WHERE company_id=?;";
+
+    public static final String ADD_COMPANY = "INSERT INTO `coupon_project`.`companies` ( `name`, `email`, `password`) VALUES (?,?,?);";
+
+    public static final String UPDATE_COMPANY = "UPDATE `coupon_project`.`companies` SET `name` = ?, `email` = ?, `password` = ? WHERE (`id` = ?);";
+
+    public static final String DELETE_COMPANY = "DELETE FROM `coupon_project`.`companies` WHERE (`id` = ?);";
+
+    public static final String GET_SINGLE_COMPANY = "SELECT* FROM `coupon_project`.`companies` WHERE (`id` = ?);";
+
+    public static final String COUNT_BY_PASS_AND_EMAIL = "SELECT COUNT(*) FROM `coupon_project`.`companies` WHERE `email` = ? and `password` = ?";
 
 }
 

@@ -1,19 +1,15 @@
 package clients.dbDao;
 
-import clients.EnumExceptions;
-import clients.Exceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.dao.CouponsDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
 
-import java.net.Inet4Address;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
@@ -61,10 +57,37 @@ public class CouponsDBDAO implements CouponsDAO {
        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
+    //todo: maybe split two methods, one for allCoupons and another for oneCoupon
     @Override
     public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws SQLException {
     ArrayList<Coupon> coupons = new ArrayList<>();
     ResultSet resultSet = DBTools.runQueryForResult(sql, values);
+        try {
+            while (resultSet.next()) {
+                Coupon coupon = new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        Category.valueOf(resultSet.getString("category_id")),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
+                coupons.add(coupon);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return coupons;
+    }
+
+    public static ArrayList<Coupon> getCouponsByCompanyId(int companyId) throws SQLException {
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        Map<Integer, Object> value = new HashMap<>();
+        value.put(1, companyId);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, value);
         try {
             while (resultSet.next()) {
                 Coupon coupon = new Coupon(

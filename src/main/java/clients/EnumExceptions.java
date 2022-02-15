@@ -11,7 +11,7 @@ public enum EnumExceptions {
 
     private String message;
 
-    EnumExceptions(String message){
+    private EnumExceptions(String message){
         setMessage(message);
     }
 
