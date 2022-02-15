@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class CompaniesDBDAO implements CompaniesDAO {
     //todo: add exceptions
     //todo: ConnectionPool connectionPool;
