@@ -16,7 +16,7 @@ public interface CompaniesDAO {
 
     public void deleteCompany(int  companyId) throws SQLException;
 
-    public ArrayList<Company> getAllCompanies(String sql, Map<Integer, Object> values) throws SQLException;
+    public ArrayList<Company> getAllCompanies() throws SQLException;
 
     public Company getOneCompany(int companyId) throws SQLException;
 }
