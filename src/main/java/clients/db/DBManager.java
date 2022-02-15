@@ -101,4 +101,18 @@ public class DBManager {
 
     public static final String COUNT_BY_PASS_AND_EMAIL = "SELECT COUNT(*) FROM `coupon_project`.`companies` WHERE `email` = ? and `password` = ?";
 
+    public static final String ADD_CUSTOMER = "INSERT INTO `coupon_project`.`customers` ( `firstName`, `lastName`, `email`, `password`) VALUES (?,?,?,?);";
+
+  public static final String UPDATE_CUSTOMER = "UPDATE `coupon_project`.`customer` SET `firstName` = ?, `lastName` = ?, `email` = ? `password` = ? WHERE (`id` = ?);";
+
+  public static final String DELETE_CUSTOMER = "DELETE FROM `coupon_project`.`customers` WHERE (`id` = ?);";
+
+  public static final String GET_ONE_CUSTOMER = "SELECT * FROM `coupon_project`.`customers` WHERE (`id` = ?);";
+
+  public static final String GET_ALL_CUSTOMERS = "SELECT * FROM `coupon_project`.`customers`;";
+
+  public static final String IS_CUSTOMER_EXISTS = "SELECT COUNT(*) FROM `coupon_project`.`customers` WHERE `email` = ? and `password` = ?";
+
+
+
 }
