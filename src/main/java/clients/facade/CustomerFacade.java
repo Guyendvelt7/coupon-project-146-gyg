@@ -1,5 +1,6 @@
 package clients.facade;
 
+import clients.CustomExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.beans.Customer;
@@ -29,9 +30,9 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     }
 
     @Override
-    public void purchaseCoupon(Coupon coupon) throws SQLException {
+    public void purchaseCoupon(Coupon coupon) throws SQLException, CustomExceptions {
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
-            myCoupons.deleteCoupon(coupon.getId());
+            couponsDAO.deleteCoupon(coupon.getId());
         }
     }
 
@@ -66,7 +67,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public Customer getCustomerDetails() throws SQLException, InterruptedException {
-      return myCustomers.getOneCustomer(customerID);
+      return customersDAO.getOneCustomer(customerID);
 
     }
 
