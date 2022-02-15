@@ -31,7 +31,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     @Override
     public void purchaseCoupon(Coupon coupon) throws SQLException {
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
-            couponsDBDAO.deleteCoupon(coupon.getId());
+            myCoupons.deleteCoupon(coupon.getId());
         }
     }
 
@@ -66,8 +66,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public Customer getCustomerDetails() throws SQLException, InterruptedException {
-      return customersDBDAO.getOneCustomer(customerID);
-
+      return myCustomers.getOneCustomer(customerID);
 
     }
 

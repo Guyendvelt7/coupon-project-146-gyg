@@ -10,9 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
+
     //todo: ConnectionPool connectionPool;
     //todo: add exceptions
 
@@ -83,6 +85,24 @@ public class CouponsDBDAO implements CouponsDAO {
         return coupons;
     }
 
+    @Override
+    public void addCouponPurchase(int customerID, int couponID) throws SQLException {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1,customerID);
+        values.put(2,couponID);
+        DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
+        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
+
+    }
+
+    @Override
+    public void deleteCouponPurchase(int customerID, int couponID) throws SQLException {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1,customerID);
+        values.put(2,couponID);
+        DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
+        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
+    }
     public static ArrayList<Coupon> getCouponsByCompanyId(int companyId) throws SQLException {
         ArrayList<Coupon> coupons = new ArrayList<>();
         Map<Integer, Object> value = new HashMap<>();
@@ -108,23 +128,25 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return coupons;
     }
-
-    @Override
-    public void addCouponPurchase(int customerID, int couponID) throws SQLException {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1,customerID);
-        values.put(2,couponID);
-        DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
-
+    public static List<Coupon> getCouponsByCustomerId(int customerID) throws SQLException, InterruptedException {
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+            while (resultSet.next()) {
+                Coupon coupon = new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        Category.valueOf(resultSet.getString("category_id")),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
+                coupons.add(coupon);
+            }
+        return coupons;
     }
 
-    @Override
-    public void deleteCouponPurchase(int customerID, int couponID) throws SQLException {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1,customerID);
-        values.put(2,couponID);
-        DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
-    }
+
 }
