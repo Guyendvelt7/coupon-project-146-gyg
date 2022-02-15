@@ -16,6 +16,7 @@ import java.util.Map;
 public class CustomersDBDAO implements CustomersDAO {
     //todo: ConnectionPool connectionPool
     //todo: add exceptions
+    private CouponsDBDAO couponsDBDAO;
 
     @Override
     public boolean isCustomerExist(String name, String password) throws SQLException {
@@ -66,14 +67,14 @@ public class CustomersDBDAO implements CustomersDAO {
                     customerResultSet.getString("lastName"),
                     customerResultSet.getString("email"),
                     customerResultSet.getString("password"),
-                    CouponsDBDAO.getCouponsByCompanyId(customerResultSet.getInt("id"))
+                    (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
             ));
         }
         return allCustomers;
     }
 
     @Override
-    public Customer getOneCustomer(int customerID) throws SQLException {
+    public Customer getOneCustomer(int customerID) throws SQLException, InterruptedException {
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER,values);
@@ -85,8 +86,10 @@ public class CustomersDBDAO implements CustomersDAO {
                 resultSet.getString("lastName"),
                 resultSet.getString("email"),
                 resultSet.getString("password"),
-                CouponsDBDAO.getCouponsByCompanyId(customerID)
+                (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerID)
         );
     }
+
+
 
 }

@@ -18,5 +18,5 @@ public interface CustomersDAO {
 
     public List<Customer> getAllCustomers() throws SQLException, InterruptedException;
 
-    public Customer getOneCustomer(int customerID) throws SQLException;
+    public Customer getOneCustomer(int customerID) throws SQLException, InterruptedException;
 }

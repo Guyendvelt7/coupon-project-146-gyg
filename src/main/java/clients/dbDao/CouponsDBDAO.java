@@ -131,5 +131,27 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return coupons;
     }
+    public static List<Coupon> getCouponsByCustomerId(int customerId) throws SQLException, InterruptedException {
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+            while (resultSet.next()) {
+                if(resultSet.getInt("id")==customerId) {
+                    coupons.add(new Coupon(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("company_id"),
+                            Category.valueOf(resultSet.getString("category_id")),
+                            resultSet.getString("title"),
+                            resultSet.getString("description"),
+                            resultSet.getDate("start_date"),
+                            resultSet.getDate("end_date"),
+                            resultSet.getInt("amount"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("image")));
+                }
+            }
+
+        return coupons;
+    }
+
 
 }
