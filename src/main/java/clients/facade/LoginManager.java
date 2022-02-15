@@ -24,26 +24,26 @@ public class LoginManager {
     }
 
     public static ClientFacade login(String email, String password, ClientType clientType) {
-        ClientFacade cl=null;
-        String
+        ClientFacade cl = null;
+        //String
         Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));
-                switch (clientType){
-            case ADMINISTRATOR:
-                if(validation.test()){
-
-                }
-
-                cl= ;
-                break;
-            case COMPANY:
-                isValidEmailAddress(email);
-                isValidPassword(password);
-                break;
-            case CUSTOMER:
-                isValidEmailAddress(email);
-                isValidPassword(password);
-                break;
-        }return
+//        switch (clientType) {
+//            case ADMINISTRATOR:
+//                if (validation.test()) {
+//
+//                }
+//
+//                cl =;
+//                break;
+//            case COMPANY:
+//                isValidEmailAddress(email);
+//                isValidPassword(password);
+//                break;
+//            case CUSTOMER:
+//                isValidEmailAddress(email);
+//                isValidPassword(password);
+//                break;
+//        } return
         //todo: switch case to clientype?
 
 
@@ -51,7 +51,7 @@ public class LoginManager {
     }
 
     private static Predicate<String> isValidEmailAddress(String email) {
-        return  (Predicate<String>) emailAdd-> email.contains("@")
+        return (Predicate<String>) emailAdd -> email.contains("@")
                 && email.contains(".com");
 //        boolean result = true;
 //        InternetAddress emailAddress = null;
@@ -64,8 +64,9 @@ public class LoginManager {
 //        }
 //        return result;
     }
-    private static Predicate<String>isValidPassword (String password){
-        return (Predicate<String>) pass -> password.length()>4
-                && password.length()<10;
+
+    private static Predicate<String> isValidPassword(String password) {
+        return (Predicate<String>) pass -> password.length() > 4
+                && password.length() < 10;
     }
 }
