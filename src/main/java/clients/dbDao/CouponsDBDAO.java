@@ -1,15 +1,11 @@
 package clients.dbDao;
 
-//import clients.EnumExceptions;
-import clients.Exceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.dao.CouponsDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
-import clients.dbDao.CompaniesDBDAO;
 
-import java.net.Inet4Address;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
+
     //todo: ConnectionPool connectionPool;
     //todo: add exceptions
 
@@ -59,13 +56,14 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
+       // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
+    //todo: maybe split two methods, one for allCoupons and another for oneCoupon
     @Override
     public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws SQLException {
-        ArrayList<Coupon> coupons = new ArrayList<>();
-        ResultSet resultSet = DBTools.runQueryForResult(sql, values);
+    ArrayList<Coupon> coupons = new ArrayList<>();
+    ResultSet resultSet = DBTools.runQueryForResult(sql, values);
         try {
             while (resultSet.next()) {
                 Coupon coupon = new Coupon(
@@ -105,7 +103,6 @@ public class CouponsDBDAO implements CouponsDAO {
         DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
         // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
-
     public static ArrayList<Coupon> getCouponsByCompanyId(int companyId) throws SQLException {
         ArrayList<Coupon> coupons = new ArrayList<>();
         Map<Integer, Object> value = new HashMap<>();
@@ -131,5 +128,25 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return coupons;
     }
+    public static List<Coupon> getCouponsByCustomerId(int customerID) throws SQLException, InterruptedException {
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+            while (resultSet.next()) {
+                Coupon coupon = new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        Category.valueOf(resultSet.getString("category_id")),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
+                coupons.add(coupon);
+            }
+        return coupons;
+    }
+
 
 }

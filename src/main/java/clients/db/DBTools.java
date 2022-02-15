@@ -80,4 +80,13 @@ public class DBTools {
             ConnectionPool.getInstance().restoreConnection(connection);
         }
     }
+
+    public static ResultSet runQueryForResult(String sql) throws SQLException, InterruptedException {
+        Connection connection = null;
+        connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        return preparedStatement.executeQuery();
+
+    }
+
 }

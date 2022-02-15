@@ -12,9 +12,14 @@ public class ConnectionPool {
     private static ConnectionPool instance=null;
     private  final Stack<Connection> connections = new Stack<>();
 
-    private ConnectionPool() throws SQLException {
+    private ConnectionPool()  {
         System.out.println("Instance created...");
-        Connection connection = DriverManager.getConnection(DBManager.URL, DBManager.SQL_USER, DBManager.SQL_PASS);
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(DBManager.URL, DBManager.SQL_USER, DBManager.SQL_PASS);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         connections.push(connection);
     }
 
