@@ -95,6 +95,8 @@ public class DBManager {
 
     public static final String GET_COUPONS_BY_COMPANIES = "SELECT * FROM `coupon_project`.`coupons` WHERE company_id=?;";
 
+    public static final String GET_ALL_COMPANIES = "SELECT * FROM `coupon_project`.`companies`;";
+
     public static final String ADD_COMPANY = "INSERT INTO `coupon_project`.`companies` ( `name`, `email`, `password`) VALUES (?,?,?);";
 
     public static final String UPDATE_COMPANY = "UPDATE `coupon_project`.`companies` SET `name` = ?, `email` = ?, `password` = ? WHERE (`id` = ?);";

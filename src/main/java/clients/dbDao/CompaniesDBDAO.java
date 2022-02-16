@@ -64,12 +64,14 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public List<Company> getAllCompanies(String sql, Map<Integer, Object> values) {
+    public List<Company> getAllCompanies() {
         List<Company> companies = new ArrayList<>();
 
         try {
-            ResultSet resultSet = DBTools.runQueryForResult(sql, values);
-            while (resultSet.next()) {
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
+            while (true) {
+                assert resultSet != null;
+                if (!resultSet.next()) break;
                 ArrayList<Coupon> coupons = new ArrayList<>();
                 Company company = new Company(
                         resultSet.getInt("id"),
