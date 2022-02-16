@@ -19,18 +19,24 @@ public class CustomersDBDAO implements CustomersDAO {
     private CouponsDBDAO couponsDBDAO;
 
     @Override
-    public boolean isCustomerExist(String name, String password) throws SQLException {
+    public boolean isCustomerExist(String name, String password) {
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,name);
         values.put(2,password);
        ResultSet resultSet =  DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS,values);
         assert resultSet != null;
-        resultSet.next();
-       return resultSet.getInt("1") == 1;
+        try {
+            resultSet.next();
+            return resultSet.getInt("1") == 1;
+        } catch (SQLException e) {
+            System.out.println("SQL exception");
+            return false;
+        }
+
     }
 
     @Override
-    public void addCustomer(Customer customer) throws SQLException {
+    public void addCustomer(Customer customer) {
     Map<Integer,Object> values = new HashMap<>();
     values.put(1,customer.getFirstName());
     values.put(2,customer.getLastName());
@@ -40,7 +46,7 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public void updateCustomer(Customer customer) throws SQLException {
+    public void updateCustomer(Customer customer){
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customer.getFirstName());
         values.put(2,customer.getLastName());
@@ -50,46 +56,59 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public void deleteCustomer(int customerID) throws SQLException {
+    public void deleteCustomer(int customerID){
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
         DBTools.runQuery(DBManager.DELETE_CUSTOMER,values);
     }
 
     @Override
-    public List<Customer> getAllCustomers() throws SQLException, InterruptedException {
+    public List<Customer> getAllCustomers(){
         ResultSet customerResultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
         List<Customer> allCustomers = new ArrayList<>();
-        while(customerResultSet.next()){
-            allCustomers.add(new Customer(
-                    customerResultSet.getInt("id"),
-                    customerResultSet.getString("firstName"),
-                    customerResultSet.getString("lastName"),
-                    customerResultSet.getString("email"),
-                    customerResultSet.getString("password"),
-                    (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
-            ));
+        while(true){
+            try {
+                if (!customerResultSet.next()) break;
+            } catch (SQLException e) {
+                System.out.println("SQL exception...");
+            }
+            try {
+                allCustomers.add(new Customer(
+                        customerResultSet.getInt("id"),
+                        customerResultSet.getString("firstName"),
+                        customerResultSet.getString("lastName"),
+                        customerResultSet.getString("email"),
+                        customerResultSet.getString("password"),
+                        (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
+                ));
+            } catch (SQLException e) {
+                System.out.println("SQL exception");
+            }
         }
         return allCustomers;
     }
 
     @Override
-    public Customer getOneCustomer(int customerID) throws SQLException, InterruptedException {
+    public Customer getOneCustomer(int customerID){
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER,values);
         assert resultSet != null;
-        resultSet.next();
-        return new Customer(
-                resultSet.getInt("id"),
-                resultSet.getString("firstName"),
-                resultSet.getString("lastName"),
-                resultSet.getString("email"),
-                resultSet.getString("password"),
-                (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerID)
-        );
+        try {
+            resultSet.next();
+            return new Customer(
+                    resultSet.getInt("id"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password"),
+                    (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerID)
+            );
+        } catch (SQLException e) {
+            System.out.println("SQL exception...");
+            return null;
+        }
     }
-
 
 
 }
