@@ -112,7 +112,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return company;
     }
 
-    public List<Coupon> getCompanyCoupons (int companyId) throws SQLException {
+    public List<Coupon> getCompanyCoupons (int companyId){
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
