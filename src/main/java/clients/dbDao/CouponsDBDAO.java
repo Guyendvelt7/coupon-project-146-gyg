@@ -92,6 +92,7 @@ public class CouponsDBDAO implements CouponsDAO {
        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
        while(true){
            try {
+               assert resultSet != null;
                if (!resultSet.next()) break;
                coupons.add(new Coupon(
                        resultSet.getInt("id"),
@@ -111,6 +112,31 @@ public class CouponsDBDAO implements CouponsDAO {
        }
        return coupons;
     }
+
+    @Override
+    public Coupon getOneCoupon() {
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+                try {
+                    assert resultSet != null;
+                    if (!resultSet.next()) {
+                   return new Coupon(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("company_id"),
+                            Category.valueOf(resultSet.getString("category_id")),
+                            resultSet.getString("title"),
+                            resultSet.getString("description"),
+                            resultSet.getDate("start_date"),
+                            resultSet.getDate("end_date"),
+                            resultSet.getInt("amount"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("image"));
+                }} catch (SQLException e) {
+                    System.out.println("SQL exception....");
+
+                }
+                return null;
+            }
+
 
     @Override
     public void addCouponPurchase(int customerID, int couponID) {
