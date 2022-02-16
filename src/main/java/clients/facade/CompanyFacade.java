@@ -1,58 +1,55 @@
 package clients.facade;
 
-import clients.CustomExceptions;
 import clients.beans.Category;
 import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.dbDao.CouponsDBDAO;
-import org.checkerframework.checker.units.qual.C;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CompanyFacade extends ClientFacade  {
 
-    private int companyId;
+private int companyId;
 
-    public CompanyFacade(int companyId) {
+public CompanyFacade(int companyId) {
         this.companyId = companyId;
     }
 
     @Override
-    public boolean login(String email, String password) throws CustomExceptions {
+public boolean login(String email, String password) {
         return false;
     }
 
-public void addCoupon(Coupon coupon) throws SQLException {
-    myCoupons.addCoupon(coupon);
+public void addCoupon(Coupon coupon) {
+    couponsDBDAO.addCoupon(coupon);
 }
 
-public void updateCoupon(Coupon coupon) throws SQLException {
-        myCoupons.updateCoupon(coupon);
+public void updateCoupon(Coupon coupon) {
+        couponsDBDAO.updateCoupon(coupon);
 }
 
-public void deleteCoupon(int couponId) throws SQLException {
-        myCoupons.deleteCoupon(couponId);
+public void deleteCoupon(int couponId){
+        couponsDBDAO.deleteCoupon(couponId);
 }
 
-public ArrayList<Coupon>getCompanyCoupons() throws SQLException {
+public ArrayList<Coupon>getCompanyCoupons() {
        return CouponsDBDAO.getCouponsByCompanyId(this.companyId);
     }
 
-public List<Coupon>getCompanyCoupons(Category category) throws SQLException {
+public List<Coupon>getCompanyCoupons(Category category) {
         return  getCompanyCoupons().stream()
             .filter(item->item.getCategory().equals(category))
             .collect(Collectors.toList());
     }
 
-public List<Coupon>getCompanyCoupons(double maxPrice) throws SQLException {
-         return getCompanyCoupons().stream()
+public List<Coupon>getCompanyCoupons(double maxPrice){
+        return getCompanyCoupons().stream()
         .filter(item->item.getPrice()<=maxPrice).collect(Collectors.toList());
 }
 
-public Company getCompanyDetails() throws SQLException {
-        return myCompanies.getOneCompany(companyId);
+public Company getCompanyDetails() {
+        return companiesDBDAO.getOneCompany(companyId);
 }
 }

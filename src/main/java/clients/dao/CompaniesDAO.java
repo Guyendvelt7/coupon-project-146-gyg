@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface CompaniesDAO {
-    public boolean isCompanyExists(String email, String password) throws SQLException;
+    public boolean isCompanyExists(String email, String password);
 
     //CRUD
     public void addCompany(Company company);
@@ -17,7 +17,7 @@ public interface CompaniesDAO {
 
     public void deleteCompany(int  companyId);
 
-    public List<Company> getAllCompanies();
+    public List<Company> getAllCompanies(String sql, Map<Integer, Object> values);
 
-    public Company getOneCompany(int companyId) throws SQLException;
+    public Company getOneCompany(int companyId);
 }

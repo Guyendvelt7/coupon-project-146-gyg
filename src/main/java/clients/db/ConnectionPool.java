@@ -1,8 +1,5 @@
 package clients.db;
 
-import clients.CustomExceptions;
-import clients.EnumExceptions;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,20 +23,20 @@ public class ConnectionPool {
         connections.push(connection);
     }
 
-    public void closeAllConnections() {
+    public void closeAllConnections(){
         synchronized (connections){
             while (connections.size()<NUMBER_OF_CONNECTIONS){
                 try {
                     connections.wait();
                 } catch (InterruptedException e) {
-                    System.out.println("Interrupted exception....");
+                    e.printStackTrace();
                 }
             }
             connections.removeAllElements();
         }
     }
 
-    public static ConnectionPool getInstance() {
+    public static ConnectionPool getInstance(){
         //check if instance is null
         if(instance==null){
             //critical code, check that no other thread pass in same time
@@ -52,15 +49,11 @@ public class ConnectionPool {
         return instance;
     }
 
-    public Connection getConnection()  {
+    public Connection getConnection(){
         synchronized (connections) {
             if (connections.isEmpty()) {
                 //wait until a connection is available
-                try {
-                    connections.wait();
-                } catch (InterruptedException e) {
-                    System.out.println("Interrupted exception...");
-                }
+                connections.wait();
             }
             return connections.pop();
         }
@@ -73,5 +66,4 @@ public class ConnectionPool {
             connections.notify();
         }
     }
-
-    }
+}
