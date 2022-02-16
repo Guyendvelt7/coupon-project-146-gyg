@@ -39,47 +39,34 @@ public class CompaniesDBDAO implements CompaniesDAO {
     @Override
     public void addCompany(Company company) {
         Map<Integer, Object> values = new HashMap<>();
-        try {
-            values.put(1, company.getName());
-            values.put(2, company.getEmail());
-            values.put(3, company.getPassword());
-            DBTools.runQuery(DBManager.ADD_COMPANY, values);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        values.put(1, company.getName());
+        values.put(2, company.getEmail());
+        values.put(3, company.getPassword());
+        DBTools.runQuery(DBManager.ADD_COMPANY, values);
     }
 
     @Override
     public void updateCompany(Company company) {
         Map<Integer, Object> values = new HashMap<>();
-        try {
-            values.put(1, company.getName());
-            values.put(2, company.getEmail());
-            values.put(3, company.getPassword());
-            values.put(4, company.getId());
-            DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        values.put(1, company.getName());
+        values.put(2, company.getEmail());
+        values.put(3, company.getPassword());
+        values.put(4, company.getId());
+        DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
     }
 
     @Override
     public void deleteCompany(int companyId) {
         Map<Integer, Object> values = new HashMap<>();
-        try {
         values.put(1, companyId);
-            DBTools.runQuery(DBManager.DELETE_COMPANY, values);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DBTools.runQuery(DBManager.DELETE_COMPANY, values);
     }
-
     @Override
-    public ArrayList<Company> getAllCompanies(String sql, Map<Integer, Object> values) {
-        ArrayList<Company> companies = new ArrayList<>();
-
+    public ArrayList<Company> getAllCompanies() {
+        ArrayList<Company> allCompanies = new ArrayList<>();
+        ResultSet resultSet = null;
         try {
-            ResultSet resultSet = DBTools.runQueryForResult(sql, values);
+            resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
             while (resultSet.next()) {
                 ArrayList<Coupon> coupons = new ArrayList<>();
                 Company company = new Company(
@@ -89,24 +76,21 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         resultSet.getString("password"),
                         CouponsDBDAO.getCouponsByCompanyId(resultSet.getInt("id"))
                 );
-                companies.add(company);
+                allCompanies.add(company);
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException | InterruptedException err) {
+            System.out.println(err.getMessage());
         }
-        return companies;
+        return allCompanies;
     }
 
     @Override
-    public Company getOneCompany(int companyId) throws SQLException {
+    public Company getOneCompany(int companyId) {
         Company company = null;
-        Connection connection = null;
-        ArrayList<Coupon> coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
+        ResultSet resultSet = null;
+        ArrayList<Coupon> coupons = new ArrayList<>();
         try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DBManager.GET_SINGLE_COMPANY);
-            preparedStatement.setInt(1, companyId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY);
             if (resultSet.next()) {
                 company = new Company(
                         resultSet.getInt("id"),
@@ -115,20 +99,18 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         resultSet.getString("password"),
                         coupons
                 );
+                coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | SQLException e) {
             System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            ConnectionPool.getInstance().restoreConnection(connection);
+            return  null;
         }
         return company;
     }
 
-    public List<Coupon> getCompanyCoupons (int companyId) throws SQLException {
+    public List<Coupon> getCompanyCoupons (int companyId) {
         Map<Integer, Object> value = new HashMap<>();
-        value.put(1, companyId);
-        return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
+            value.put(1,companyId);
+            return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
     }
 }

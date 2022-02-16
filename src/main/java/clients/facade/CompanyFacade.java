@@ -26,15 +26,15 @@ public class CompanyFacade extends ClientFacade  {
     }
 
 public void addCoupon(Coupon coupon) throws SQLException {
-    myCoupons.addCoupon(coupon);
+    couponsDAO.addCoupon(coupon);
 }
 
 public void updateCoupon(Coupon coupon) throws SQLException {
-        myCoupons.updateCoupon(coupon);
+        couponsDAO.updateCoupon(coupon);
 }
 
 public void deleteCoupon(int couponId) throws SQLException {
-        myCoupons.deleteCoupon(couponId);
+        couponsDAO.deleteCoupon(couponId);
 }
 
 public ArrayList<Coupon>getCompanyCoupons() throws SQLException {
@@ -53,6 +53,6 @@ public List<Coupon>getCompanyCoupons(double maxPrice) throws SQLException {
 }
 
 public Company getCompanyDetails() throws SQLException {
-        return myCompanies.getOneCompany(companyId);
+        return companiesDAO.getOneCompany(companyId);
 }
 }

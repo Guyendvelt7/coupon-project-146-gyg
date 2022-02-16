@@ -4,13 +4,14 @@ import clients.db.DBManager;
 import clients.dbDao.CouponsDBDAO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Company {
     private int id;
     private String name;
     private String email;
     private String password;
-    private ArrayList<Coupon> coupons;
+    private List<Coupon> coupons;
     CouponsDBDAO couponsDBDAO;
 
     public Company(int id, String name, String email, String password, ArrayList<Coupon> coupons) {
@@ -53,12 +54,12 @@ public class Company {
         this.password = password;
     }
 
-    public ArrayList<Coupon> getCoupons() {
+    public List<Coupon> getCoupons() {
 
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(List<Coupon> coupons) {
         this.coupons = coupons;
     }
 

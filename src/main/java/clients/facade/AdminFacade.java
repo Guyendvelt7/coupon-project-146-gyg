@@ -35,7 +35,7 @@ public class AdminFacade extends ClientFacade {
 
     public void deleteCompany (int companyID) throws SQLException {
         this.companiesDAO.deleteCompany(companyID);
-        //delete coupons
+        //delete coupons - cascade sql
     }
 
     public ArrayList<Company> getAllCompanies(){

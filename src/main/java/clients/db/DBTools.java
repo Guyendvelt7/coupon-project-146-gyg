@@ -30,20 +30,18 @@ public class DBTools {
                     } else if (value instanceof Category) {
                         preparedStatement.setString(key, String.valueOf((Category) value));
                     }
-                    preparedStatement.execute();
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
                 }
             });
-
+            preparedStatement.execute();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         } finally {
             ConnectionPool.getInstance().restoreConnection(connection);
         }
-
+        return false;
     }
 
     public static ResultSet runQueryForResult(String sql, Map<Integer, Object> params) {
@@ -85,18 +83,15 @@ public class DBTools {
 
     public static ResultSet runQueryForResult(String sql) {
         Connection connection = null;
-        connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement preparedStatement = null;
         try {
+            connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement preparedStatement = null;
             preparedStatement = connection.prepareStatement(sql);
             return preparedStatement.executeQuery();
         } catch (SQLException e) {
-            System.out.println("there is a problem in the sql query");
+            System.out.println(e.getMessage());
             return null;
         }
-
-
-
     }
 
 }
