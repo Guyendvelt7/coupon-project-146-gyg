@@ -7,9 +7,9 @@ import clients.dbDao.CustomersDBDAO;
 
 public abstract class ClientFacade {
 
-    protected CouponsDBDAO myCoupons;
-    protected CompaniesDBDAO myCompanies;
-    protected CustomersDBDAO myCustomers;
+    protected CouponsDBDAO couponsDBDAO;
+    protected CompaniesDBDAO companiesDBDAO;
+    protected CustomersDBDAO customersDBDAO;
 
     public abstract boolean login(String email, String password) throws CustomExceptions;
 

@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.Map;
 
 public class DBTools {
-    public static boolean runQuery(String sql, Map<Integer, Object> params) throws SQLException {
+    public static boolean runQuery(String sql, Map<Integer, Object> params){
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
@@ -36,7 +36,7 @@ public class DBTools {
             });
             preparedStatement.execute();
             return true;
-        } catch (InterruptedException | SQLException e) {
+        } catch ( SQLException e) {
             e.printStackTrace();
         } finally {
             ConnectionPool.getInstance().restoreConnection(connection);
@@ -44,7 +44,7 @@ public class DBTools {
         return false;
     }
 
-    public static ResultSet runQueryForResult(String sql, Map<Integer, Object> params) throws SQLException {
+    public static ResultSet runQueryForResult(String sql, Map<Integer, Object> params){
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
@@ -73,7 +73,7 @@ public class DBTools {
 
             return preparedStatement.executeQuery();
 
-        } catch (SQLException | InterruptedException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
         } finally {
@@ -81,12 +81,16 @@ public class DBTools {
         }
     }
 
-    public static ResultSet runQueryForResult(String sql) throws SQLException, InterruptedException {
+    public static ResultSet runQueryForResult(String sql) {
         Connection connection = null;
         connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        return preparedStatement.executeQuery();
-
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            return preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-
 }

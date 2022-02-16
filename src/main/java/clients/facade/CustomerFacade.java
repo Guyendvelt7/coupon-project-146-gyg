@@ -6,7 +6,6 @@ import clients.beans.Customer;
 import clients.dao.CustomerFacadeDao;
 import clients.dbDao.CouponsDBDAO;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     @Override
     public void purchaseCoupon(Coupon coupon) throws SQLException {
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
-            myCoupons.deleteCoupon(coupon.getId());
+            couponsDBDAO.deleteCoupon(coupon.getId());
         }
     }
 
@@ -66,7 +65,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public Customer getCustomerDetails() throws SQLException, InterruptedException {
-      return myCustomers.getOneCustomer(customerID);
+      return customersDBDAO.getOneCustomer(customerID);
 
     }
 
