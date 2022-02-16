@@ -30,19 +30,19 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     }
 
     @Override
-    public void purchaseCoupon(Coupon coupon) throws SQLException, CustomExceptions {
+    public void purchaseCoupon(Coupon coupon){
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
-            couponsDAO.deleteCoupon(coupon.getId());
+            couponsDBDAO.deleteCoupon(coupon.getId());
         }
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons() throws SQLException, InterruptedException {
+    public List<Coupon> getCustomerCoupons(){
         return CouponsDBDAO.getCouponsByCustomerId(customerID);
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(Category category) throws SQLException, InterruptedException {
+    public List<Coupon> getCustomerCoupons(Category category){
         List<Coupon> couponList = getCustomerCoupons();
         List<Coupon> couponCategoryList = new ArrayList<>();
         for(Coupon item:couponList){
@@ -54,7 +54,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(double maxPrice) throws SQLException, InterruptedException {
+    public List<Coupon> getCustomerCoupons(double maxPrice) {
         List<Coupon> couponList = getCustomerCoupons();
         List<Coupon> couponUnderPriceList = new ArrayList<>();
         for(Coupon item:couponList){
@@ -66,8 +66,8 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     }
 
     @Override
-    public Customer getCustomerDetails() throws SQLException, InterruptedException {
-      return customersDAO.getOneCustomer(customerID);
+    public Customer getCustomerDetails(){
+      return customersDBDAO.getOneCustomer(customerID);
 
     }
 
