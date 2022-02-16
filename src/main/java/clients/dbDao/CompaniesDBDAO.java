@@ -39,39 +39,29 @@ public class CompaniesDBDAO implements CompaniesDAO {
     @Override
     public void addCompany(Company company) {
         Map<Integer, Object> values = new HashMap<>();
-        try {
             values.put(1, company.getName());
             values.put(2, company.getEmail());
             values.put(3, company.getPassword());
             DBTools.runQuery(DBManager.ADD_COMPANY, values);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
     public void updateCompany(Company company) {
         Map<Integer, Object> values = new HashMap<>();
-        try {
             values.put(1, company.getName());
             values.put(2, company.getEmail());
             values.put(3, company.getPassword());
             values.put(4, company.getId());
             DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void deleteCompany(int companyId) {
         Map<Integer, Object> values = new HashMap<>();
-        try {
         values.put(1, companyId);
-            DBTools.runQuery(DBManager.DELETE_COMPANY, values);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DBTools.runQuery(DBManager.DELETE_COMPANY, values);
+
     }
 
     @Override
@@ -91,14 +81,14 @@ public class CompaniesDBDAO implements CompaniesDAO {
                 );
                 companies.add(company);
             }
-        } catch (SQLException | InterruptedException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return companies;
     }
 
     @Override
-    public Company getOneCompany(int companyId) throws SQLException {
+    public Company getOneCompany(int companyId) {
         Company company = null;
         Connection connection = null;
         ArrayList<Coupon> coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
@@ -116,17 +106,15 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         coupons
                 );
             }
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQL Exception...");
         } finally {
             ConnectionPool.getInstance().restoreConnection(connection);
         }
         return company;
     }
 
-    public List<Coupon> getCompanyCoupons (int companyId) throws SQLException {
+    public List<Coupon> getCompanyCoupons (int companyId){
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
