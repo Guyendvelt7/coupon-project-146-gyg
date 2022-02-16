@@ -1,15 +1,16 @@
 package clients.facade;
 
 import clients.CustomExceptions;
-import clients.dbDao.CompaniesDBDAO;
-import clients.dbDao.CouponsDBDAO;
-import clients.dbDao.CustomersDBDAO;
+import clients.dao.CompaniesDAO;
+import clients.dao.CouponsDAO;
+import clients.dao.CustomersDAO;
+
 
 public abstract class ClientFacade {
 
-    protected CouponsDBDAO myCoupons;
-    protected CompaniesDBDAO myCompanies;
-    protected CustomersDBDAO myCustomers;
+    protected CouponsDAO couponsDAO;
+    protected CompaniesDAO companiesDAO;
+    protected CustomersDAO customersDAO;
 
     public abstract boolean login(String email, String password) throws CustomExceptions;
 
