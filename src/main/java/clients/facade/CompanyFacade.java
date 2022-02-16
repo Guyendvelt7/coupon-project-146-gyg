@@ -48,7 +48,7 @@ public List<Coupon>getCompanyCoupons(Category category) throws SQLException {
     }
 
 public List<Coupon>getCompanyCoupons(double maxPrice) throws SQLException {
-return getCompanyCoupons().stream()
+         return getCompanyCoupons().stream()
         .filter(item->item.getPrice()<=maxPrice).collect(Collectors.toList());
 }
 

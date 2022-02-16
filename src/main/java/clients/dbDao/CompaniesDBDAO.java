@@ -89,7 +89,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 
     @Override
-    public Company getOneCompany(int companyId) throws SQLException {
+    public Company getOneCompany(int companyId){
         Company company = null;
         Connection connection = null;
         ArrayList<Coupon> coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
@@ -107,8 +107,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         coupons
                 );
             }
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
