@@ -34,7 +34,7 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
-    public void updateCoupon(Coupon coupon){
+    public void updateCoupon(Coupon coupon)  {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, coupon.getCompanyId());
         values.put(2, coupon.getCategory());
@@ -55,16 +55,17 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
-       // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
     //todo: maybe split two methods, one for allCoupons and another for oneCoupon
     @Override
-    public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values){
+    public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values) {
     ArrayList<Coupon> coupons = new ArrayList<>();
     ResultSet resultSet = DBTools.runQueryForResult(sql, values);
         try {
-            while (resultSet.next()) {
+            while (true) {
+                assert resultSet != null;
+                if (!resultSet.next()) break;
                 Coupon coupon = new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
@@ -88,34 +89,60 @@ public class CouponsDBDAO implements CouponsDAO {
     public List<Coupon> getAllCoupons() {
        List<Coupon> coupons = new ArrayList<>();
        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
-        try {
        while(true){
+           try {
+               assert resultSet != null;
                if (!resultSet.next()) break;
-           coupons.add(new Coupon(
-                   resultSet.getInt("id"),
-                   resultSet.getInt("company_id"),
-                   Category.valueOf(resultSet.getString("category_id")),
-                   resultSet.getString("title"),
-                   resultSet.getString("description"),
-                   resultSet.getDate("start_date"),
-                   resultSet.getDate("end_date"),
-                   resultSet.getInt("amount"),
-                   resultSet.getDouble("price"),
-                   resultSet.getString("image")));
+               coupons.add(new Coupon(
+                       resultSet.getInt("id"),
+                       resultSet.getInt("company_id"),
+                       Category.valueOf(resultSet.getString("category_id")),
+                       resultSet.getString("title"),
+                       resultSet.getString("description"),
+                       resultSet.getDate("start_date"),
+                       resultSet.getDate("end_date"),
+                       resultSet.getInt("amount"),
+                       resultSet.getDouble("price"),
+                       resultSet.getString("image")));
+           } catch (SQLException e) {
+               System.out.println("SQL exception....");
+           }
+
        }
-       } catch (SQLException e) {
-            System.out.println(e.getMessage());;
-        }
        return coupons;
     }
 
     @Override
-    public void addCouponPurchase(int customerID, int couponID){
+    public Coupon getOneCoupon() {
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+                try {
+                    assert resultSet != null;
+                    if (!resultSet.next()) {
+                   return new Coupon(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("company_id"),
+                            Category.valueOf(resultSet.getString("category_id")),
+                            resultSet.getString("title"),
+                            resultSet.getString("description"),
+                            resultSet.getDate("start_date"),
+                            resultSet.getDate("end_date"),
+                            resultSet.getInt("amount"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("image"));
+                }} catch (SQLException e) {
+                    System.out.println("SQL exception....");
+
+                }
+                return null;
+            }
+
+
+    @Override
+    public void addCouponPurchase(int customerID, int couponID) {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1,customerID);
         values.put(2,couponID);
         DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
 
     }
 
@@ -125,15 +152,16 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(1,customerID);
         values.put(2,couponID);
         DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
-    public static ArrayList<Coupon> getCouponsByCompanyId(int companyId){
+    public static ArrayList<Coupon> getCouponsByCompanyId(int companyId) {
         ArrayList<Coupon> coupons = new ArrayList<>();
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, value);
         try {
-            while (resultSet.next()) {
+            while (true) {
+                assert resultSet != null;
+                if (!resultSet.next()) break;
                 Coupon coupon = new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
@@ -148,32 +176,33 @@ public class CouponsDBDAO implements CouponsDAO {
                 coupons.add(coupon);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQL exception...");
         }
         return coupons;
     }
-    public static List<Coupon> getCouponsByCustomerId(int customerID){
+    public static List<Coupon> getCouponsByCustomerId(int customerID) {
         ArrayList<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
-        try {
             while (true) {
+                try {
                     if (!resultSet.next()) break;
-                Coupon coupon = new Coupon(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("company_id"),
-                        Category.valueOf(resultSet.getString("category_id")),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
-                        resultSet.getInt("amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image"));
-                coupons.add(coupon);
+                    Coupon coupon = new Coupon(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("company_id"),
+                            Category.valueOf(resultSet.getString("category_id")),
+                            resultSet.getString("title"),
+                            resultSet.getString("description"),
+                            resultSet.getDate("start_date"),
+                            resultSet.getDate("end_date"),
+                            resultSet.getInt("amount"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("image"));
+                    coupons.add(coupon);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
             }
-            } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
         return coupons;
     }
 

@@ -23,20 +23,20 @@ public class ConnectionPool {
         connections.push(connection);
     }
 
-    public void closeAllConnections() {
+    public void closeAllConnections(){
         synchronized (connections){
             while (connections.size()<NUMBER_OF_CONNECTIONS){
                 try {
                     connections.wait();
                 } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());;
+                    e.printStackTrace();
                 }
             }
             connections.removeAllElements();
         }
     }
 
-    public static ConnectionPool getInstance() {
+    public static ConnectionPool getInstance(){
         //check if instance is null
         if(instance==null){
             //critical code, check that no other thread pass in same time
@@ -56,7 +56,7 @@ public class ConnectionPool {
                 try {
                     connections.wait();
                 } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());;
+                    e.printStackTrace();
                 }
             }
             return connections.pop();

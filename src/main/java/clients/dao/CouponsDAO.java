@@ -10,15 +10,17 @@ import java.util.Map;
 
 public interface CouponsDAO {
 
-    public void addCoupon (Coupon coupon) throws SQLException, CustomExceptions;
+    public void addCoupon (Coupon coupon);
 
-    public void updateCoupon(Coupon coupon) throws SQLException, CustomExceptions;
+    public void updateCoupon(Coupon coupon);
 
-    public void deleteCoupon(int couponID) throws SQLException, CustomExceptions;
+    public void deleteCoupon(int couponID);
 
-    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws SQLException, CustomExceptions;
+    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values);
 
-    public List<Coupon> getAllCoupons() throws SQLException, InterruptedException;
+    public List<Coupon> getAllCoupons();
+
+    public Coupon getOneCoupon();
 
     public void addCouponPurchase(int customerID, int couponID) throws SQLException, CustomExceptions;
 
