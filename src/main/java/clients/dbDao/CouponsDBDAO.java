@@ -85,6 +85,26 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
+    public List<Coupon> getAllCoupons() throws SQLException, InterruptedException {
+       List<Coupon> coupons = new ArrayList<>();
+       ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+       while(resultSet.next()){
+           coupons.add(new Coupon(
+                   resultSet.getInt("id"),
+                   resultSet.getInt("company_id"),
+                   Category.valueOf(resultSet.getString("category_id")),
+                   resultSet.getString("title"),
+                   resultSet.getString("description"),
+                   resultSet.getDate("start_date"),
+                   resultSet.getDate("end_date"),
+                   resultSet.getInt("amount"),
+                   resultSet.getDouble("price"),
+                   resultSet.getString("image")));
+       }
+       return coupons;
+    }
+
+    @Override
     public void addCouponPurchase(int customerID, int couponID) throws SQLException {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1,customerID);

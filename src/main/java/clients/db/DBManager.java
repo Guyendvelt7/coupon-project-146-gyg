@@ -101,8 +101,6 @@ public class DBManager {
 
     public static final String DELETE_COMPANY = "DELETE FROM `coupon_project`.`companies` WHERE (`id` = ?);";
 
-  public static final String GET_ALL_COMPANIES = "SELECT* FROM `coupon_project`.`companies`;";
-
     public static final String GET_SINGLE_COMPANY = "SELECT* FROM `coupon_project`.`companies` WHERE (`id` = ?);";
 
     public static final String COUNT_BY_PASS_AND_EMAIL = "SELECT COUNT(*) FROM `coupon_project`.`companies` WHERE `email` = ? and `password` = ?";
