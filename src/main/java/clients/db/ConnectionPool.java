@@ -53,7 +53,11 @@ public class ConnectionPool {
         synchronized (connections) {
             if (connections.isEmpty()) {
                 //wait until a connection is available
-                connections.wait();
+                try {
+                    connections.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             return connections.pop();
         }

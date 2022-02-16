@@ -20,20 +20,20 @@ public class AdminFacade extends ClientFacade {
         this.password = "admin";
     }
     @Override
-    public boolean login(String email, String password) throws CustomExceptions {
+    public boolean login(String email, String password){
         return this.email.equals(email) && this.password.equals(password);
 
     }
 
-    public void addCompany(Company company) throws SQLException {
+    public void addCompany(Company company){
         this.companiesDBDAO.addCompany(company);
     }
 
-    public void updateCompany (Company company) throws SQLException {
+    public void updateCompany (Company company){
         this.companiesDBDAO.updateCompany(company);
     }
 
-    public void deleteCompany (int companyID) throws SQLException {
+    public void deleteCompany (int companyID){
         this.companiesDBDAO.deleteCompany(companyID);
         //delete coupons
     }

@@ -64,11 +64,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public List<Company> getAllCompanies(String sql, Map<Integer, Object> values) {
+    public List<Company> getAllCompanies() {
         List<Company> companies = new ArrayList<>();
 
         try {
-            ResultSet resultSet = DBTools.runQueryForResult(sql, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
             while (resultSet.next()) {
                 ArrayList<Coupon> coupons = new ArrayList<>();
                 Company company = new Company(
@@ -110,7 +110,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return company;
     }
 
-    public List<Coupon> getCompanyCoupons (int companyId) throws SQLException {
+    public List<Coupon> getCompanyCoupons (int companyId){
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
