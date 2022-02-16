@@ -31,7 +31,6 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(8, coupon.getPrice());
         values.put(9, coupon.getImage());
         DBTools.runQuery(DBManager.CREATE_NEW_COUPON, values);
-
     }
 
     @Override
