@@ -55,7 +55,6 @@ public class Company {
     }
 
     public List<Coupon> getCoupons() {
-
         return coupons;
     }
 

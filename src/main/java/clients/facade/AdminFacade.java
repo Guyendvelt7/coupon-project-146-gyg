@@ -20,6 +20,7 @@ public class AdminFacade extends ClientFacade {
         this.password = "admin";
     }
     @Override
+
     public boolean login(String email, String password) throws CustomExceptions {
         return this.email.equals(email) && this.password.equals(password);
 

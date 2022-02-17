@@ -61,6 +61,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         values.put(1, companyId);
         DBTools.runQuery(DBManager.DELETE_COMPANY, values);
     }
+  
     @Override
     public ArrayList<Company> getAllCompanies() {
         ArrayList<Company> allCompanies = new ArrayList<>();
@@ -87,10 +88,13 @@ public class CompaniesDBDAO implements CompaniesDAO {
     @Override
     public Company getOneCompany(int companyId) {
         Company company = null;
-        ResultSet resultSet = null;
-        ArrayList<Coupon> coupons = new ArrayList<>();
+        ArrayList<Coupon> coupons = null;
+        Map<Integer,Object> map= new HashMap<>();
+        map.put(1,companyId);
         try {
-            resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY);
+            coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY,map);
+            assert resultSet != null;
             if (resultSet.next()) {
                 company = new Company(
                         resultSet.getInt("id"),
@@ -101,16 +105,15 @@ public class CompaniesDBDAO implements CompaniesDAO {
                 );
                 coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
             }
-        } catch (InterruptedException | SQLException e) {
-            System.out.println(e.getMessage());
-            return  null;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return company;
     }
 
-    public List<Coupon> getCompanyCoupons (int companyId) {
+    public List<Coupon> getCompanyCoupons (int companyId){
         Map<Integer, Object> value = new HashMap<>();
-            value.put(1,companyId);
-            return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
+        value.put(1, companyId);
+        return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
     }
 }
