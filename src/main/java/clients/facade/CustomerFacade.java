@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     private int customerID;
@@ -37,6 +38,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
             couponsDBDAO.deleteCoupon(coupon.getId());
         }
+
     }
 
     @Override
@@ -46,32 +48,21 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public List<Coupon> getCustomerCoupons(Category category){
-        List<Coupon> couponList = getCustomerCoupons();
-        List<Coupon> couponCategoryList = new ArrayList<>();
-        for(Coupon item:couponList){
-            if(item.getCategory()==category){
-                couponCategoryList.add(item);
-            }
-        }
-        return couponCategoryList;
+        return getCustomerCoupons().stream()
+                .filter(item->item.getCategory().equals(category))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Coupon> getCustomerCoupons(double maxPrice) {
-        List<Coupon> couponList = getCustomerCoupons();
-        List<Coupon> couponUnderPriceList = new ArrayList<>();
-        for(Coupon item:couponList){
-            if(item.getPrice()<=maxPrice){
-                couponUnderPriceList.add(item);
-            }
-        }
-        return couponUnderPriceList;
+        return getCustomerCoupons().stream()
+                .filter(item->item.getPrice()<=maxPrice)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Customer getCustomerDetails(){
       return customersDBDAO.getOneCustomer(customerID);
-
     }
 
 
