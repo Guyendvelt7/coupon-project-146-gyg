@@ -97,6 +97,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         try {
             coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY,map);
+            assert resultSet != null;
             if (resultSet.next()) {
                 company = new Company(
                         resultSet.getInt("id"),
