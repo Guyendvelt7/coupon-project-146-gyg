@@ -84,7 +84,13 @@ public class CompaniesDBDAO implements CompaniesDAO {
             System.out.println(e.getMessage());
         }
         return companies;
+
+
+
+
     }
+
+
 
     @Override
     public Company getOneCompany(int companyId){
