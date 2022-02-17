@@ -71,7 +71,6 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     @Override
     public Customer getCustomerDetails(){
       return customersDBDAO.getOneCustomer(customerID);
-
     }
 
 

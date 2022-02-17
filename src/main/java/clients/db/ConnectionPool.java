@@ -12,7 +12,7 @@ public class ConnectionPool {
     private static ConnectionPool instance=null;
     private  final Stack<Connection> connections = new Stack<>();
 
-    private ConnectionPool()  {
+    private ConnectionPool() {
         System.out.println("Instance created...");
         Connection connection = null;
         try {
@@ -23,13 +23,19 @@ public class ConnectionPool {
         connections.push(connection);
     }
 
-    public void closeAllConnections(){
+
+    public void closeAllConnections()  {
+
         synchronized (connections){
             while (connections.size()<NUMBER_OF_CONNECTIONS){
                 try {
                     connections.wait();
                 } catch (InterruptedException e) {
+
                     e.printStackTrace();
+
+                    System.out.println(e.getMessage());
+
                 }
             }
             connections.removeAllElements();
@@ -49,14 +55,18 @@ public class ConnectionPool {
         return instance;
     }
 
+
     public Connection getConnection(){
+
         synchronized (connections) {
             if (connections.isEmpty()) {
                 //wait until a connection is available
                 try {
                     connections.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+                    System.out.println(e.getMessage());
+
                 }
             }
             return connections.pop();

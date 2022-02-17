@@ -28,7 +28,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
             values.put(1, email);
             values.put(2, password);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_BY_PASS_AND_EMAIL, values);
-            assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
         } catch (SQLException e) {
@@ -40,38 +39,36 @@ public class CompaniesDBDAO implements CompaniesDAO {
     @Override
     public void addCompany(Company company) {
         Map<Integer, Object> values = new HashMap<>();
-            values.put(1, company.getName());
-            values.put(2, company.getEmail());
-            values.put(3, company.getPassword());
-            DBTools.runQuery(DBManager.ADD_COMPANY, values);
+        values.put(1, company.getName());
+        values.put(2, company.getEmail());
+        values.put(3, company.getPassword());
+        DBTools.runQuery(DBManager.ADD_COMPANY, values);
     }
 
     @Override
     public void updateCompany(Company company) {
         Map<Integer, Object> values = new HashMap<>();
-            values.put(1, company.getName());
-            values.put(2, company.getEmail());
-            values.put(3, company.getPassword());
-            values.put(4, company.getId());
-            DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
+        values.put(1, company.getName());
+        values.put(2, company.getEmail());
+        values.put(3, company.getPassword());
+        values.put(4, company.getId());
+        DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
     }
 
     @Override
     public void deleteCompany(int companyId) {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, companyId);
-            DBTools.runQuery(DBManager.DELETE_COMPANY, values);
+        DBTools.runQuery(DBManager.DELETE_COMPANY, values);
     }
-
+  
     @Override
-    public List<Company> getAllCompanies() {
-        List<Company> companies = new ArrayList<>();
-
+    public ArrayList<Company> getAllCompanies() {
+        ArrayList<Company> allCompanies = new ArrayList<>();
+        ResultSet resultSet = null;
         try {
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
-            while (true) {
-                assert resultSet != null;
-                if (!resultSet.next()) break;
+            resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
+            while (resultSet.next()) {
                 ArrayList<Coupon> coupons = new ArrayList<>();
                 Company company = new Company(
                         resultSet.getInt("id"),
@@ -80,16 +77,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         resultSet.getString("password"),
                         CouponsDBDAO.getCouponsByCompanyId(resultSet.getInt("id"))
                 );
-                companies.add(company);
+                allCompanies.add(company);
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException | InterruptedException err) {
+            System.out.println(err.getMessage());
         }
-        return companies;
+        return allCompanies;
     }
 
     @Override
-    public Company getOneCompany(int companyId){
+    public Company getOneCompany(int companyId) {
         Company company = null;
         ArrayList<Coupon> coupons = null;
         Map<Integer,Object> map= new HashMap<>();
@@ -106,6 +103,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         resultSet.getString("password"),
                         coupons
                 );
+                coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
             }
         } catch (SQLException e) {
             e.printStackTrace();

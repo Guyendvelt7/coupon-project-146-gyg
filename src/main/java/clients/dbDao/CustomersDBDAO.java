@@ -20,59 +20,57 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public boolean isCustomerExist(String name, String password) {
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,name);
-        values.put(2,password);
-       ResultSet resultSet =  DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS,values);
-        assert resultSet != null;
+        Map<Integer, Object> values = new HashMap<>();
+        ResultSet resultSet = null;
         try {
+            values.put(1, name);
+            values.put(2, password);
+            resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS, values);
+            assert resultSet != null;
             resultSet.next();
             return resultSet.getInt("1") == 1;
         } catch (SQLException e) {
             System.out.println("SQL exception");
             return false;
         }
-
     }
 
     @Override
     public void addCustomer(Customer customer) {
-    Map<Integer,Object> values = new HashMap<>();
-    values.put(1,customer.getFirstName());
-    values.put(2,customer.getLastName());
-    values.put(3,customer.getEmail());
-    values.put(4,customer.getPassword());
-    DBTools.runQuery(DBManager.ADD_CUSTOMER,values);
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customer.getFirstName());
+        values.put(2, customer.getLastName());
+        values.put(3, customer.getEmail());
+        values.put(4, customer.getPassword());
+        DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
     }
 
     @Override
-    public void updateCustomer(Customer customer){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customer.getFirstName());
-        values.put(2,customer.getLastName());
-        values.put(3,customer.getEmail());
-        values.put(4,customer.getPassword());
-        DBTools.runQuery(DBManager.UPDATE_CUSTOMER,values);
+    public void updateCustomer(Customer customer) {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customer.getFirstName());
+        values.put(2, customer.getLastName());
+        values.put(3, customer.getEmail());
+        values.put(4, customer.getPassword());
+        DBTools.runQuery(DBManager.UPDATE_CUSTOMER, values);
     }
 
     @Override
-    public void deleteCustomer(int customerID){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customerID);
-        DBTools.runQuery(DBManager.DELETE_CUSTOMER,values);
+    public void deleteCustomer(int customerID) {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customerID);
+        DBTools.runQuery(DBManager.DELETE_CUSTOMER, values);
     }
 
     @Override
-    public List<Customer> getAllCustomers(){
-        ResultSet customerResultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
+    public List<Customer> getAllCustomers() {
+        ResultSet customerResultSet = null;
         List<Customer> allCustomers = new ArrayList<>();
-        while(true){
+        while (true) {
             try {
+                customerResultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
                 if (!customerResultSet.next()) break;
-            } catch (SQLException e) {
-                System.out.println("SQL exception...");
-            }
-            try {
+
                 allCustomers.add(new Customer(
                         customerResultSet.getInt("id"),
                         customerResultSet.getString("firstName"),
@@ -81,7 +79,7 @@ public class CustomersDBDAO implements CustomersDAO {
                         customerResultSet.getString("password"),
                         (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
-            } catch (SQLException e) {
+            } catch (SQLException | InterruptedException e) {
                 System.out.println("SQL exception");
             }
         }
@@ -89,10 +87,10 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     @Override
-    public Customer getOneCustomer(int customerID){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customerID);
-       ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER,values);
+    public Customer getOneCustomer(int customerID) {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customerID);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER, values);
         assert resultSet != null;
         try {
             resultSet.next();
@@ -104,7 +102,7 @@ public class CustomersDBDAO implements CustomersDAO {
                     resultSet.getString("password"),
                     (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerID)
             );
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             System.out.println("SQL exception...");
             return null;
         }
