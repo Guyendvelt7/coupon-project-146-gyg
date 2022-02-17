@@ -27,7 +27,7 @@ public class CouponExpirationDailyJob implements Runnable {
 
                 Thread.sleep(1000 * 60 * 60 * 24);
 
-            } catch (SQLException | InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
