@@ -85,6 +85,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return allCompanies;
     }
 
+
+
     @Override
     public Company getOneCompany(int companyId) {
         Company company = null;
