@@ -120,8 +120,10 @@ public class DBManager {
 
     public static final String IS_CUSTOMER_EXISTS = "SELECT COUNT(*) FROM `coupon_project`.`customers` WHERE `email` = ? and `password` = ?";
 
-
-
+    public static final String ADD_COUPON_TO_CUSTOMER = "INSERT INTO `coupon_project`.`customers_vs_coupons` " +
+            "(`customer_id`, `coupon_id`) " +
+            "VALUES (?,?);";
+    public static final String GET_COUPONS_BY_CUSTOMER = "SELECT * FROM `coupon_project`.`customers_vs_coupons` WHERE customer_id=?;";
 }
 
 //Todo: CREATE_NEW_COMPANY

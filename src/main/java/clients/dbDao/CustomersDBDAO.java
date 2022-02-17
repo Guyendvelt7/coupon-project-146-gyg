@@ -68,6 +68,7 @@ public class CustomersDBDAO implements CustomersDAO {
         List<Customer> allCustomers = new ArrayList<>();
         while(true){
             try {
+                assert customerResultSet != null;
                 if (!customerResultSet.next()) break;
             } catch (SQLException e) {
                 System.out.println("SQL exception...");
@@ -79,7 +80,7 @@ public class CustomersDBDAO implements CustomersDAO {
                         customerResultSet.getString("lastName"),
                         customerResultSet.getString("email"),
                         customerResultSet.getString("password"),
-                        (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
+                        couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
             } catch (SQLException e) {
                 System.out.println("SQL exception");
@@ -102,12 +103,19 @@ public class CustomersDBDAO implements CustomersDAO {
                     resultSet.getString("lastName"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
-                    (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerID)
+                     couponsDBDAO.getCouponsByCustomerId(customerID)
             );
         } catch (SQLException e) {
             System.out.println("SQL exception...");
             return null;
         }
+    }
+
+    public void addCouponToCustomer(int couponId, int customerId){
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,customerId);
+        values.put(2,couponId);
+        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER,values);
     }
 
 
