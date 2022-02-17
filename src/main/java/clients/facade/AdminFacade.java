@@ -20,32 +20,33 @@ public class AdminFacade extends ClientFacade {
         this.password = "admin";
     }
     @Override
-    public boolean login(String email, String password){
+
+    public boolean login(String email, String password) throws CustomExceptions {
         return this.email.equals(email) && this.password.equals(password);
 
     }
 
-    public void addCompany(Company company){
-        this.companiesDBDAO.addCompany(company);
+    public void addCompany(Company company) throws SQLException {
+        this.companiesDAO.addCompany(company);
     }
 
-    public void updateCompany (Company company){
-        this.companiesDBDAO.updateCompany(company);
+    public void updateCompany (Company company) throws SQLException {
+        this.companiesDAO.updateCompany(company);
     }
 
-    public void deleteCompany (int companyID){
-        this.companiesDBDAO.deleteCompany(companyID);
-        //delete coupons
+    public void deleteCompany (int companyID) throws SQLException {
+        this.companiesDAO.deleteCompany(companyID);
+        //delete coupons - cascade sql
     }
 
-    public List<Company> getAllCompanies(){
-        return this.companiesDBDAO.getAllCompanies();
+    public ArrayList<Company> getAllCompanies(){
+        return this.companiesDAO.getAllCompanies();
     }
 
-    public Company getOneCompany (int companyID){
+    public Company getOneCompany (int companyID) throws SQLException {
         Company comp = null;
-        comp = this.companiesDBDAO.getOneCompany(companyID);
-        comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
+        comp = this.companiesDAO.getOneCompany(companyID);
+        comp.setCoupons(this.companiesDAO.getCompanyCoupons(companyID));
         return comp;
 
     }

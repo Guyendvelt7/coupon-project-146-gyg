@@ -18,9 +18,9 @@ public interface CouponsDAO {
 
     public List<Coupon> getCoupons(String sql, Map<Integer, Object> values);
 
-    public List<Coupon> getAllCoupons();
 
-    public Coupon getOneCoupon();
+
+
 
     public void addCouponPurchase(int customerID, int couponID) throws SQLException, CustomExceptions;
 

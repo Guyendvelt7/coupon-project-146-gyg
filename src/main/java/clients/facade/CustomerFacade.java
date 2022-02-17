@@ -27,11 +27,14 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public boolean login(String email, String password) {
-        return email.equals("customer") && password.equals("customer");
+       String pas = customersDBDAO.getOneCustomer(customerID).getPassword();
+       String mail = customersDBDAO.getOneCustomer(customerID).getEmail();
+        return email.equals(mail) && password.equals(pas);
     }
 
     @Override
     public void purchaseCoupon(Coupon coupon){
+        //amount>0, true->amount-1
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
             couponsDBDAO.deleteCoupon(coupon.getId());
         }
