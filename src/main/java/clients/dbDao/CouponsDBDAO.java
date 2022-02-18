@@ -113,8 +113,10 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
-    public Coupon getOneCoupon() {
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+    public Coupon getOneCoupon(int couponId) {
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,couponId);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON,values);
                 try {
                     assert resultSet != null;
                     if (!resultSet.next()) {
@@ -180,9 +182,11 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return coupons;
     }
-    public static List<Coupon> getCouponsByCustomerId(int customerID) {
+    public List<Coupon> getCouponsByCustomerId(int customerID) {
         ArrayList<Coupon> coupons = new ArrayList<>();
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,customerID);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER,values);
             while (true) {
                 try {
                     if (!resultSet.next()) break;
