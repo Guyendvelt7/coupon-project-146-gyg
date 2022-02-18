@@ -87,12 +87,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return companies;
 
-
-
-
     }
-
-
 
     @Override
     public Company getOneCompany(int companyId){
