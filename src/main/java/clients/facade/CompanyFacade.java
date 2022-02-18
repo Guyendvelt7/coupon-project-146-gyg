@@ -56,6 +56,7 @@ public List<Coupon>getCompanyCoupons(double maxPrice){
         .filter(item->item.getPrice()<=maxPrice).collect(Collectors.toList());
 }
 
+
 public Company getCompanyDetails() {
         return companiesDBDAO.getOneCompany(companyId);
 }
