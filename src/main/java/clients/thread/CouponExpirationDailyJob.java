@@ -1,5 +1,7 @@
 package clients.thread;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Coupon;
 import clients.dbDao.CouponsDBDAO;
 
@@ -27,8 +29,9 @@ public class CouponExpirationDailyJob implements Runnable {
 
                 Thread.sleep(1000 * 60 * 60 * 24);
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | CustomExceptions e) {
+                System.out.println(e.getMessage());
+                System.out.println(EnumExceptions.ID_NOT_EXIST);
             }
         }
 

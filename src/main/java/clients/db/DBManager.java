@@ -98,7 +98,7 @@ public class DBManager {
 
     public static final String ADD_COMPANY = "INSERT INTO `coupons_project`.`companies` ( `name`, `email`, `password`) VALUES (?,?,?);";
 
-    public static final String UPDATE_COMPANY = "UPDATE `coupons_project`.`companies` SET `name` = ?, `email` = ?, `password` = ? WHERE (`id` = ?);";
+    public static final String UPDATE_COMPANY = "UPDATE `coupons_project`.`companies` SET `email` = ?, `password` = ? WHERE (`id` = ?);";
 
     public static final String DELETE_COMPANY = "DELETE FROM `coupons_project`.`companies` WHERE (`id` = ?);";
 
@@ -120,9 +120,5 @@ public class DBManager {
 
     public static final String IS_CUSTOMER_EXISTS = "SELECT COUNT(*) FROM `coupons_project`.`customers` WHERE `email` = ? and `password` = ?";
 
-
-
 }
 
-//Todo: CREATE_NEW_COMPANY
-//Todo: CREATE_NEW_CUSTOMER

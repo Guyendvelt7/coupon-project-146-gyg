@@ -1,5 +1,7 @@
 package clients.dbDao;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.dao.CompaniesDAO;
@@ -47,6 +49,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
     @Override
     public void updateCompany(Company company) {
+        //cannot update company ID
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
@@ -79,8 +82,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
                 );
                 allCompanies.add(company);
             }
-        } catch (SQLException | InterruptedException err) {
-            System.out.println(err.getMessage());
+        } catch (SQLException | CustomExceptions err) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
         }
         return allCompanies;
     }
@@ -109,6 +112,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
         }
         return company;
     }
@@ -116,6 +121,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public List<Coupon> getCompanyCoupons (int companyId){
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
-        return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
+        try {
+            return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
+            return null;
+        }
     }
 }
