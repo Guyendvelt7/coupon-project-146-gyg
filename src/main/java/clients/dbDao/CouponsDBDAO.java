@@ -59,9 +59,9 @@ public class CouponsDBDAO implements CouponsDAO {
 
     //todo: maybe split two methods, one for allCoupons and another for oneCoupon
     @Override
-    public ArrayList<Coupon> getCoupons(String sql, Map<Integer, Object> values) {
-    ArrayList<Coupon> coupons = new ArrayList<>();
-    ResultSet resultSet = DBTools.runQueryForResult(sql, values);
+    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) {
+        List<Coupon> coupons = new ArrayList<>();
+        ResultSet resultSet = DBTools.runQueryForResult(sql, values);
         try {
             while (true) {
                 assert resultSet != null;
@@ -183,7 +183,7 @@ public class CouponsDBDAO implements CouponsDAO {
         return coupons;
     }
     public List<Coupon> getCouponsByCustomerId(int customerID) {
-        ArrayList<Coupon> coupons = new ArrayList<>();
+        List<Coupon> coupons = new ArrayList<>();
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER,values);

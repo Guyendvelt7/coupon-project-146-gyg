@@ -63,8 +63,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
   
     @Override
-    public ArrayList<Company> getAllCompanies() {
-        ArrayList<Company> allCompanies = new ArrayList<>();
+    public List<Company> getAllCompanies() {
+        List<Company> allCompanies = new ArrayList<>();
         ResultSet resultSet = null;
         try {
             resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
@@ -79,7 +79,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
                 );
                 allCompanies.add(company);
             }
-        } catch (SQLException | InterruptedException err) {
+        } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
         return allCompanies;

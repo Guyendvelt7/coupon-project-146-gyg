@@ -9,14 +9,14 @@ public class DBManager {
     public static final String SQL_PASS = "12345678";
 
 
-    public static final String CREATE_COMPANY_TABLE = "CREATE TABLE `coupon_project`.`companies` (" +
+    public static final String CREATE_COMPANY_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`companies` (" +
             "`id` INT NOT NULL AUTO_INCREMENT," +
             "`name` VARCHAR(45) NOT NULL," +
             "`email` VARCHAR(45) NOT NULL," +
             "`password` VARCHAR(45) NOT NULL," +
             "PRIMARY KEY (`id`));";
 
-    public static final String CREATE_CUSTOMER_TABLE = "CREATE TABLE `coupon_project`.`customers` (" +
+    public static final String CREATE_CUSTOMER_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`customers` (" +
             " `id` INT NOT NULL AUTO_INCREMENT," +
             "`first_name` VARCHAR(45) NOT NULL," +
             "`last_name` VARCHAR(45) NOT NULL," +
@@ -24,12 +24,12 @@ public class DBManager {
             "`password` VARCHAR(45) NOT NULL," +
             "PRIMARY KEY (`id`));";
 
-    public static final String CREATE_CATEGORIES_TABLE = "CREATE TABLE `coupon_project`.`categories` ( " +
+    public static final String CREATE_CATEGORIES_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`categories` ( " +
             "`id` INT NOT NULL AUTO_INCREMENT," +
             "`name` VARCHAR(45) NOT NULL," +
             "PRIMARY KEY (`id`));";
 
-    public static final String CREATE_COUPONS_TABLE = "CREATE TABLE `coupon_project`.`coupons` (" +
+    public static final String CREATE_COUPONS_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`coupons` (" +
             "`id` INT NOT NULL AUTO_INCREMENT," +
             "`company_id` INT NOT NULL," +
             "`category_id` INT NOT NULL," +
@@ -44,32 +44,32 @@ public class DBManager {
             "INDEX `company_id_idx` (`company_id` ASC) VISIBLE," +
             "INDEX `category_id_idx` (`category_id` ASC) VISIBLE," +
             "CONSTRAINT `company_id`" +
-            "FOREIGN KEY (`company_id`)" +
-            "REFERENCES `coupon_project`.`companies` (`id`)" +
-            "ON DELETE NO ACTION" +
-            "ON UPDATE NO ACTION," +
+            " FOREIGN KEY (`company_id`)" +
+            " REFERENCES `coupons_project`.`companies` (`id`)" +
+            " ON DELETE CASCADE" +
+            " ON UPDATE CASCADE," +
             "CONSTRAINT `category_id`" +
-            "FOREIGN KEY (`category_id`)" +
-            "REFERENCES `coupon_project`.`categories` (`id`)" +
-            "ON DELETE NO ACTION" +
-            "ON UPDATE NO ACTION);";
+            " FOREIGN KEY (`category_id`)" +
+            " REFERENCES `coupons_project`.`categories` (`id`)" +
+            " ON DELETE CASCADE" +
+            " ON UPDATE CASCADE;";
 
     public static final String CREATE_CUSTOMER_VS_COUPONS_TABLE =
-            "CREATE TABLE `coupon_project`.`customers_vs_coupons` (" +
-            "`customer_id` INT NOT NULL," +
-            "`coupon_id` INT NOT NULL," +
-            "PRIMARY KEY (`customer_id`, `coupon_id`)," +
-            "INDEX `coupon_id_idx` (`coupon_id` ASC) VISIBLE," +
-            "CONSTRAINT `customer_id`" +
-            "FOREIGN KEY (`customer_id`)" +
-            "REFERENCES `coupon_project`.`customers` (`id`)" +
-            "ON DELETE NO ACTION" +
-            "ON UPDATE NO ACTION," +
-            "CONSTRAINT `coupon_id`" +
-            "FOREIGN KEY (`coupon_id`)" +
-            "REFERENCES `coupon_project`.`coupons` (`id`)" +
-            "ON DELETE NO ACTION" +
-            "ON UPDATE NO ACTION);";
+            "CREATE TABLE IF NOT EXISTS `coupons_project`.`customers_vs_coupons` (" +
+                    "`customer_id` INT NOT NULL," +
+                    "`coupon_id` INT NOT NULL," +
+                    "PRIMARY KEY (`customer_id`, `coupon_id`)," +
+                    "INDEX `coupon_id_idx` (`coupon_id` ASC) VISIBLE," +
+                    "CONSTRAINT `customer_id`" +
+                    "FOREIGN KEY (`customer_id`)" +
+                    " REFERENCES `coupons_project`.`customers` (`id`)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE," +
+                    "CONSTRAINT `coupon_id`" +
+                    " FOREIGN KEY (`coupon_id`)" +
+                    " REFERENCES `coupons_project`.`coupons` (`id`)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE);";
 
 
     public static final String CREATE_NEW_COUPON = "INSERT INTO `coupon_project`.`coupons` " +

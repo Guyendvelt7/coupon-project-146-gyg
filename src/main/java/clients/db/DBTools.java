@@ -7,6 +7,22 @@ import java.sql.*;
 import java.util.Map;
 
 public class DBTools {
+
+    public static boolean runQuery(String sql){
+        Connection connection = null;
+        connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.execute();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
     public static boolean runQuery(String sql, Map<Integer, Object> params) {
         Connection connection = null;
         try {
@@ -38,10 +54,10 @@ public class DBTools {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } finally {
             ConnectionPool.getInstance().restoreConnection(connection);
         }
-        return false;
     }
 
     public static ResultSet runQueryForResult(String sql, Map<Integer, Object> params) {

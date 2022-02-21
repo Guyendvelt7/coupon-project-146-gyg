@@ -14,7 +14,7 @@ public class Company {
     private List<Coupon> coupons;
     CouponsDBDAO couponsDBDAO;
 
-    public Company(int id, String name, String email, String password, ArrayList<Coupon> coupons) {
+    public Company(int id, String name, String email, String password, List<Coupon> coupons) {
         this.id = id;
         this.name = name;
         this.email = email;

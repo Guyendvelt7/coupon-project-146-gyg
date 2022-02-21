@@ -1,5 +1,7 @@
 package clients.dbDao;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomersDAO;
@@ -29,7 +31,7 @@ public class CustomersDBDAO implements CustomersDAO {
             resultSet.next();
             return resultSet.getInt("1") == 1;
         } catch (SQLException e) {
-            System.out.println("SQL exception");
+            System.out.println(new CustomExceptions(EnumExceptions.EMPTY_RESULT_SET).getMessage());
             return false;
         }
 
@@ -71,7 +73,7 @@ public class CustomersDBDAO implements CustomersDAO {
                 assert customerResultSet != null;
                 if (!customerResultSet.next()) break;
             } catch (SQLException e) {
-                System.out.println("SQL exception...");
+                System.out.println(EnumExceptions.EMPTY_RESULT_SET);
             }
             try {
                 allCustomers.add(new Customer(
@@ -83,7 +85,7 @@ public class CustomersDBDAO implements CustomersDAO {
                         couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
             } catch (SQLException e) {
-                System.out.println("SQL exception");
+                System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
             }
         }
         return allCustomers;
@@ -106,7 +108,7 @@ public class CustomersDBDAO implements CustomersDAO {
                      couponsDBDAO.getCouponsByCustomerId(customerID)
             );
         } catch (SQLException e) {
-            System.out.println("SQL exception...");
+            System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
             return null;
         }
     }
