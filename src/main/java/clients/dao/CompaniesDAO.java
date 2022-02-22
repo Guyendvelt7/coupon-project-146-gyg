@@ -20,7 +20,7 @@ public interface CompaniesDAO {
 
     public void deleteCompany(int  companyId);
 
-    public List<Company> getAllCompanies();
+    public List<Company> getAllCompanies() throws CustomExceptions;
 
     public Company getOneCompany(int companyId);
 }

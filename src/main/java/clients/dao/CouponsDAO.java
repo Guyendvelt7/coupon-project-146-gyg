@@ -31,7 +31,6 @@ public interface CouponsDAO {
      */
     public void deleteCoupon(int couponID) throws CustomExceptions;
 
-
     /**
      * get specific sql query
      * @return list of coupons
