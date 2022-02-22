@@ -1,5 +1,7 @@
 package clients.dbDao;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.dao.CompaniesDAO;
@@ -37,12 +39,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public void addCompany(Company company) {
+    public void addCompany(Company company) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
+        if(this.isCompanyExists(company.getEmail(),company.getPassword())){
+            throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
+        }
         DBTools.runQuery(DBManager.ADD_COMPANY, values);
+
     }
 
     @Override

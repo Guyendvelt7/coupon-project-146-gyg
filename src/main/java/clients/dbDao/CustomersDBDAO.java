@@ -21,9 +21,9 @@ public class CustomersDBDAO implements CustomersDAO {
     private CouponsDBDAO couponsDBDAO;
 
     @Override
-    public boolean isCustomerExist(String name, String password) {
+    public boolean isCustomerExist(String email, String password) {
         Map<Integer,Object> values = new HashMap<>();
-        values.put(1,name);
+        values.put(1,email);
         values.put(2,password);
        ResultSet resultSet =  DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS,values);
         assert resultSet != null;
@@ -31,21 +31,28 @@ public class CustomersDBDAO implements CustomersDAO {
             resultSet.next();
             return resultSet.getInt("1") == 1;
         } catch (SQLException e) {
-            System.out.println(new CustomExceptions(EnumExceptions.EMPTY_RESULT_SET).getMessage());
+            System.out.println(e.getMessage());
             return false;
         }
 
     }
 
     @Override
-    public void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) throws CustomExceptions {
     Map<Integer,Object> values = new HashMap<>();
     values.put(1,customer.getFirstName());
     values.put(2,customer.getLastName());
     values.put(3,customer.getEmail());
     values.put(4,customer.getPassword());
-    DBTools.runQuery(DBManager.ADD_CUSTOMER,values);
-    }
+        if(this.isCustomerExist(customer.getEmail(), customer.getPassword())){
+            throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
+
+        } else {
+            DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
+        }
+
+
+        }
 
     @Override
     public void updateCustomer(Customer customer){
@@ -73,8 +80,7 @@ public class CustomersDBDAO implements CustomersDAO {
                 assert customerResultSet != null;
                 if (!customerResultSet.next()) break;
             } catch (SQLException e) {
-                System.out.println(EnumExceptions.EMPTY_RESULT_SET);
-            }
+                System.out.println(e.getMessage());            }
             try {
                 allCustomers.add(new Customer(
                         customerResultSet.getInt("id"),
@@ -85,7 +91,7 @@ public class CustomersDBDAO implements CustomersDAO {
                         couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
             } catch (SQLException e) {
-                System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
+                System.out.println(e.getMessage());
             }
         }
         return allCustomers;

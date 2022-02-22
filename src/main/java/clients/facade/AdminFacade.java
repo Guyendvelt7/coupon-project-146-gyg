@@ -27,7 +27,11 @@ public class AdminFacade extends ClientFacade {
     }
 
     public void addCompany(Company company) throws SQLException {
-        this.companiesDBDAO.addCompany(company);
+        try {
+            this.companiesDBDAO.addCompany(company);
+        } catch (CustomExceptions customException) {
+            System.out.println(customException.getMessage());
+        }
     }
 
     public void updateCompany (Company company) throws SQLException {
@@ -39,7 +43,10 @@ public class AdminFacade extends ClientFacade {
         //delete coupons - cascade sql
     }
 
-    public List<Company> getAllCompanies(){
+    public List<Company> getAllCompanies() throws CustomExceptions {
+        if(this.companiesDBDAO.getAllCompanies().isEmpty()){
+            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
+        }
         return this.companiesDBDAO.getAllCompanies();
     }
 
