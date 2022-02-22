@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
-
     /**
      * insert new coupon info to database
+     *
      * @param coupon coupon object
      */
     @Override
@@ -38,6 +38,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
     /**
      * update coupons info in database
+     *
      * @param coupon coupon object
      */
     @Override
@@ -59,30 +60,31 @@ public class CouponsDBDAO implements CouponsDAO {
 
     /**
      * removes coupon from database
+     *
      * @param couponID uses coupons ID for removal
      */
     @Override
-    public void deleteCoupon(int couponID) throws CustomExceptions{
+    public void deleteCoupon(int couponID) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
-       }
+    }
 
     /**
      * gets all coupons from database by open sql query
+     *
      * @param sql
      * @param values
      * @return arrayList of said coupons
      */
     @Override
-    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions{
+    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions {
         ArrayList<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = DBTools.runQueryForResult(sql, values);
-        while (true) {
-            try {
+        try {
+            while (true) {
                 assert resultSet != null;
                 if (!resultSet.next()) break;
-
                 Coupon coupon = new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
@@ -95,9 +97,9 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));
                 coupons.add(coupon);
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());;
+            } catch(SQLException e){
+                System.out.println(e.getMessage());
+                ;
             }
         }
         return coupons;
@@ -105,13 +107,14 @@ public class CouponsDBDAO implements CouponsDAO {
 
     /**
      * gets all coupons from database by specified sql query
+     *
      * @return arrayList of said coupons
      */
     @Override
     public List<Coupon> getAllCoupons() throws CustomExceptions {
         List<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
-        while(true){
+        while (true) {
             try {
                 assert resultSet != null;
                 if (!resultSet.next()) break;
@@ -127,18 +130,20 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image")));
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.out.println("SQL exception....");
             }
+
         }
         return coupons;
     }
 
     /**
      * gets on coupon from database by ID
+     *
      * @return coupon object
      */
     @Override
-    public Coupon getOneCoupon() throws CustomExceptions{
+    public Coupon getOneCoupon() throws CustomExceptions {
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON);
         try {
             assert resultSet != null;
@@ -156,15 +161,17 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getString("image"));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQL exception....");
+
         }
         return null;
     }
 
     /**
      * gets purchased coupon from customer and updates customer table and coupon amount in coupon table
+     *
      * @param customerID for adding coupon to customer table
-     * @param couponID for removing amount from coupon table
+     * @param couponID   for removing amount from coupon table
      */
     @Override
     public void addCouponPurchase(int customerID, int couponID) throws CustomExceptions {
@@ -176,11 +183,12 @@ public class CouponsDBDAO implements CouponsDAO {
 
     /**
      * removes expired or used coupon ,updates customer table and coupon amount in coupon table
+     *
      * @param customerID for removing coupon from customer table
-     * @param couponID for removing from coupon table
+     * @param couponID   for removing from coupon table
      */
     @Override
-    public void deleteCouponPurchase(int customerID, int couponID) throws CustomExceptions{
+    public void deleteCouponPurchase(int customerID, int couponID) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, customerID);
         values.put(2, couponID);
@@ -189,11 +197,12 @@ public class CouponsDBDAO implements CouponsDAO {
 
     /**
      * gets all existing coupons from one company
+     *
      * @param companyId to locate company and said coupons
      * @return arrayLis of companies coupons
      */
-    public static ArrayList<Coupon> getCouponsByCompanyId(int companyId)throws CustomExceptions {
-        ArrayList<Coupon> coupons = new ArrayList<>();
+    public List<Coupon> getCouponsByCompanyId(int companyId) throws CustomExceptions {
+        List<Coupon> coupons = new ArrayList<>();
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, value);
@@ -215,17 +224,18 @@ public class CouponsDBDAO implements CouponsDAO {
                 coupons.add(coupon);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQL exception...");
         }
         return coupons;
     }
 
     /**
      * gets al coupons purchased by one specific customer
+     *
      * @param customerID to locate said customer and it's coupons
      * @return arrayList of customer purchased coupons
      */
-    public static List<Coupon> getCouponsByCustomerId(int customerID) throws CustomExceptions {
+    public List<Coupon> getCouponsByCustomerId(int customerID) {
         ArrayList<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = null;
         while (true) {
