@@ -66,7 +66,6 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
     /**
@@ -79,12 +78,10 @@ public class CouponsDBDAO implements CouponsDAO {
     public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions{
         ArrayList<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = DBTools.runQueryForResult(sql, values);
-
-        while (true) {
-            try {
+        try {
+            while (true) {
                 assert resultSet != null;
                 if (!resultSet.next()) break;
-
                 Coupon coupon = new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
@@ -97,7 +94,6 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));
                 coupons.add(coupon);
-
             } catch (SQLException e) {
                 System.out.println(e.getMessage());;
             }
@@ -172,8 +168,8 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public void addCouponPurchase(int customerID, int couponID) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customerID);
-        values.put(2, couponID);
+        values.put(1,customerID);
+        values.put(2,couponID);
         DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
     }
 
@@ -185,10 +181,9 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public void deleteCouponPurchase(int customerID, int couponID) throws CustomExceptions{
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customerID);
-        values.put(2, couponID);
+        values.put(1,customerID);
+        values.put(2,couponID);
         DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
     /**
@@ -219,11 +214,11 @@ public class CouponsDBDAO implements CouponsDAO {
                 coupons.add(coupon);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQL exception...");
         }
         return coupons;
     }
-
+   
     /**
      * gets al coupons purchased by one specific customer
      * @param customerID to locate said customer and it's coupons
@@ -252,9 +247,7 @@ public class CouponsDBDAO implements CouponsDAO {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-        }
         return coupons;
     }
-
 
 }

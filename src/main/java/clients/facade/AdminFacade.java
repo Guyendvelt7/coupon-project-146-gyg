@@ -27,23 +27,29 @@ public class AdminFacade extends ClientFacade {
 
     }
 
-    public void addCompany(Company company) throws SQLException, CustomExceptions {
-        this.companiesDBDAO.addCompany(company);
+    public void addCompany(Company company) throws SQLException {
+        try {
+            this.companiesDBDAO.addCompany(company);
+        } catch (CustomExceptions customException) {
+            System.out.println(customException.getMessage());
+        }
     }
 
-    public void updateCompany (Company company) throws SQLException, CustomExceptions {
+    public void updateCompany (Company company) throws SQLException {
         this.companiesDBDAO.updateCompany(company);
+      //try/catch
     }
 
-    public void deleteCompany (int companyID) throws SQLException, CustomExceptions {
+    public void deleteCompany (int companyID) throws SQLException {
         this.companiesDBDAO.deleteCompany(companyID);
-        //delete coupons - cascade sql
+        //try/catch
     }
 
-    public ArrayList<Company> getAllCompanies()throws CustomExceptions{
-        ArrayList<Company> companiesList = new ArrayList<>();
-        companiesList = this.companiesDBDAO.getAllCompanies();
-        return companiesList;
+    public List<Company> getAllCompanies() throws CustomExceptions {
+        if(this.companiesDBDAO.getAllCompanies().isEmpty()){
+            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
+        }
+        return this.companiesDBDAO.getAllCompanies();
     }
 
     public Company getOneCompany (int companyID) throws SQLException, CustomExceptions {

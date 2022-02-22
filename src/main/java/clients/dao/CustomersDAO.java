@@ -1,5 +1,6 @@
 package clients.dao;
 
+import clients.CustomExceptions;
 import clients.beans.Customer;
 
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ public interface CustomersDAO {
 
     public boolean isCustomerExist(String name, String password);
 
-    public void addCustomer(Customer customer);
+    public void addCustomer(Customer customer) throws CustomExceptions;
 
     public void updateCustomer(Customer customer);
 

@@ -55,10 +55,10 @@ public class DBTools {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } finally {
             ConnectionPool.getInstance().restoreConnection(connection);
         }
-        return false;
     }
 
     public static ResultSet runQueryForResult(String sql, Map<Integer, Object> params) {

@@ -39,12 +39,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public void addCompany(Company company) {
+    public void addCompany(Company company) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
+        if(this.isCompanyExists(company.getEmail(),company.getPassword())){
+            throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
+        }
         DBTools.runQuery(DBManager.ADD_COMPANY, values);
+
     }
 
     @Override
@@ -66,8 +70,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
   
     @Override
-    public ArrayList<Company> getAllCompanies() {
-        ArrayList<Company> allCompanies = new ArrayList<>();
+    public List<Company> getAllCompanies() {
+        List<Company> allCompanies = new ArrayList<>();
         ResultSet resultSet = null;
         try {
             resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
@@ -82,8 +86,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
                 );
                 allCompanies.add(company);
             }
-        } catch (SQLException | CustomExceptions err) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
         }
         return allCompanies;
     }
