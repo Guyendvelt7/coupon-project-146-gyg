@@ -77,33 +77,6 @@ public class CouponsDBDAO implements CouponsDAO {
      * @param values
      * @return arrayList of said coupons
      */
-    @Override
-    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions {
-        ArrayList<Coupon> coupons = new ArrayList<>();
-        ResultSet resultSet = DBTools.runQueryForResult(sql, values);
-        try {
-            while (true) {
-                assert resultSet != null;
-                if (!resultSet.next()) break;
-                Coupon coupon = new Coupon(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("company_id"),
-                        Category.valueOf(resultSet.getString("category_id")),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
-                        resultSet.getInt("amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image"));
-                coupons.add(coupon);
-            } catch(SQLException e){
-                System.out.println(e.getMessage());
-                ;
-            }
-        }
-        return coupons;
-    }
 
     /**
      * gets all coupons from database by specified sql query
