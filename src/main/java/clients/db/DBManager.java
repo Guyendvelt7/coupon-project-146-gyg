@@ -69,7 +69,7 @@ public class DBManager {
             " FOREIGN KEY (`coupon_id`)" +
             " REFERENCES `coupons_project`.`coupons` (`id`)" +
             " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE);";
+            " ON UPDATE CASCADE;";
 
 
     public static final String CREATE_NEW_COUPON = "INSERT INTO `coupons_project`.`coupons` " +

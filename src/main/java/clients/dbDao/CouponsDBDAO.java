@@ -66,8 +66,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
-    }
+       }
 
     /**
      * gets all coupons from database by open sql query
@@ -79,7 +78,6 @@ public class CouponsDBDAO implements CouponsDAO {
     public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions{
         ArrayList<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = DBTools.runQueryForResult(sql, values);
-
         while (true) {
             try {
                 assert resultSet != null;
@@ -129,9 +127,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image")));
             } catch (SQLException e) {
-                System.out.println("SQL exception....");
+                System.out.println(e.getMessage());
             }
-
         }
         return coupons;
     }
@@ -157,9 +154,9 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getInt("amount"),
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));
-            }} catch (SQLException e) {
-            System.out.println("SQL exception....");
-
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
         return null;
     }
@@ -188,7 +185,6 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(1, customerID);
         values.put(2, couponID);
         DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON, values);
-        // throw new Exceptions(EnumExceptions.ID_NOT_EXIST);
     }
 
     /**
@@ -255,6 +251,4 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return coupons;
     }
-
-
 }
