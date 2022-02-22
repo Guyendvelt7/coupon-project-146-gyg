@@ -35,38 +35,46 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public void purchaseCoupon(Coupon coupon){
-        if(canPurchaseCoupon(coupon)){
-            coupon.setAmount(coupon.getAmount()-1);
-            customersDBDAO.addCouponToCustomer(coupon.getId(),customerID);
-        } else{
-            System.out.println("you cant purchase this coupon");
-        }
-
-     }
-
-    @Override
-    public List<Coupon> getCustomerCoupons(){
-      //if{}
         try {
-            return CouponsDBDAO.getCouponsByCustomerId(customerID);
-        } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
-            return null;
+            if(canPurchaseCoupon(coupon)){
+                coupon.setAmount(coupon.getAmount()-1);
+                customersDBDAO.addCouponToCustomer(coupon.getId(),customerID);
+            }
+        } catch (CustomExceptions customException) {
+            System.out.println(customException.getMessage());
         }
+
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(Category category){
-        return getCustomerCoupons().stream()
+    public List<Coupon> getCustomerCoupons() throws CustomExceptions {
+       if (couponsDBDAO.getCouponsByCustomerId(this.customerID).isEmpty()){
+           throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+       } else{
+           return couponsDBDAO.getCouponsByCustomerId(this.customerID);
+       }
+        }
+
+    @Override
+    public List<Coupon> getCustomerCoupons(Category category) throws CustomExceptions {
+        List<Coupon> categoryList =  getCustomerCoupons().stream()
                 .filter(item->item.getCategory().equals(category))
                 .collect(Collectors.toList());
+        if(categoryList.isEmpty()){
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS_BY_CATEGORY);
+        }
+        return categoryList;
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(double maxPrice) {
-        return getCustomerCoupons().stream()
+    public List<Coupon> getCustomerCoupons(double maxPrice) throws CustomExceptions {
+        List<Coupon> priceList =  getCustomerCoupons().stream()
                 .filter(item->item.getPrice()<=maxPrice)
                 .collect(Collectors.toList());
+        if(priceList.isEmpty()){
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS_BY_PRICE);
+        }
+        return priceList;
     }
 
     @Override
@@ -74,12 +82,11 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
       return customersDBDAO.getOneCustomer(customerID);
     }
 
-    private boolean canPurchaseCoupon(Coupon coupon){
-        for (Coupon item:getCustomerCoupons()){
-            if(item.getId()==coupon.getId()){
-                return false;
-            }
-        }
+    private boolean canPurchaseCoupon(Coupon coupon) throws CustomExceptions {
+             if(getCustomerCoupons().stream()
+                    .filter(one->one.getId()==coupon.getId()).count()>0){
+                 return false;
+             }
         return !coupon.getEndDate().toLocalDate().isBefore(LocalDate.now()) && coupon.getAmount() != 0;
     }
 

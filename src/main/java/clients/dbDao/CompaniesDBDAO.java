@@ -82,7 +82,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         resultSet.getString("name"),
                         resultSet.getString("email"),
                         resultSet.getString("password"),
-                        CouponsDBDAO.getCouponsByCompanyId(resultSet.getInt("id"))
+                        couponsDBDAO.getCouponsByCompanyId(resultSet.getInt("id"))
                 );
                 allCompanies.add(company);
             }
@@ -97,11 +97,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
     @Override
     public Company getOneCompany(int companyId) {
         Company company = null;
-        ArrayList<Coupon> coupons = null;
+        List<Coupon> coupons = null;
         Map<Integer,Object> map= new HashMap<>();
         map.put(1,companyId);
         try {
-            coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
+            coupons = couponsDBDAO.getCouponsByCompanyId(companyId);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY,map);
             assert resultSet != null;
             if (resultSet.next()) {
@@ -112,7 +112,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
                         resultSet.getString("password"),
                         coupons
                 );
-                coupons = CouponsDBDAO.getCouponsByCompanyId(companyId);
+                coupons = couponsDBDAO.getCouponsByCompanyId(companyId);
             }
         } catch (SQLException e) {
             e.printStackTrace();

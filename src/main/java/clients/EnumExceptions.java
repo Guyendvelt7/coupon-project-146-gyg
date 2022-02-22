@@ -12,9 +12,13 @@ public enum EnumExceptions {
     INVALID_PASSWORD("Invalid password."),
     COUPON_TITLE_EXIST("Cannot add coupon, title already exist."),
     COUPON_PURCHASED("Cannot purchase this item, already in your list."),
-    EMPTY_RESULT_SET("no data in result set, the result set doesnt have next"),
+    EMPTY_RESULT_SET("no data in result set, the result set does not! have next"),
     RESULT_SET_DATA_PROBLEM("problem in the result set data, sql context"),
-    NO_COMPANIES("there are no companies in the system")
+    NO_COMPANIES("there are no companies in the system"),
+    CUSTOMER_ALREADY_EXIST("the customer already exist in the system"),
+    NO_COUPONS("you don't have coupons purchased"),
+    NO_COUPONS_BY_CATEGORY("you don't have coupons at this category"),
+    NO_COUPONS_BY_PRICE("you don't have coupons under this price")
     ;
 
 
