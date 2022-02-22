@@ -32,6 +32,14 @@ public interface CouponsDAO {
     public void deleteCoupon(int couponID) throws CustomExceptions;
 
     /**
+     * get sql query (by any param) for all coupons
+     * @param sql
+     * @param values
+     * @return list of all coupons
+     */
+    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions;
+
+    /**
      * get specific sql query
      * @return list of coupons
      */
