@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
+
+    CompaniesDBDAO companiesDBDAO;
     /**
      * insert new coupon info to database
      *
@@ -68,41 +70,6 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
-    }
-
-    /**
-     * gets all coupons from database by open sql query
-     *
-     * @param sql
-     * @param values
-     * @return arrayList of said coupons
-     */
-    @Override
-    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions {
-        ArrayList<Coupon> coupons = new ArrayList<>();
-        ResultSet resultSet = DBTools.runQueryForResult(sql, values);
-        try {
-            while (true) {
-                assert resultSet != null;
-                if (!resultSet.next()) break;
-                Coupon coupon = new Coupon(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("company_id"),
-                        Category.valueOf(resultSet.getString("category_id")),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
-                        resultSet.getInt("amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image"));
-                coupons.add(coupon);
-            } catch(SQLException e){
-                System.out.println(e.getMessage());
-                ;
-            }
-        }
-        return coupons;
     }
 
     /**
@@ -202,6 +169,9 @@ public class CouponsDBDAO implements CouponsDAO {
      * @return arrayLis of companies coupons
      */
     public List<Coupon> getCouponsByCompanyId(int companyId) throws CustomExceptions {
+        if(companiesDBDAO.getOneCompany(companyId)==null){
+            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
+        }
         List<Coupon> coupons = new ArrayList<>();
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);

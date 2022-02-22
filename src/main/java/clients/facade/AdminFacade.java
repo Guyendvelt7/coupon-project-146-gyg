@@ -20,6 +20,7 @@ public class AdminFacade extends ClientFacade {
         this.email = "admin@admin.com";
         this.password = "admin";
     }
+
     @Override
 
     public boolean login(String email, String password) {
@@ -28,51 +29,58 @@ public class AdminFacade extends ClientFacade {
     }
 
     public void addCompany(Company company) {
-        this.companiesDBDAO.addCompany(company);
+        try {
+            this.companiesDBDAO.addCompany(company);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
-    public void updateCompany (Company company) {
+    public void updateCompany(Company company) {
         this.companiesDBDAO.updateCompany(company);
     }
 
-    public void deleteCompany (int companyID) {
+    public void deleteCompany(int companyID) {
         this.companiesDBDAO.deleteCompany(companyID);
     }
 
-    public ArrayList<Company> getAllCompanies(){
-        ArrayList<Company> companiesList = new ArrayList<>();
-        companiesList = this.companiesDBDAO.getAllCompanies();
-        return companiesList;
-    }
+    public List<Company> getAllCompanies() {
+        return this.companiesDBDAO.getAllCompanies();
 
-    public Company getOneCompany (int companyID) {
-        Company comp = null;
-        comp = this.companiesDBDAO.getOneCompany(companyID);
-        comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
-        return comp;
-    }
+        }
 
-    public void addCustomer (Customer customer){
-        this.customersDBDAO.addCustomer(customer);
-    }
+        public Company getOneCompany ( int companyID){
+            Company comp = null;
+            comp = this.companiesDBDAO.getOneCompany(companyID);
+            comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
+            return comp;
+        }
 
-    public void updateCustomer(Customer customer){
-        this.customersDBDAO.updateCustomer(customer);
-    }
+        public void addCustomer (Customer customer){
+            try {
+                this.customersDBDAO.addCustomer(customer);
+            } catch (CustomExceptions customExceptions) {
+                System.out.println(customExceptions.getMessage());
+            }
+        }
 
-    public void deleteCustomer(int customerID) {
-        this.customersDBDAO.deleteCustomer(customerID);
-    }
+        public void updateCustomer (Customer customer){
+            this.customersDBDAO.updateCustomer(customer);
+        }
 
-    public List<Customer> getAllCustomers() {
-        List<Customer> customerList = new ArrayList<>();
-        customerList = this.customersDBDAO.getAllCustomers();
-        return customerList;
-    }
+        public void deleteCustomer ( int customerID){
+            this.customersDBDAO.deleteCustomer(customerID);
+        }
 
-    public Customer getOneCustomer(int customerID) {
-        Customer customer = null;
-        customer = this.customersDBDAO.getOneCustomer(customerID);
-        return customer;
+        public List<Customer> getAllCustomers () {
+            List<Customer> customerList = new ArrayList<>();
+            customerList = this.customersDBDAO.getAllCustomers();
+            return customerList;
+        }
+
+        public Customer getOneCustomer ( int customerID){
+            Customer customer = null;
+            customer = this.customersDBDAO.getOneCustomer(customerID);
+            return customer;
+        }
     }
-}

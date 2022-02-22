@@ -17,7 +17,7 @@ public interface CustomersDAO {
 
     public void deleteCustomer(int customerID);
 
-    public List<Customer> getAllCustomers();
+    public List<Customer> getAllCustomers() throws CustomExceptions;
 
     public Customer getOneCustomer(int customerID);
 }
