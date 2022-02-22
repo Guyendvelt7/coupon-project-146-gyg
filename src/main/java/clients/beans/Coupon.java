@@ -1,7 +1,14 @@
 package clients.beans;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
 
+/**
+ * Coupon class
+ * @author Yoav, Guy and Geri
+ */
 public class Coupon {
     private int id;
     private int companyId;
@@ -13,6 +20,22 @@ public class Coupon {
     private int amount;
     private double price;
     private String image;
+    private Scanner sc = new Scanner(System.in);
+
+    /**
+     *Coupon constructor
+     * @param id coupon ID
+     * @param companyId refers to coupons company ownership
+     * @param category refers to coupons category type
+     * @param title coupons name
+     * @param description message about coupon discount
+     * @param startDate coupon start date
+     * @param endDate coupon end date
+     * @param amount defines number of coupons available for purchase
+     * @param price coupons purchase value
+     * @param image visual of coupon description
+     */
+
 
     public Coupon(int id, int companyId, Category category, String title, String description, Date startDate, Date endDate, int amount, double price, String image) {
         this.id = id;
@@ -72,6 +95,14 @@ public class Coupon {
     }
 
     public void setStartDate(Date startDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
+        System.out.println("set start date of coupon by format dd/MM/yyyy");
+        String startDateString = sc.next();
+        try {
+            startDate = (Date) sdf.parse(startDateString);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
         this.startDate = startDate;
     }
 
@@ -80,6 +111,14 @@ public class Coupon {
     }
 
     public void setEndDate(Date endDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
+        System.out.println("set end date of coupon by format dd/MM/yyyy");
+        String endDateString = sc.next();
+        try {
+            endDate = (Date) sdf.parse(endDateString);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
         this.endDate = endDate;
     }
 

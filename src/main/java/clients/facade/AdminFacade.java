@@ -3,6 +3,7 @@ package clients.facade;
 import clients.EnumExceptions;
 import clients.CustomExceptions;
 import clients.beans.Company;
+import clients.beans.Customer;
 import clients.dao.CompaniesDAO;
 import clients.dbDao.CompaniesDBDAO;
 
@@ -21,7 +22,7 @@ public class AdminFacade extends ClientFacade {
     }
     @Override
 
-    public boolean login(String email, String password) throws CustomExceptions {
+    public boolean login(String email, String password) {
         return this.email.equals(email) && this.password.equals(password);
 
     }
@@ -36,11 +37,12 @@ public class AdminFacade extends ClientFacade {
 
     public void updateCompany (Company company) throws SQLException {
         this.companiesDBDAO.updateCompany(company);
+      //try/catch
     }
 
     public void deleteCompany (int companyID) throws SQLException {
         this.companiesDBDAO.deleteCompany(companyID);
-        //delete coupons - cascade sql
+        //try/catch
     }
 
     public List<Company> getAllCompanies() throws CustomExceptions {
@@ -50,14 +52,34 @@ public class AdminFacade extends ClientFacade {
         return this.companiesDBDAO.getAllCompanies();
     }
 
-    public Company getOneCompany (int companyID) throws SQLException {
+    public Company getOneCompany (int companyID) throws SQLException, CustomExceptions {
         Company comp = null;
         comp = this.companiesDBDAO.getOneCompany(companyID);
         comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
         return comp;
-
     }
 
-//    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
-//    throw new CustomExceptions(EnumExceptions.INVALID_PASSWORD);
+    public void addCustomer (Customer customer){
+        this.customersDBDAO.addCustomer(customer);
+    }
+
+    public void updateCustomer(Customer customer){
+        this.customersDBDAO.updateCustomer(customer);
+    }
+
+    public void deleteCustomer(int customerID) {
+        this.customersDBDAO.deleteCustomer(customerID);
+    }
+
+    public List<Customer> getAllCustomers() {
+        List<Customer> customerList = new ArrayList<>();
+        customerList = this.customersDBDAO.getAllCustomers();
+        return customerList;
+    }
+
+    public Customer getOneCustomer(int customerID) {
+        Customer customer = null;
+        customer = this.customersDBDAO.getOneCustomer(customerID);
+        return customer;
+    }
 }

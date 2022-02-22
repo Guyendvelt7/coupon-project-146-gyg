@@ -1,5 +1,8 @@
 package clients;
 
+/**
+ * keys to exceptions
+ */
 public enum EnumExceptions {
 
     NAME_EXIST("Cannot add existing name."),

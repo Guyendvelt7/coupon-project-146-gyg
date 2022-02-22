@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.Stack;
 
 public class ConnectionPool {
-    //todo: look for changes between projects
 
     private static final int NUMBER_OF_CONNECTIONS = 10;
     private static ConnectionPool instance=null;

@@ -91,7 +91,7 @@ public class CustomersDBDAO implements CustomersDAO {
                         couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage());                
             }
         }
         return allCustomers;
@@ -115,6 +115,9 @@ public class CustomersDBDAO implements CustomersDAO {
             );
         } catch (SQLException e) {
             System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
+            return null;
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
             return null;
         }
     }

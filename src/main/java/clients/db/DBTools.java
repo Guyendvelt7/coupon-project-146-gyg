@@ -8,20 +8,21 @@ import java.util.Map;
 
 public class DBTools {
 
-    public static boolean runQuery(String sql){
+    public static boolean runQuery(String sql) {
         Connection connection = null;
-        connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.execute();
+            connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement(sql);
+            statement.execute();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return false;
+        } finally {
+            ConnectionPool.getInstance().restoreConnection(connection);
         }
     }
-
 
     public static boolean runQuery(String sql, Map<Integer, Object> params) {
         Connection connection = null;

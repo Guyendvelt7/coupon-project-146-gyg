@@ -8,22 +8,65 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * interface implemented by CouponsDBDAO
+ */
 public interface CouponsDAO {
 
-    public void addCoupon (Coupon coupon);
+    /**
+     * adds company coupon to database
+     * @param coupon coupon object
+     */
+    public void addCoupon (Coupon coupon) throws CustomExceptions;
 
-    public void updateCoupon(Coupon coupon);
+    /**
+     * update information on database w/o altering coupons ID
+     * @param coupon coupon object
+     */
+    public void updateCoupon(Coupon coupon) throws CustomExceptions;
 
-    public void deleteCoupon(int couponID);
+    /**
+     * removes coupon from all linked tables in database
+     * @param couponID uses coupons ID for removal
+     */
+    public void deleteCoupon(int couponID) throws CustomExceptions;
 
-    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values);
+    /**
+     * get sql query (by any param) for all coupons
+     * @param sql
+     * @param values
+     * @return list of all coupons
+     */
+    public List<Coupon> getCoupons(String sql, Map<Integer, Object> values) throws CustomExceptions;
 
-    public List<Coupon> getAllCoupons();
+    /**
+     * get specific sql query
+     * @return list of coupons
+     */
+    public List<Coupon> getAllCoupons() throws CustomExceptions;
 
-    public Coupon getOneCoupon(int couponId);
+    /**
+     * get one coupon info by SQL query by ID
+     * @return one coupon object
+     */
+    public Coupon getOneCoupon() throws CustomExceptions;
 
+    /**
+     * insert a purchased coupon to customer table and decrements amount of available coupons in coupon table
+     * @param customerID for adding coupon to customer table
+     * @param couponID for removing amount from coupon table
+     * @throws SQLException
+     * @throws CustomExceptions
+     */
     public void addCouponPurchase(int customerID, int couponID) throws SQLException, CustomExceptions;
 
+    /**
+     * deletes coupon from customer when coupon is used or coupon expiry.
+     * @param customerID for removing coupon from customer table
+     * @param couponID for removing from coupon table
+     * @throws SQLException
+     * @throws CustomExceptions
+     */
     public void deleteCouponPurchase(int customerID, int couponID) throws SQLException, CustomExceptions;
 
 }

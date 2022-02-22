@@ -1,6 +1,7 @@
 package clients.facade;
 
 import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.beans.Customer;
@@ -40,12 +41,18 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         } else{
             System.out.println("you cant purchase this coupon");
         }
-        }
 
+     }
 
     @Override
     public List<Coupon> getCustomerCoupons(){
-        return couponsDBDAO.getCouponsByCustomerId(customerID);
+      //if{}
+        try {
+            return CouponsDBDAO.getCouponsByCustomerId(customerID);
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
+            return null;
+        }
     }
 
     @Override
