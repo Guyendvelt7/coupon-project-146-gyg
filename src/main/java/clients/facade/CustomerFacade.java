@@ -28,26 +28,25 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public boolean login(String email, String password) {
-       String pas = customersDBDAO.getOneCustomer(customerID).getPassword();
-       String mail = customersDBDAO.getOneCustomer(customerID).getEmail();
-        return email.equals(mail) && password.equals(pas);
+
+        return email.equals(customersDBDAO.getOneCustomer(customerID).getEmail()) &&
+        password.equals(customersDBDAO.getOneCustomer(customerID).getPassword());
     }
 
     @Override
     public void purchaseCoupon(Coupon coupon){
-        //amount>0, true->amount-1
-        if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
-            try {
-                couponsDBDAO.deleteCoupon(coupon.getId());
-            }catch (CustomExceptions e){
-                System.out.println(EnumExceptions.COUPON_PURCHASED);
-            }
+        if(canPurchaseCoupon(coupon)){
+            coupon.setAmount(coupon.getAmount()-1);
+            customersDBDAO.addCouponToCustomer(coupon.getId(),customerID);
+        } else{
+            System.out.println("you cant purchase this coupon");
         }
 
-    }
+     }
 
     @Override
     public List<Coupon> getCustomerCoupons(){
+      //if{}
         try {
             return CouponsDBDAO.getCouponsByCustomerId(customerID);
         } catch (CustomExceptions e) {
@@ -75,6 +74,13 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
       return customersDBDAO.getOneCustomer(customerID);
     }
 
-
+    private boolean canPurchaseCoupon(Coupon coupon){
+        for (Coupon item:getCustomerCoupons()){
+            if(item.getId()==coupon.getId()){
+                return false;
+            }
+        }
+        return !coupon.getEndDate().toLocalDate().isBefore(LocalDate.now()) && coupon.getAmount() != 0;
+    }
 
 }
