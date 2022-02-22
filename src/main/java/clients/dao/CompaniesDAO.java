@@ -1,5 +1,6 @@
 package clients.dao;
 
+import clients.CustomExceptions;
 import clients.beans.Company;
 import clients.beans.Coupon;
 
@@ -13,13 +14,13 @@ public interface CompaniesDAO {
     public boolean isCompanyExists(String email, String password);
 
     //CRUD
-    public void addCompany(Company company);
+    public void addCompany(Company company) throws CustomExceptions;
 
     public void updateCompany(Company company);
 
     public void deleteCompany(int  companyId);
 
-    public List<Company> getAllCompanies();
+    public List<Company> getAllCompanies() throws CustomExceptions;
 
     public Company getOneCompany(int companyId);
 }

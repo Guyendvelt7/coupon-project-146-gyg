@@ -69,7 +69,7 @@ public class DBManager {
             " FOREIGN KEY (`coupon_id`)" +
             " REFERENCES `coupons_project`.`coupons` (`id`)" +
             " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE);";
+            " ON UPDATE CASCADE;";
 
 
     public static final String CREATE_NEW_COUPON = "INSERT INTO `coupons_project`.`coupons` " +
@@ -115,6 +115,11 @@ public class DBManager {
     public static final String DELETE_CUSTOMER = "DELETE FROM `coupons_project`.`customers` WHERE (`id` = ?);";
 
     public static final String GET_ONE_CUSTOMER = "SELECT * FROM `coupons_project`.`customers` WHERE (`id` = ?);";
+
+    public static final String ADD_COUPON_TO_CUSTOMER = "INSERT INTO `coupon_project`.`customers_vs_coupons` " +
+            "(`customer_id`, `coupon_id`) " +
+            "VALUES (?,?);";
+    public static final String GET_COUPONS_BY_CUSTOMER = "SELECT * FROM `coupon_project`.`customers_vs_coupons` WHERE customer_id=?;";
 
     public static final String GET_ALL_CUSTOMERS = "SELECT * FROM `coupons_project`.`customers`;";
 
