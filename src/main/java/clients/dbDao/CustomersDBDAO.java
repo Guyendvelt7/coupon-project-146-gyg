@@ -1,5 +1,7 @@
 package clients.dbDao;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomersDAO;
@@ -79,8 +81,10 @@ public class CustomersDBDAO implements CustomersDAO {
                         customerResultSet.getString("password"),
                         (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
-            } catch (SQLException | InterruptedException e) {
+            } catch (SQLException e) {
                 System.out.println("SQL exception");
+            } catch (CustomExceptions e) {
+                System.out.println(EnumExceptions.ID_NOT_EXIST);
             }
         }
         return allCustomers;
@@ -102,8 +106,11 @@ public class CustomersDBDAO implements CustomersDAO {
                     resultSet.getString("password"),
                     (ArrayList<Coupon>) CouponsDBDAO.getCouponsByCustomerId(customerID)
             );
-        } catch (SQLException | InterruptedException e) {
+        } catch (SQLException e) {
             System.out.println("SQL exception...");
+            return null;
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
             return null;
         }
     }

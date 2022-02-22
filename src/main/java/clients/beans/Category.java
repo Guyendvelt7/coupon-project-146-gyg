@@ -1,7 +1,9 @@
 package clients.beans;
 
 public enum Category {
-    //todo: add other categories
+    /**
+     * coupons categories
+     */
     FOOD,
     ELECTRICITY,
     RESTAURANT,

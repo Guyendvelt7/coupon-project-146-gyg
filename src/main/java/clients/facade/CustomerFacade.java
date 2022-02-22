@@ -1,6 +1,7 @@
 package clients.facade;
 
 import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.beans.Customer;
@@ -36,14 +37,23 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     public void purchaseCoupon(Coupon coupon){
         //amount>0, true->amount-1
         if(LocalDate.now().isBefore(coupon.getEndDate().toLocalDate())){
-            couponsDBDAO.deleteCoupon(coupon.getId());
+            try {
+                couponsDBDAO.deleteCoupon(coupon.getId());
+            }catch (CustomExceptions e){
+                System.out.println(EnumExceptions.COUPON_PURCHASED);
+            }
         }
 
     }
 
     @Override
     public List<Coupon> getCustomerCoupons(){
-        return CouponsDBDAO.getCouponsByCustomerId(customerID);
+        try {
+            return CouponsDBDAO.getCouponsByCustomerId(customerID);
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
+            return null;
+        }
     }
 
     @Override

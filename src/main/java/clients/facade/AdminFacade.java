@@ -27,26 +27,26 @@ public class AdminFacade extends ClientFacade {
     }
 
     public void addCompany(Company company) throws SQLException {
-        this.companiesDBDAO.addCompany(company);
+        this.companiesDAO.addCompany(company);
     }
 
     public void updateCompany (Company company) throws SQLException {
-        this.companiesDBDAO.updateCompany(company);
+        this.companiesDAO.updateCompany(company);
     }
 
     public void deleteCompany (int companyID) throws SQLException {
-        this.companiesDBDAO.deleteCompany(companyID);
+        this.companiesDAO.deleteCompany(companyID);
         //delete coupons - cascade sql
     }
 
-    public List<Company> getAllCompanies(){
-        return this.companiesDBDAO.getAllCompanies();
+    public ArrayList<Company> getAllCompanies(){
+        return this.companiesDAO.getAllCompanies();
     }
 
     public Company getOneCompany (int companyID) throws SQLException {
         Company comp = null;
-        comp = this.companiesDBDAO.getOneCompany(companyID);
-        comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
+        comp = this.companiesDAO.getOneCompany(companyID);
+        comp.setCoupons(this.companiesDAO.getCompanyCoupons(companyID));
         return comp;
 
     }

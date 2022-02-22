@@ -7,6 +7,23 @@ import java.sql.*;
 import java.util.Map;
 
 public class DBTools {
+
+    public static boolean runQuery(String sql) {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement(sql);
+            statement.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            ConnectionPool.getInstance().restoreConnection(connection);
+        }
+    }
+
     public static boolean runQuery(String sql, Map<Integer, Object> params) {
         Connection connection = null;
         try {

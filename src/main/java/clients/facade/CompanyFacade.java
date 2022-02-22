@@ -1,5 +1,7 @@
 package clients.facade;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.beans.Category;
 import clients.beans.Company;
 import clients.beans.Coupon;
@@ -29,21 +31,38 @@ public void addCoupon(Coupon coupon){
     List<Coupon>couponList = companiesDBDAO.getCompanyCoupons(companyId).stream()
             .filter(item->item.getTitle().equals(coupon.getTitle())).collect(Collectors.toList());
     if(couponList.size()==0) {
-        couponsDBDAO.addCoupon(coupon);
+        try {
+            couponsDBDAO.addCoupon(coupon);
+        } catch (CustomExceptions e) {
+            System.out.println(EnumExceptions.COUPON_TITLE_EXIST);
+        }
     }
 }
 
 public void updateCoupon(Coupon coupon){
+    try {
         couponsDBDAO.updateCoupon(coupon);
+    } catch (CustomExceptions e) {
+        System.out.println(EnumExceptions.ID_NOT_EXIST);
+    }
 }
 
 public void deleteCoupon(int couponId){
+    try {
         couponsDBDAO.deleteCoupon(couponId);
+    }catch (CustomExceptions e){
+        System.out.println(EnumExceptions.ID_NOT_EXIST);
+    }
 }
 
 public ArrayList<Coupon>getCompanyCoupons() {
-       return CouponsDBDAO.getCouponsByCompanyId(this.companyId);
+    try {
+        return CouponsDBDAO.getCouponsByCompanyId(this.companyId);
+    } catch (CustomExceptions e) {
+        System.out.println(EnumExceptions.ID_NOT_EXIST);
+        return null;
     }
+}
 
 public List<Coupon>getCompanyCoupons(Category category){
         return  getCompanyCoupons().stream()
