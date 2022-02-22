@@ -46,7 +46,6 @@ public class CustomersDBDAO implements CustomersDAO {
     values.put(4,customer.getPassword());
         if(this.isCustomerExist(customer.getEmail(), customer.getPassword())){
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
-
         } else {
             DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
         }
@@ -61,6 +60,7 @@ public class CustomersDBDAO implements CustomersDAO {
         values.put(2,customer.getLastName());
         values.put(3,customer.getEmail());
         values.put(4,customer.getPassword());
+        values.put(5,customer.getId());
         DBTools.runQuery(DBManager.UPDATE_CUSTOMER,values);
     }
 
@@ -103,7 +103,7 @@ public class CustomersDBDAO implements CustomersDAO {
         values.put(1,customerID);
        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER,values);
         assert resultSet != null;
-        try {
+        try{
             resultSet.next();
             return new Customer(
                     resultSet.getInt("id"),
@@ -115,9 +115,6 @@ public class CustomersDBDAO implements CustomersDAO {
             );
         } catch (SQLException e) {
             System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
-            return null;
-        } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
             return null;
         }
     }
