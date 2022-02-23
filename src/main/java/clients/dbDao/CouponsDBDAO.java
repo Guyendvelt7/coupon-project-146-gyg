@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
-
-    CompaniesDBDAO companiesDBDAO;
     /**
      * insert new coupon info to database
      *
@@ -71,6 +69,8 @@ public class CouponsDBDAO implements CouponsDAO {
         values.put(1, couponID);
         DBTools.runQuery(DBManager.DELETE_COUPON, values);
     }
+
+
 
     /**
      * gets all coupons from database by specified sql query
@@ -169,9 +169,6 @@ public class CouponsDBDAO implements CouponsDAO {
      * @return arrayLis of companies coupons
      */
     public List<Coupon> getCouponsByCompanyId(int companyId) throws CustomExceptions {
-        if(companiesDBDAO.getOneCompany(companyId)==null){
-            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
-        }
         List<Coupon> coupons = new ArrayList<>();
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);

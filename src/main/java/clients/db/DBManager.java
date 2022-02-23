@@ -14,7 +14,7 @@ public class DBManager {
             "`name` VARCHAR(45) NOT NULL," +
             "`email` VARCHAR(45) NOT NULL," +
             "`password` VARCHAR(45) NOT NULL," +
-            "PRIMARY KEY (`id`));";
+            "PRIMARY KEY (`id`);";
 
     public static final String CREATE_CUSTOMER_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`customers` (" +
             " `id` INT NOT NULL AUTO_INCREMENT," +
@@ -22,12 +22,12 @@ public class DBManager {
             "`last_name` VARCHAR(45) NOT NULL," +
             "`email` VARCHAR(45) NOT NULL," +
             "`password` VARCHAR(45) NOT NULL," +
-            "PRIMARY KEY (`id`));";
+            "PRIMARY KEY (`id`);";
 
     public static final String CREATE_CATEGORIES_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`categories` ( " +
             "`id` INT NOT NULL AUTO_INCREMENT," +
             "`name` VARCHAR(45) NOT NULL," +
-            "PRIMARY KEY (`id`));";
+            "PRIMARY KEY (`id`);";
 
     public static final String CREATE_COUPONS_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`coupons` (" +
             "`id` INT NOT NULL AUTO_INCREMENT," +

@@ -1,5 +1,6 @@
 package clients.facade;
 
+import clients.CustomExceptions;
 import clients.beans.Company;
 import clients.beans.Customer;
 
@@ -31,15 +32,19 @@ public class LoginManager {
         return instance;
     }
 
-    public static ClientFacade login(String email, String password, ClientType clientType) {
+    public static ClientFacade login(String email, String password, ClientType clientType){
         //Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));
         switch (clientType) {
             case ADMINISTRATOR:
-                if (adminFacade.login(email, password)) {
-                    System.out.println("admin connected");
-                    return new AdminFacade();
-                } else {
-                    return null;
+                try {
+                    if (adminFacade.login(email, password)) {
+                        System.out.println("admin connected");
+                        return new AdminFacade();
+                    } else {
+                        return null;
+                    }
+                } catch (CustomExceptions e) {
+                    e.printStackTrace();
                 }
             case COMPANY:
                 if (companyFacade.login(email, password)) {

@@ -8,6 +8,7 @@ import clients.dao.CompaniesDAO;
 import clients.db.ConnectionPool;
 import clients.db.DBManager;
 import clients.db.DBTools;
+import org.checkerframework.checker.units.qual.C;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,6 +31,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
             values.put(1, email);
             values.put(2, password);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_BY_PASS_AND_EMAIL, values);
+            assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
         } catch (SQLException e) {
@@ -38,44 +40,52 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return false;
     }
 
+
     @Override
     public void addCompany(Company company) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
-        if(this.isCompanyExists(company.getEmail(),company.getPassword())){
-            throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
+        if (isCompanyExists(company.getEmail(),company.getPassword())){
+            throw new CustomExceptions(EnumExceptions.COMPANY_ALREADY_EXIST);
+        }else {
+            DBTools.runQuery(DBManager.ADD_COMPANY, values);
         }
-        DBTools.runQuery(DBManager.ADD_COMPANY, values);
-
     }
 
     @Override
-    public void updateCompany(Company company) {
-        //cannot update company ID
+    public void updateCompany(Company company) throws CustomExceptions{
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
         values.put(4, company.getId());
+        if (getOneCompany(company.getId())!=null){
+            throw new CustomExceptions(EnumExceptions.ID_COMPANY_ALREADY_EXIST);
+        }
         DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
     }
 
     @Override
-    public void deleteCompany(int companyId) {
+    public void deleteCompany(int companyId) throws CustomExceptions{
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, companyId);
+        if (getOneCompany(companyId)==null){
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }
         DBTools.runQuery(DBManager.DELETE_COMPANY, values);
     }
   
     @Override
-    public List<Company> getAllCompanies() {
-        List<Company> allCompanies = new ArrayList<>();
+    public ArrayList<Company> getAllCompanies() throws CustomExceptions{
+        ArrayList<Company> allCompanies = new ArrayList<>();
         ResultSet resultSet = null;
         try {
             resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
-            while (resultSet.next()) {
+            while (true) {
+                assert resultSet != null;
+                if (!resultSet.next()) break;
                 ArrayList<Coupon> coupons = new ArrayList<>();
                 Company company = new Company(
                         resultSet.getInt("id"),
@@ -89,13 +99,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
         } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
+        if (allCompanies.size()==0){
+            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
+        }
         return allCompanies;
     }
 
 
 
     @Override
-    public Company getOneCompany(int companyId) {
+    public Company getOneCompany(int companyId) throws CustomExceptions {
         Company company = null;
         List<Coupon> coupons = null;
         Map<Integer,Object> map= new HashMap<>();
@@ -116,8 +129,9 @@ public class CompaniesDBDAO implements CompaniesDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
+        }
+        if (getOneCompany(companyId)==null){
+            throw new CustomExceptions(EnumExceptions.NO_COMPANY);
         }
         return company;
     }
@@ -126,9 +140,12 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         try {
-            return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
+            if (couponsDBDAO.getCouponsByCompanyId(companyId)==null){
+                throw new CustomExceptions(EnumExceptions.NO_COUPONS_COMPANY);
+            }
+            return couponsDBDAO.getCouponsByCompanyId(companyId);
         } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
+            e.printStackTrace();
             return null;
         }
     }
