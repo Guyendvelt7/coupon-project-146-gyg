@@ -48,9 +48,14 @@ public class LoginManager {
                 }
             case COMPANY:
                 if (companyFacade.login(email, password)) {
-                    List<Company> companies = companyFacade.companiesDBDAO.getAllCompanies().stream()
-                            .filter(item -> Objects.equals(item.getPassword(), password))
-                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList());
+                    List<Company> companies = null;
+                    try {
+                        companies = companyFacade.companiesDBDAO.getAllCompanies().stream()
+                                .filter(item -> Objects.equals(item.getPassword(), password))
+                                .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList());
+                    } catch (CustomExceptions e) {
+                        System.out.println(e.getMessage());
+                    }
                     System.out.println(companies.get(0).getName()+" connected");
                     return new CompanyFacade(companies.get(0).getId());
                 } else {
