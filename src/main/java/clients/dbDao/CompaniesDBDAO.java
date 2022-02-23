@@ -5,7 +5,6 @@ import clients.EnumExceptions;
 import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.dao.CompaniesDAO;
-import clients.db.ConnectionPool;
 import clients.db.DBManager;
 import clients.db.DBTools;
 import org.checkerframework.checker.units.qual.C;
@@ -21,8 +20,6 @@ import java.util.Map;
 
 public class CompaniesDBDAO implements CompaniesDAO {
     CouponsDBDAO couponsDBDAO;
-    //todo: add exceptions
-    //todo: ConnectionPool connectionPool;
 
     @Override
     public boolean isCompanyExists(String email, String password) {
@@ -39,7 +36,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return false;
     }
-
 
     @Override
     public void addCompany(Company company) throws CustomExceptions {
@@ -104,8 +100,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return allCompanies;
     }
-
-
 
     @Override
     public Company getOneCompany(int companyId) throws CustomExceptions {
