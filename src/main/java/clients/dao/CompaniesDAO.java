@@ -16,11 +16,11 @@ public interface CompaniesDAO {
     //CRUD
     public void addCompany(Company company) throws CustomExceptions;
 
-    public void updateCompany(Company company);
+    public void updateCompany(Company company) throws CustomExceptions;
 
-    public void deleteCompany(int  companyId);
+    public void deleteCompany(int  companyId) throws CustomExceptions;
 
     public List<Company> getAllCompanies() throws CustomExceptions;
 
-    public Company getOneCompany(int companyId);
+    public Company getOneCompany(int companyId) throws CustomExceptions;
 }

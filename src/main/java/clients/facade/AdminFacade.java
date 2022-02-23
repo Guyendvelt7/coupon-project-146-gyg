@@ -26,26 +26,47 @@ public class AdminFacade extends ClientFacade {
 
     }
 
-    public void addCompany(Company company) throws SQLException {
-        this.companiesDBDAO.addCompany(company);
+    public void addCompany(Company company){
+        try {
+            this.companiesDBDAO.addCompany(company);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());;
+        }
     }
 
     public void updateCompany (Company company) throws SQLException {
-        this.companiesDBDAO.updateCompany(company);
+        try {
+            this.companiesDBDAO.updateCompany(company);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void deleteCompany (int companyID) throws SQLException {
-        this.companiesDBDAO.deleteCompany(companyID);
+        try {
+            this.companiesDBDAO.deleteCompany(companyID);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+        }
         //delete coupons - cascade sql
     }
 
     public ArrayList<Company> getAllCompanies(){
-        return this.companiesDBDAO.getAllCompanies();
+        try {
+            return this.companiesDBDAO.getAllCompanies();
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+            throw null;
+        }
     }
 
     public Company getOneCompany (int companyID) throws SQLException {
         Company comp = null;
-        comp = this.companiesDBDAO.getOneCompany(companyID);
+        try {
+            comp = this.companiesDBDAO.getOneCompany(companyID);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());;
+        }
         comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
         return comp;
 

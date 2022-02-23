@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class CompanyFacade extends ClientFacade  {
 
 private int companyId;
+private CouponsDBDAO couponsDBDAO;
 
 public CompanyFacade(int companyId) {
         this.companyId = companyId;
@@ -22,8 +23,14 @@ public CompanyFacade(int companyId) {
 
     @Override
 public boolean login(String email, String password) {
-        String pas = companiesDBDAO.getOneCompany(companyId).getPassword();
-        String mail = companiesDBDAO.getOneCompany(companyId).getEmail();
+        String pas = null;
+        String mail = null;
+        try {
+            pas = companiesDBDAO.getOneCompany(companyId).getPassword();
+            mail = companiesDBDAO.getOneCompany(companyId).getEmail();
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());;
+        }
         return email.equals(mail) && password.equals(pas);
     }
 
@@ -55,9 +62,9 @@ public void deleteCoupon(int couponId){
     }
 }
 
-public ArrayList<Coupon>getCompanyCoupons() {
+public List<Coupon>getCompanyCoupons() {
     try {
-        return CouponsDBDAO.getCouponsByCompanyId(this.companyId);
+        return couponsDBDAO.getCouponsByCompanyId(this.companyId);
     } catch (CustomExceptions e) {
         System.out.println(EnumExceptions.ID_NOT_EXIST);
         return null;
@@ -77,6 +84,11 @@ public List<Coupon>getCompanyCoupons(double maxPrice){
 
 
 public Company getCompanyDetails() {
+    try {
         return companiesDBDAO.getOneCompany(companyId);
+    } catch (CustomExceptions e) {
+        System.out.println(e.getMessage());
+        return null;
+    }
 }
 }
