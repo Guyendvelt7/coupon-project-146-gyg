@@ -1,14 +1,8 @@
 package clients.facade;
 
-import clients.EnumExceptions;
 import clients.CustomExceptions;
 import clients.beans.Company;
-import clients.dao.CompaniesDAO;
-import clients.dbDao.CompaniesDBDAO;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdminFacade extends ClientFacade {
     private final String email;
@@ -19,11 +13,10 @@ public class AdminFacade extends ClientFacade {
         this.email = "admin@admin.com";
         this.password = "admin";
     }
-    @Override
 
+    @Override
     public boolean login(String email, String password) throws CustomExceptions {
         return this.email.equals(email) && this.password.equals(password);
-
     }
 
     public void addCompany(Company company){
@@ -34,7 +27,7 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
-    public void updateCompany (Company company) throws SQLException {
+    public void updateCompany (Company company) {
         try {
             this.companiesDBDAO.updateCompany(company);
         } catch (CustomExceptions e) {
@@ -42,13 +35,12 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
-    public void deleteCompany (int companyID) throws SQLException {
+    public void deleteCompany (int companyID) {
         try {
             this.companiesDBDAO.deleteCompany(companyID);
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());
         }
-        //delete coupons - cascade sql
     }
 
     public ArrayList<Company> getAllCompanies(){
@@ -56,22 +48,20 @@ public class AdminFacade extends ClientFacade {
             return this.companiesDBDAO.getAllCompanies();
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());
-            throw null;
+            return null;
         }
     }
 
-    public Company getOneCompany (int companyID) throws SQLException {
+    public Company getOneCompany (int companyID) {
         Company comp = null;
         try {
             comp = this.companiesDBDAO.getOneCompany(companyID);
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());;
         }
+        assert comp != null;
         comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
         return comp;
-
     }
 
-//    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
-//    throw new CustomExceptions(EnumExceptions.INVALID_PASSWORD);
 }

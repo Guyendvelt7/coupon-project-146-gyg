@@ -12,6 +12,7 @@ public class DBManager {
     public static final String DROP_DB = "DROP SCHEMA `coupons_project`";
 
 
+
     public static final String CREATE_COMPANY_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`companies` (" +
             "`id` INT NOT NULL AUTO_INCREMENT," +
             "`name` VARCHAR(45) NOT NULL," +

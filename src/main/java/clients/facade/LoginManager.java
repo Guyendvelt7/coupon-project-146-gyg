@@ -32,7 +32,7 @@ public class LoginManager {
         return instance;
     }
 
-    public static ClientFacade login(String email, String password, ClientType clientType){
+    public static ClientFacade login(String email, String password, ClientType clientType) throws CustomExceptions {
         //Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));
         switch (clientType) {
             case ADMINISTRATOR:
