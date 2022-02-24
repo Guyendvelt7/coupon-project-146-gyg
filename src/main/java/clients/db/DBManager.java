@@ -8,6 +8,10 @@ public class DBManager {
     public static final String SQL_USER = "root";
     public static final String SQL_PASS = "12345678";
 
+    public static final String CREATED_DB = "CREATE SCHEMA `coupons_project` ;";
+    public static final String DROP_DB = "DROP SCHEMA `coupons_project`";
+
+
 
     public static final String CREATE_COMPANY_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`companies` (" +
             "`id` INT NOT NULL AUTO_INCREMENT," +
