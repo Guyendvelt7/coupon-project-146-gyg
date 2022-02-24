@@ -68,7 +68,6 @@ public class LoginManager {
         System.out.println("wrong client type");
         return null;
     }
-
 }
 
     private static Predicate<String> isValidEmailAddress(String email) {
