@@ -108,9 +108,7 @@ public class DBManager {
 
     public static final String GET_SINGLE_COMPANY = "SELECT* FROM `coupons_project`.`companies` WHERE (`id` = ?);";
 
-    public static final String COUNT_BY_PASS_AND_EMAIL = "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE `email` = ? and `password` = ?";
-
-    public static final String COUNT_COMPANY_BY_ID = "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE (`id` = ?)";
+    public static final String COUNT_BY_PASS_AND_EMAIL = "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE `email` = ? and `password` = ?;";
 
     public static final String ADD_CUSTOMER = "INSERT INTO `coupons_project`.`customers` ( `firstName`, `lastName`, `email`, `password`) VALUES (?,?,?,?);";
 

@@ -50,7 +50,7 @@ public void updateCoupon(Coupon coupon){
     try {
         couponsDBDAO.updateCoupon(coupon);
     } catch (CustomExceptions e) {
-        System.out.println(EnumExceptions.ID_NOT_EXIST);
+        System.out.println(e.getMessage());
     }
 }
 
@@ -58,7 +58,7 @@ public void deleteCoupon(int couponId){
     try {
         couponsDBDAO.deleteCoupon(couponId);
     }catch (CustomExceptions e){
-        System.out.println(EnumExceptions.ID_NOT_EXIST);
+        System.out.println(e.getMessage());
     }
 }
 
@@ -66,7 +66,7 @@ public List<Coupon>getCompanyCoupons() {
     try {
         return couponsDBDAO.getCouponsByCompanyId(this.companyId);
     } catch (CustomExceptions e) {
-        System.out.println(EnumExceptions.ID_NOT_EXIST);
+        System.out.println(e.getMessage());
         return null;
     }
 }

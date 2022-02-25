@@ -22,7 +22,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, id);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_ID, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);

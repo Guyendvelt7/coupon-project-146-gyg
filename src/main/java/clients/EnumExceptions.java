@@ -22,7 +22,9 @@ public enum EnumExceptions {
     NO_COUPONS_BY_PRICE("you don't have coupons under this price"),
     COMPANY_ALREADY_EXIST("the company is already exist in the system"),
     ID_COMPANY_ALREADY_EXIST("the id company is already exist in the system"),
-    NO_COUPONS_COMPANY("company doesn't have coupons")
+    NO_COUPONS_COMPANY("company doesn't have coupons"),
+    COMPANY_IS_NOT_EXIST("the company is not exist in the system"),
+    CATEGORY_IS_NOT_EXIST("not such category");
     ;
 
     private String message;
