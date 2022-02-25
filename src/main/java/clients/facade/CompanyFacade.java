@@ -37,7 +37,7 @@ public boolean login(String email, String password) {
 public void addCoupon(Coupon coupon){
     List<Coupon>couponList = companiesDBDAO.getCompanyCoupons(companyId).stream()
             .filter(item->item.getTitle().equals(coupon.getTitle())).collect(Collectors.toList());
-    if(couponList.size()==0) {
+    if(couponList.isEmpty()) {
         try {
             couponsDBDAO.addCoupon(coupon);
         } catch (CustomExceptions e) {
