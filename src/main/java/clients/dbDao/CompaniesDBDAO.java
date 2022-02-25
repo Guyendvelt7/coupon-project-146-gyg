@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class CompaniesDBDAO implements CompaniesDAO {
     CouponsDBDAO couponsDBDAO;
-    //todo: add exceptions
-    //todo: ConnectionPool connectionPool;
 
     public boolean isCompanyExistsById(int id) {
         Map<Integer, Object> values = new HashMap<>();
@@ -49,7 +47,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return false;
     }
-
 
     @Override
     public void addCompany(Company company) throws CustomExceptions {
@@ -114,8 +111,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
         return allCompanies;
     }
-
-
 
     @Override
     public Company getOneCompany(int companyId) throws CustomExceptions {
