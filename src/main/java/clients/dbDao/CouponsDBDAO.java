@@ -3,6 +3,7 @@ package clients.dbDao;
 import clients.CustomExceptions;
 import clients.EnumExceptions;
 import clients.beans.Category;
+import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.dao.CouponsDAO;
 import clients.db.DBManager;
@@ -41,7 +42,7 @@ public class CouponsDBDAO implements CouponsDAO {
     public void addCoupon(Coupon coupon) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, coupon.getCompanyId());
-        values.put(2, coupon.getCategory());
+        values.put(2, getCategoryId(coupon.getCategory()));
         values.put(3, coupon.getTitle());
         values.put(4, coupon.getDescription());
         values.put(5, coupon.getStartDate());
@@ -255,5 +256,21 @@ public class CouponsDBDAO implements CouponsDAO {
             }
         }
         return coupons;
+    }
+
+    public int getCategoryId(Category category){
+        int categoryId=0;
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, Category.valueOf(category.name()));
+        try {
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CATEGORY, map);
+            assert resultSet != null;
+            if (resultSet.next()) {
+                categoryId =resultSet.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return categoryId;
     }
 }

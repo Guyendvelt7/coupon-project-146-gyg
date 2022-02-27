@@ -68,10 +68,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
         values.put(4, company.getId());
-        if (getOneCompany(company.getId())!=null){
-            throw new CustomExceptions(EnumExceptions.ID_COMPANY_ALREADY_EXIST);
-        }
-        DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
+//        if (getOneCompany(company.getId())!=null){
+//            throw new CustomExceptions(EnumExceptions.ID_COMPANY_ALREADY_EXIST);
+//        }
+       DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
     }
 
     @Override

@@ -73,6 +73,13 @@ public class DBManager {
             " ON DELETE CASCADE" +
             " ON UPDATE CASCADE;";
 
+    public static final String ADD_CATEGORY = "INSERT INTO `coupons_project`.`categories` " +
+            "(`name`) VALUES (?);";
+
+    public static final String DELETE_CATEGORY = "DELETE FROM `coupons_project`.`categories` WHERE id=?;";
+
+    public static final String GET_ONE_CATEGORY = "SELECT `id` FROM `coupons_project`.`categories` WHERE name=?;";
+
 
     public static final String CREATE_NEW_COUPON = "INSERT INTO `coupons_project`.`coupons` " +
             "(`company_id`, `category_id`, `title`, `description`, " +
@@ -100,7 +107,7 @@ public class DBManager {
 
     public static final String ADD_COMPANY = "INSERT INTO `coupons_project`.`companies` ( `name`, `email`, `password`) VALUES (?,?,?);";
 
-    public static final String UPDATE_COMPANY = "UPDATE `coupons_project`.`companies` SET `email` = ?, `password` = ? WHERE (`id` = ?);";
+    public static final String UPDATE_COMPANY = "UPDATE `coupons_project`.`companies` SET `name`= ?, `email` = ?, `password` = ? WHERE (`id` = ?);";
 
     public static final String DELETE_COMPANY = "DELETE FROM `coupons_project`.`companies` WHERE (`id` = ?);";
 
