@@ -97,7 +97,7 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image")));
             } catch (SQLException e) {
-                System.out.println("SQL exception....");
+                System.out.println(e.getMessage());
             }
 
         }
@@ -206,7 +206,7 @@ public class CouponsDBDAO implements CouponsDAO {
      * @return arrayList of customer purchased coupons
      */
     public List<Coupon> getCouponsByCustomerId(int customerID) {
-        ArrayList<Coupon> coupons = new ArrayList<>();
+        List<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = null;
         while (true) {
             try {
@@ -225,8 +225,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));
                 coupons.add(coupon);
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            } catch (SQLException err) {
+                System.out.println(err.getMessage());
             }
         }
         return coupons;

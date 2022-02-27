@@ -55,9 +55,9 @@ public void deleteCoupon(int couponId){
     }
 }
 
-public ArrayList<Coupon>getCompanyCoupons() {
+public List<Coupon> getCompanyCoupons() {
     try {
-        return CouponsDBDAO.getCouponsByCompanyId(this.companyId);
+        return couponsDBDAO.getCouponsByCompanyId(this.companyId);
     } catch (CustomExceptions e) {
         System.out.println(EnumExceptions.ID_NOT_EXIST);
         return null;

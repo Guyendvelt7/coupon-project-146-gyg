@@ -52,25 +52,24 @@ public class DBManager {
             " FOREIGN KEY (`category_id`)" +
             " REFERENCES `coupons_project`.`categories` (`id`)" +
             " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE;";
+            " ON UPDATE CASCADE);";
 
     public static final String CREATE_CUSTOMER_VS_COUPONS_TABLE =
             "CREATE TABLE IF NOT EXISTS `coupons_project`.`customers_vs_coupons` (" +
-            "`customer_id` INT NOT NULL," +
-            "`coupon_id` INT NOT NULL," +
-            "PRIMARY KEY (`customer_id`, `coupon_id`)," +
-            "INDEX `coupon_id_idx` (`coupon_id` ASC) VISIBLE," +
-            "CONSTRAINT `customer_id`" +
-            "FOREIGN KEY (`customer_id`)" +
-            " REFERENCES `coupons_project`.`customers` (`id`)" +
-            " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE," +
-            "CONSTRAINT `coupon_id`" +
-            " FOREIGN KEY (`coupon_id`)" +
-            " REFERENCES `coupons_project`.`coupons` (`id`)" +
-            " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE;";
-
+                    "`customer_id` INT NOT NULL," +
+                    "`coupon_id` INT NOT NULL," +
+                    "PRIMARY KEY (`customer_id`, `coupon_id`)," +
+                    "INDEX `coupon_id_idx` (`coupon_id` ASC) VISIBLE," +
+                    "CONSTRAINT `customer_id`" +
+                    "FOREIGN KEY (`customer_id`)" +
+                    " REFERENCES `coupons_project`.`customers` (`id`)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE," +
+                    "CONSTRAINT `coupon_id`" +
+                    " FOREIGN KEY (`coupon_id`)" +
+                    " REFERENCES `coupons_project`.`coupons` (`id`)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE);";
 
     public static final String CREATE_NEW_COUPON = "INSERT INTO `coupons_project`.`coupons` " +
             "(`company_id`, `category_id`, `title`, `description`, " +

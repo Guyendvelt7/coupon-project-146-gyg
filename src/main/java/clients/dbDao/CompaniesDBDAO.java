@@ -86,7 +86,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
                 );
                 allCompanies.add(company);
             }
-        } catch (SQLException err) {
+        } catch (SQLException | CustomExceptions err) {
             System.out.println(err.getMessage());
         }
         return allCompanies;
@@ -126,7 +126,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         try {
-            return couponsDBDAO.getCoupons(DBManager.GET_COUPONS_BY_COMPANIES, value);
+            return couponsDBDAO.getCouponsByCompanyId(companyId);
         } catch (CustomExceptions e) {
             System.out.println(EnumExceptions.ID_NOT_EXIST);
             return null;

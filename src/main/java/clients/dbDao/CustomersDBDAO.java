@@ -2,7 +2,6 @@ package clients.dbDao;
 
 import clients.CustomExceptions;
 import clients.EnumExceptions;
-import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomersDAO;
 import clients.db.DBManager;
@@ -26,7 +25,9 @@ public class CustomersDBDAO implements CustomersDAO {
         values.put(1,email);
         values.put(2,password);
        ResultSet resultSet =  DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS,values);
-        assert resultSet != null;
+       if(resultSet==null){
+           return false;
+       }
         try {
             resultSet.next();
             return resultSet.getInt("1") == 1;
@@ -114,7 +115,7 @@ public class CustomersDBDAO implements CustomersDAO {
                      couponsDBDAO.getCouponsByCustomerId(customerID)
             );
         } catch (SQLException e) {
-            System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
+            System.out.println(EnumExceptions.ID_NOT_EXIST);
             return null;
         }
     }
