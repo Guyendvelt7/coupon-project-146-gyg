@@ -24,14 +24,10 @@ public class LoginManager {
 
     public static LoginManager getInstance() {
         if (instance == null) {
-            synchronized (LoginManager.class) {
-                if (instance == null) {
                     instance = new LoginManager();
-                }
             }
-        }
         return instance;
-    }
+        }
 
     public static ClientFacade login(String email, String password, ClientType clientType) throws CustomExceptions {
         //Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));

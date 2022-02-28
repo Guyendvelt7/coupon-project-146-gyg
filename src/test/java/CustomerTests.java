@@ -1,6 +1,9 @@
 import clients.CustomExceptions;
 import clients.beans.Company;
+import clients.beans.Coupon;
 import clients.beans.Customer;
+import clients.db.DBManager;
+import clients.db.DBTools;
 import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
@@ -21,10 +24,12 @@ public class CustomerTests {
         customersDBDAO = new CustomersDBDAO();
         couponsDBDAO = new CouponsDBDAO();
 
+
     }
+
     @Test
     public void addCustomer() throws CustomExceptions {
-        Customer customer = new Customer( 3,"geri","glazer","geris-email","geris-password",null);
+        Customer customer = new Customer(3, "geri", "glazer", "geris-email", "geris-password", null);
         customersDBDAO.addCustomer(customer);
 
     }
@@ -32,25 +37,36 @@ public class CustomerTests {
     @Test
     public void customerDoesNotExist() throws CustomExceptions {
         Assert.assertFalse(customersDBDAO.isCustomerExist("customer123", "password123"));
-   }
+    }
+
     @Test
     public void customerExist() throws CustomExceptions {
         Assert.assertTrue(customersDBDAO.isCustomerExist("geris-email", "geris-password"));
     }
+
     @Test
-    public void updateCustomer(){
-        Customer customer = new Customer(1,"guy","endvelt","guys-email","guys-password",null);
+    public void updateCustomer() {
+        Customer customer = new Customer(1, "guy", "endvelt", "guys-email", "guys-password", null);
         customersDBDAO.updateCustomer(customer);
     }
+
     @Test
     public void deleteCustomer() {
         customersDBDAO.deleteCustomer(1);
     }
-    @Test
-    public void getAllCustomers(){
-        List<Customer> customerList = customersDBDAO.getAllCustomers();
-        customerList.forEach(System.out::println);
 
+    @Test
+    public void getAllCustomers() {
+        List<Customer> customerList = customersDBDAO.getAllCustomers();
+        //customerList.forEach(System.out::println);
+    }
+
+    @Test
+    public void getCouponsByCustomerId() throws CustomExceptions {
+        //couponsDBDAO.getOneCoupon(1);
+        //DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER);
+        //Coupon coupon = new Coupon();
+        //couponsDBDAO.getAllCoupons();
     }
 
 

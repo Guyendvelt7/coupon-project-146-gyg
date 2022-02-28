@@ -76,29 +76,26 @@ public class CustomersDBDAO implements CustomersDAO {
     public List<Customer> getAllCustomers(){
         ResultSet customerResultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
         List<Customer> allCustomers = new ArrayList<>();
-        while(true){
-            try {
-                assert customerResultSet != null;
-                if (!customerResultSet.next()) break;
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());            }
-            try {
+        try{
+               while(customerResultSet.next()) {
+                int id = customerResultSet.getInt("id");
                 allCustomers.add(new Customer(
                         customerResultSet.getInt("id"),
                         customerResultSet.getString("first_name"),
                         customerResultSet.getString("last_name"),
                         customerResultSet.getString("email"),
                         customerResultSet.getString("password"),
-                        this.couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
-                ));
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());                
-            }
+                        this.couponsDBDAO.getCouponsByCustomerId(id))
+                );
+        }
+
+    } catch (SQLException err) {
+            System.out.println(err.getMessage());
         }
         return allCustomers;
-    }
+        }
 
-    @Override
+        @Override
     public Customer getOneCustomer(int customerID){
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
@@ -114,8 +111,8 @@ public class CustomersDBDAO implements CustomersDAO {
                     resultSet.getString("password"),
                      couponsDBDAO.getCouponsByCustomerId(customerID)
             );
-        } catch (SQLException e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
             return null;
         }
     }

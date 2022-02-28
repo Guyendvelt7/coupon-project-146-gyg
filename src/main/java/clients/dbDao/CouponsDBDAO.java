@@ -13,9 +13,11 @@ import org.checkerframework.checker.units.qual.C;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
+    CustomersDBDAO customersDBDAO;
 
     private boolean isCouponExists(int id){
         Map<Integer, Object> values = new HashMap<>();
@@ -110,7 +112,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 coupons.add(new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
-                        Category.valueOf(resultSet.getString("category_id")),
+                        Category.valueOf(getCategoryName(resultSet.getInt("category_id")).toUpperCase()),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
                         resultSet.getDate("start_date"),
@@ -132,8 +134,13 @@ public class CouponsDBDAO implements CouponsDAO {
      * @return coupon object
      */
     @Override
-    public Coupon getOneCoupon() throws CustomExceptions {
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON);
+    public Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
+        if(!isCouponExists(coupon_id)){
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+        }
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,coupon_id);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON,values);
         try {
             assert resultSet != null;
             if (!resultSet.next()) {
@@ -149,8 +156,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));
             }
-        } catch (SQLException e) {
-            System.out.println("SQL exception....");
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
 
         }
         return null;
@@ -222,39 +229,28 @@ public class CouponsDBDAO implements CouponsDAO {
         }
     }
 
+
+
     /**
      * gets al coupons purchased by one specific customer
      *
      * @param customerID to locate said customer and it's coupons
      * @return arrayList of customer purchased coupons
      */
-    public List<Coupon> getCouponsByCustomerId(int customerID) {
-        List<Coupon> coupons = new ArrayList<>();
-        ResultSet resultSet = null;
-        while (true) {
-            try {
-                resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
-                assert resultSet != null;
-                if (!resultSet.next()) break;
-                Coupon coupon = new Coupon(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("company_id"),
-                        Category.valueOf(getCategoryName(resultSet.getInt("category_id")).toUpperCase()),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
-                        resultSet.getInt("amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image"));
-                coupons.add(coupon);
-            } catch (SQLException err) {
-                System.out.println(err.getMessage());
+    public List<Coupon> getCouponsByCustomerId(int customerID){
+        List<Coupon> couponByCustomer = null;
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,customerID);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER,values);
+        if(resultSet==null) return null;
+        try{
+        while(resultSet.next()){
+           couponByCustomer.add(getOneCoupon(resultSet.getInt("coupon_id")));
+            }}catch(SQLException | CustomExceptions err){
+            System.out.println(err.getMessage());
             }
+        return couponByCustomer;
         }
-        if(coupons.isEmpty()) return null;
-        return coupons;
-    }
 
     public int getCategoryId(Category category){
         int categoryId=0;
