@@ -7,6 +7,7 @@ public class DBManager {
     public static final String SQL_PASS = "12345678";
 
     public static final String CREATED_DB = "CREATE SCHEMA `coupons_project` ;";
+    public static final String CREATED_TESTSCHEMA = "CREATE SCHEMA `test_schema` ;";
     public static final String DROP_DB = "DROP SCHEMA `coupons_project`";
 
 
@@ -30,6 +31,7 @@ public class DBManager {
             "`id` INT NOT NULL AUTO_INCREMENT," +
             "`name` VARCHAR(45) NOT NULL," +
             "PRIMARY KEY (`id`);";
+
 
     public static final String CREATE_COUPONS_TABLE = "CREATE TABLE IF NOT EXISTS `coupons_project`.`coupons` (" +
             "`id` INT NOT NULL AUTO_INCREMENT," +
@@ -58,27 +60,28 @@ public class DBManager {
 
     public static final String CREATE_CUSTOMER_VS_COUPONS_TABLE =
             "CREATE TABLE IF NOT EXISTS `coupons_project`.`customers_vs_coupons` (" +
-            "`customer_id` INT NOT NULL," +
-            "`coupon_id` INT NOT NULL," +
-            "PRIMARY KEY (`customer_id`, `coupon_id`)," +
-            "INDEX `coupon_id_idx` (`coupon_id` ASC) VISIBLE," +
-            "CONSTRAINT `customer_id`" +
-            "FOREIGN KEY (`customer_id`)" +
-            " REFERENCES `coupons_project`.`customers` (`id`)" +
-            " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE," +
-            "CONSTRAINT `coupon_id`" +
-            " FOREIGN KEY (`coupon_id`)" +
-            " REFERENCES `coupons_project`.`coupons` (`id`)" +
-            " ON DELETE CASCADE" +
-            " ON UPDATE CASCADE;";
+                    "`customer_id` INT NOT NULL," +
+                    "`coupon_id` INT NOT NULL," +
+                    "PRIMARY KEY (`customer_id`, `coupon_id`)," +
+                    "INDEX `coupon_id_idx` (`coupon_id` ASC) VISIBLE," +
+                    "CONSTRAINT `customer_id`" +
+                    "FOREIGN KEY (`customer_id`)" +
+                    " REFERENCES `coupons_project`.`customers` (`id`)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE," +
+                    "CONSTRAINT `coupon_id`" +
+                    " FOREIGN KEY (`coupon_id`)" +
+                    " REFERENCES `coupons_project`.`coupons` (`id`)" +
+                    " ON DELETE CASCADE" +
+                    " ON UPDATE CASCADE;";
 
     public static final String ADD_CATEGORY = "INSERT INTO `coupons_project`.`categories` " +
             "(`name`) VALUES (?);";
 
     public static final String DELETE_CATEGORY = "DELETE FROM `coupons_project`.`categories` WHERE id=?;";
 
-    public static final String GET_ONE_CATEGORY = "SELECT `id` FROM `coupons_project`.`categories` WHERE name=?;";
+    public static final String GET_ONE_CATEGORY_ID = "SELECT `id` FROM `coupons_project`.`categories` WHERE name=?;";
+    public static final String GET_CATEGORY_NAME = "SELECT `name` FROM `coupons_project`.`categories` WHERE id=?;";
 
 
     public static final String CREATE_NEW_COUPON = "INSERT INTO `coupons_project`.`coupons` " +
@@ -117,9 +120,9 @@ public class DBManager {
 
     public static final String COUNT_BY_PASS_AND_EMAIL = "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE `email` = ? and `password` = ?;";
 
-    public static final String ADD_CUSTOMER = "INSERT INTO `coupons_project`.`customers` ( `firstName`, `lastName`, `email`, `password`) VALUES (?,?,?,?);";
+    public static final String ADD_CUSTOMER = "INSERT INTO `coupons_project`.`customers` ( `first_name`, `last_name`, `email`, `password`) VALUES (?,?,?,?);";
 
-    public static final String UPDATE_CUSTOMER = "UPDATE `coupons_project`.`customer` SET `firstName` = ?, `lastName` = ?, `email` = ? `password` = ? WHERE (`id` = ?);";
+    public static final String UPDATE_CUSTOMER = "UPDATE `coupons_project`.`customers` SET `first_name` = ?, `last_name` = ?, `email` = ?, `password` = ? WHERE (`id` = ?);";
 
     public static final String DELETE_CUSTOMER = "DELETE FROM `coupons_project`.`customers` WHERE (`id` = ?);";
 
@@ -132,7 +135,8 @@ public class DBManager {
 
     public static final String GET_ALL_CUSTOMERS = "SELECT * FROM `coupons_project`.`customers`;";
 
-    public static final String IS_CUSTOMER_EXISTS = "SELECT COUNT(*) FROM `coupons_project`.`customers` WHERE `email` = ? and `password` = ?";
+    public static final String IS_CUSTOMER_EXISTS = "SELECT COUNT(1) FROM `coupons_project`.`customers` WHERE `email` = ? and `password` = ?";
+
 
 }
 

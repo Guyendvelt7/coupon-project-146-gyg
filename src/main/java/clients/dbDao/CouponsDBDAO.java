@@ -12,10 +12,7 @@ import org.checkerframework.checker.units.qual.C;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
@@ -242,7 +239,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 Coupon coupon = new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
-                        Category.valueOf(resultSet.getString("category_id")),
+                        Category.valueOf(getCategoryName(resultSet.getInt("category_id")).toUpperCase()),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
                         resultSet.getDate("start_date"),
@@ -255,6 +252,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 System.out.println(err.getMessage());
             }
         }
+        if(coupons.isEmpty()) return null;
         return coupons;
     }
 
@@ -263,7 +261,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> map = new HashMap<>();
         map.put(1, Category.valueOf(category.name()));
         try {
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CATEGORY, map);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CATEGORY_ID, map);
             assert resultSet != null;
             if (resultSet.next()) {
                 categoryId =resultSet.getInt("id");
@@ -273,4 +271,26 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return categoryId;
     }
+    public String getCategoryName(int categoryId){
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,categoryId);
+        try {
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_CATEGORY_NAME,values);
+            assert resultSet != null;
+            if(resultSet.next()) {
+                return resultSet.getString("name");
+            }} catch (SQLException err) {
+            System.out.println(err.getMessage());
+            }
+        return null;
+        }
+
+
+    public void addCategory(Category category){
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,category.name());
+        DBTools.runQuery(DBManager.ADD_CATEGORY,values);
+    }
+
+
 }

@@ -132,8 +132,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
                             coupons
                     );
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException err) {
+                err.printStackTrace();
             }
             return company;
         }else{

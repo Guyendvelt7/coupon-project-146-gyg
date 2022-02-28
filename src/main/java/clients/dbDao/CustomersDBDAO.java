@@ -30,7 +30,7 @@ public class CustomersDBDAO implements CustomersDAO {
        }
         try {
             resultSet.next();
-            return resultSet.getInt("1") == 1;
+            return resultSet.getInt(1) == 1;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -85,11 +85,11 @@ public class CustomersDBDAO implements CustomersDAO {
             try {
                 allCustomers.add(new Customer(
                         customerResultSet.getInt("id"),
-                        customerResultSet.getString("firstName"),
-                        customerResultSet.getString("lastName"),
+                        customerResultSet.getString("first_name"),
+                        customerResultSet.getString("last_name"),
                         customerResultSet.getString("email"),
                         customerResultSet.getString("password"),
-                        couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
+                        this.couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
                 ));
             } catch (SQLException e) {
                 System.out.println(e.getMessage());                
