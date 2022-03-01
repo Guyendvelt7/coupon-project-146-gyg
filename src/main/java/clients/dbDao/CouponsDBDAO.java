@@ -19,7 +19,7 @@ public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
     CustomersDBDAO customersDBDAO;
 
-    private boolean isCouponExists(int id){
+    public boolean isCouponExistsById(int id){
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, id);
@@ -32,11 +32,14 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return false;
     }
-    private static boolean isCouponExistsStatic(int id){
+
+
+    public boolean isCouponExists(String email,String password){
         Map<Integer, Object> values = new HashMap<>();
         try {
-            values.put(1, id);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON, values);
+            values.put(1, email);
+            values.put(2,password);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON_BY_EMAIL_AND_PASS, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
@@ -45,11 +48,9 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return false;
     }
-    /**
-     * insert new coupon info to database
-     *
-     * @param coupon coupon object
-     */
+
+
+
     @Override
     public void addCoupon(Coupon coupon) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
@@ -72,7 +73,7 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public void updateCoupon(Coupon coupon) throws CustomExceptions {
-        if (isCouponExists(coupon.getId())) {
+        if (isCouponExistsById(coupon.getId())) {
             Map<Integer, Object> values = new HashMap<>();
             values.put(1, coupon.getCompanyId());
             values.put(2, coupon.getCategory());
@@ -98,7 +99,7 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public void deleteCoupon(int couponID) throws CustomExceptions {
-        if (isCouponExists(couponID)) {
+        if (isCouponExistsById(couponID)) {
             Map<Integer, Object> values = new HashMap<>();
             values.put(1, couponID);
             DBTools.runQuery(DBManager.DELETE_COUPON, values);
@@ -213,7 +214,7 @@ public class CouponsDBDAO implements CouponsDAO {
         }
     }
     public  Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
-        if(!isCouponExists(coupon_id)){
+        if(!isCouponExistsById(coupon_id)){
             throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
         Map<Integer,Object> values = new HashMap<>();

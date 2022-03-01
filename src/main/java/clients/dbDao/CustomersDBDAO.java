@@ -99,6 +99,7 @@ public class CustomersDBDAO implements CustomersDAO {
 
         @Override
     public Customer getOneCustomer(int customerID){
+        couponsDBDAO = new CouponsDBDAO();
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER,values);
@@ -111,7 +112,7 @@ public class CustomersDBDAO implements CustomersDAO {
                     resultSet.getString("last_name"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
-                     CouponsDBDAO.getCouponsByCustomerId(customerID)
+                     couponsDBDAO.getCouponsByCustomerId(customerID)
             );
         } catch (SQLException err) {
             System.out.println(err.getMessage());

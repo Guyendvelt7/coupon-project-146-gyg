@@ -99,6 +99,7 @@ public class DBManager {
     public static final String GET_ALL_COUPONS = "SELECT * FROM `coupons_project`.`coupons`;";
 
     public static final String GET_ONE_COUPON = "SELECT * FROM `coupons_project`.`coupons` WHERE id=?;";
+    public static final String GET_ONE_COUPON_BY_EMAIL_AND_PASS = "SELECT COUNT(1) FROM `coupons_project`.`coupons` WHERE email=? and password=?;";
 
     public static final String ADD_PURCHASED_COUPON = "INSERT INTO `coupons_project`.`customers_vs_coupons` " +
             "(`customer_id`, `coupon_id`) VALUES (?,?);";

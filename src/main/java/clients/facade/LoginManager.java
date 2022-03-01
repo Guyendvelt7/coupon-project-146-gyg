@@ -4,6 +4,8 @@ import clients.CustomExceptions;
 import clients.EnumExceptions;
 import clients.beans.Company;
 import clients.beans.Customer;
+import clients.dbDao.CompaniesDBDAO;
+import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
 
 import javax.mail.internet.AddressException;
@@ -19,6 +21,8 @@ public class LoginManager {
     private static CustomerFacade customerFacade;
     private static CompanyFacade companyFacade;
     private static CustomersDBDAO customersDBDAO;
+    private static CompaniesDBDAO companiesDBDAO;
+    private static CouponsDBDAO couponsDBDAO;
 
     private LoginManager() {
 
@@ -35,7 +39,8 @@ public class LoginManager {
         //Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));
         switch (clientType) {
             case ADMINISTRATOR:
-                if (adminFacade.login(email, password)) {
+                couponsDBDAO = new CouponsDBDAO();
+                if (couponsDBDAO.isCouponExists(email, password)) {
                     System.out.println("admin connected");
                     return new AdminFacade();
                 } else {
@@ -43,12 +48,13 @@ public class LoginManager {
                 }
 
         case COMPANY:
-        if (companyFacade.login(email, password)){
-            List<Company> companies = companyFacade.companiesDBDAO.getAllCompanies().stream()
+            companiesDBDAO = new CompaniesDBDAO();
+        if (companiesDBDAO.isCompanyExists(email,password)){
+            Company company = companyFacade.companiesDBDAO.getAllCompanies().stream()
                     .filter(item -> Objects.equals(item.getPassword(), password))
-                    .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList());
-            System.out.println(companies.get(0).getName() + " connected");
-            return new CompanyFacade(companies.get(0).getId());
+                    .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+            System.out.println(company.getName() + " connected");
+            return new CompanyFacade(company.getId());
         } else {
             throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
         }
