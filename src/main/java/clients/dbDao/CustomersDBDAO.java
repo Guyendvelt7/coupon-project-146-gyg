@@ -80,15 +80,12 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public List<Customer> getAllCustomers(){
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS,new HashMap<>());
         List<Customer> customers = new ArrayList<>();
         try{
             while (resultSet.next()) {
-                if(!resultSet.next()) break;
                 Customer customer = getOneCustomer(resultSet.getInt("id"));
-                System.out.println(customer);
                 customers.add(customer);
-
             }
 
     } catch (SQLException err) {

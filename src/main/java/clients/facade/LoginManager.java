@@ -4,6 +4,7 @@ import clients.CustomExceptions;
 import clients.EnumExceptions;
 import clients.beans.Company;
 import clients.beans.Customer;
+import clients.dbDao.CustomersDBDAO;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -17,6 +18,7 @@ public class LoginManager {
     private static AdminFacade adminFacade;
     private static CustomerFacade customerFacade;
     private static CompanyFacade companyFacade;
+    private static CustomersDBDAO customersDBDAO;
 
     private LoginManager() {
 
@@ -29,7 +31,7 @@ public class LoginManager {
         return instance;
         }
 
-    public static ClientFacade login(String email, String password, ClientType clientType) throws CustomExceptions {
+    public ClientFacade login(String email, String password, ClientType clientType) throws CustomExceptions {
         //Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));
         switch (clientType) {
             case ADMINISTRATOR:
@@ -51,15 +53,19 @@ public class LoginManager {
             throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
         }
         case CUSTOMER:
-        if (customerFacade.login(email, password)) {
-            List<Customer> customers = customerFacade.customersDBDAO.getAllCustomers().stream()
+            customersDBDAO = new CustomersDBDAO();
+            if(customersDBDAO.isCustomerExist(email,password)){
+            Customer customer = customersDBDAO.getAllCustomers().stream()
                     .filter(item -> Objects.equals(item.getPassword(), password))
-                    .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList());
-            System.out.println(customers.get(0).getFirstName() + " connected");
-            return new CustomerFacade(customers.get(0).getId());
-        } else {
-            throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
-        }
+                    .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+                System.out.println(customer.getFirstName() + " connected");
+                return new CustomerFacade(customer.getId());
+            } else {
+                System.out.println("customer doesnt exists");
+                //throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+            }
+
+
         default:
         System.out.println("wrong client type");
         return null;

@@ -146,35 +146,6 @@ public class CouponsDBDAO implements CouponsDAO {
      *
      * @return coupon object
      */
-    @Override
-    public Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
-        if(!isCouponExists(coupon_id)){
-            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
-        }
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,coupon_id);
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON,values);
-        try {
-            assert resultSet != null;
-            if (!resultSet.next()) {
-                return new Coupon(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("company_id"),
-                        Category.valueOf(resultSet.getString("category_id")),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
-                        resultSet.getInt("amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image"));
-            }
-        } catch (SQLException err) {
-            System.out.println(err.getMessage());
-
-        }
-        return null;
-    }
 
     /**
      * gets purchased coupon from customer and updates customer table and coupon amount in coupon table
@@ -241,8 +212,8 @@ public class CouponsDBDAO implements CouponsDAO {
             throw new CustomExceptions(EnumExceptions.COMPANY_IS_NOT_EXIST);
         }
     }
-    public static Coupon getOneCouponStatic(int coupon_id) throws CustomExceptions {
-        if(!isCouponExistsStatic(coupon_id)){
+    public  Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
+        if(!isCouponExists(coupon_id)){
             throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
         Map<Integer,Object> values = new HashMap<>();
@@ -254,7 +225,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 return new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
-                        Category.valueOf(CouponsDBDAO.getCategoryNameStatic(resultSet.getInt("category_id"))),
+                        Category.valueOf(getCategoryName(resultSet.getInt("category_id"))),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
                         resultSet.getDate("start_date"),
@@ -277,7 +248,7 @@ public class CouponsDBDAO implements CouponsDAO {
      * @param customerID to locate said customer and it's coupons
      * @return arrayList of customer purchased coupons
      */
-    public static List<Coupon> getCouponsByCustomerId(int customerID){
+    public  List<Coupon> getCouponsByCustomerId(int customerID){
         List<Coupon> couponByCustomer = new ArrayList<>();
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
@@ -285,7 +256,7 @@ public class CouponsDBDAO implements CouponsDAO {
         if(resultSet==null) return null;
         try{
         while(resultSet.next()){
-            Coupon coupon = getOneCouponStatic(resultSet.getInt("coupon_id"));
+            Coupon coupon = getOneCoupon(resultSet.getInt("coupon_id"));
             couponByCustomer.add(coupon);
             }}catch(SQLException | CustomExceptions err){
             System.out.println(err.getMessage());
@@ -308,6 +279,7 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return categoryId;
     }
+
     public String getCategoryName(int categoryId){
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,categoryId);
@@ -321,20 +293,6 @@ public class CouponsDBDAO implements CouponsDAO {
             }
         return null;
         }
-    public static String getCategoryNameStatic(int categoryId){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,categoryId);
-        try {
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_CATEGORY_NAME,values);
-            assert resultSet != null;
-            if(resultSet.next()) {
-                return resultSet.getString("name");
-            }} catch (SQLException err) {
-            System.out.println(err.getMessage());
-        }
-        return null;
-    }
-
 
     public void addCategory(Category category){
         Map<Integer,Object> values = new HashMap<>();
