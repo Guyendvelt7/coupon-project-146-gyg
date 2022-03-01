@@ -55,45 +55,50 @@ public class CustomersDBDAO implements CustomersDAO {
         }
 
     @Override
-    public void updateCustomer(Customer customer){
+    public void updateCustomer(Customer customer) throws CustomExceptions {
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customer.getFirstName());
         values.put(2,customer.getLastName());
         values.put(3,customer.getEmail());
         values.put(4,customer.getPassword());
         values.put(5,customer.getId());
-        DBTools.runQuery(DBManager.UPDATE_CUSTOMER,values);
+        if(getOneCustomer(customer.getId())==null){
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }
+            DBTools.runQuery(DBManager.UPDATE_CUSTOMER, values);
     }
 
     @Override
-    public void deleteCustomer(int customerID){
+    public void deleteCustomer(int customerID) throws CustomExceptions{
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
+        if(getOneCustomer(customerID)==null){
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }
         DBTools.runQuery(DBManager.DELETE_CUSTOMER,values);
     }
 
     @Override
     public List<Customer> getAllCustomers(){
-        ResultSet customerResultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
-        List<Customer> allCustomers = new ArrayList<>();
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
+        List<Customer> customers = new ArrayList<>();
         try{
-               while(customerResultSet.next()) {
-                int id = customerResultSet.getInt("id");
-                allCustomers.add(new Customer(
-                        customerResultSet.getInt("id"),
-                        customerResultSet.getString("first_name"),
-                        customerResultSet.getString("last_name"),
-                        customerResultSet.getString("email"),
-                        customerResultSet.getString("password"),
-                        this.couponsDBDAO.getCouponsByCustomerId(id))
-                );
-        }
+            while (resultSet.next()) {
+                if(!resultSet.next()) break;
+                Customer customer = getOneCustomer(resultSet.getInt("id"));
+                System.out.println(customer);
+                customers.add(customer);
+
+            }
 
     } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
-        return allCustomers;
+        return customers;
         }
+
+
+
 
         @Override
     public Customer getOneCustomer(int customerID){
@@ -105,11 +110,11 @@ public class CustomersDBDAO implements CustomersDAO {
             resultSet.next();
             return new Customer(
                     resultSet.getInt("id"),
-                    resultSet.getString("firstName"),
-                    resultSet.getString("lastName"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
-                     couponsDBDAO.getCouponsByCustomerId(customerID)
+                     CouponsDBDAO.getCouponsByCustomerId(customerID)
             );
         } catch (SQLException err) {
             System.out.println(err.getMessage());

@@ -7,29 +7,31 @@ import clients.db.DBTools;
 import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CustomerTests {
-    private static CustomersDBDAO customersDBDAO;
-    private static CouponsDBDAO couponsDBDAO;
-
+private static CustomersDBDAO customersDBDAO;
+private static Customer customer;
 
     @BeforeClass
     public static void message() {
         System.out.println("start test and initialize db-dao");
+        customer = new Customer(5, "yoav", "hacmon", "yoavs-email", "yoavs-password", null);
         customersDBDAO = new CustomersDBDAO();
-        couponsDBDAO = new CouponsDBDAO();
+
 
 
     }
 
     @Test
     public void addCustomer() throws CustomExceptions {
-        Customer customer = new Customer(3, "geri", "glazer", "geris-email", "geris-password", null);
         customersDBDAO.addCustomer(customer);
 
     }
@@ -46,27 +48,51 @@ public class CustomerTests {
 
     @Test
     public void updateCustomer() {
-        Customer customer = new Customer(1, "guy", "endvelt", "guys-email", "guys-password", null);
-        customersDBDAO.updateCustomer(customer);
+        customer.setEmail("yoyo123-email");
+        try {
+            customersDBDAO.updateCustomer(customer);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void deleteCustomer() {
-        customersDBDAO.deleteCustomer(1);
+        try {
+            customersDBDAO.deleteCustomer(8);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+   @Test
+   public void getAllCustomers(){
+        customersDBDAO.getAllCustomers();
+
+       }
+
+       //customersDBDAO.getAllCustomers();
+   @Test
+   public void getOneCustomer(){
+       //ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
+       customersDBDAO.getOneCustomer(3);
+   }
+
+    @Test
+    public void getOneCoupons() throws CustomExceptions {
+        Coupon coupon = CouponsDBDAO.getOneCouponStatic(1);
+        System.out.println(coupon);
     }
 
     @Test
-    public void getAllCustomers() {
-        List<Customer> customerList = customersDBDAO.getAllCustomers();
-        //customerList.forEach(System.out::println);
+        public void getCouponsByCustomerId() throws CustomExceptions {
+            List<Coupon> coupons = CouponsDBDAO.getCouponsByCustomerId(3);
+            System.out.println(coupons);
     }
 
     @Test
-    public void getCouponsByCustomerId() throws CustomExceptions {
-        //couponsDBDAO.getOneCoupon(1);
-        //DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER);
-        //Coupon coupon = new Coupon();
-        //couponsDBDAO.getAllCoupons();
+    public void addCouponToCustomer(){
+        customersDBDAO.addCouponToCustomer(3,1);
     }
 
 

@@ -32,6 +32,19 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         return false;
     }
+    private static boolean isCouponExistsStatic(int id){
+        Map<Integer, Object> values = new HashMap<>();
+        try {
+            values.put(1, id);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON, values);
+            assert resultSet != null;
+            resultSet.next();
+            return (resultSet.getInt(1) == 1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
     /**
      * insert new coupon info to database
      *
@@ -228,7 +241,34 @@ public class CouponsDBDAO implements CouponsDAO {
             throw new CustomExceptions(EnumExceptions.COMPANY_IS_NOT_EXIST);
         }
     }
+    public static Coupon getOneCouponStatic(int coupon_id) throws CustomExceptions {
+        if(!isCouponExistsStatic(coupon_id)){
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+        }
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,coupon_id);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON,values);
+        try {
+            assert resultSet != null;
+            if (resultSet.next()) {
+                return new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        Category.valueOf(CouponsDBDAO.getCategoryNameStatic(resultSet.getInt("category_id"))),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
+            }
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
 
+        }
+        return null;
+    }
 
 
     /**
@@ -237,15 +277,16 @@ public class CouponsDBDAO implements CouponsDAO {
      * @param customerID to locate said customer and it's coupons
      * @return arrayList of customer purchased coupons
      */
-    public List<Coupon> getCouponsByCustomerId(int customerID){
-        List<Coupon> couponByCustomer = null;
+    public static List<Coupon> getCouponsByCustomerId(int customerID){
+        List<Coupon> couponByCustomer = new ArrayList<>();
         Map<Integer,Object> values = new HashMap<>();
         values.put(1,customerID);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER,values);
         if(resultSet==null) return null;
         try{
         while(resultSet.next()){
-           couponByCustomer.add(getOneCoupon(resultSet.getInt("coupon_id")));
+            Coupon coupon = getOneCouponStatic(resultSet.getInt("coupon_id"));
+            couponByCustomer.add(coupon);
             }}catch(SQLException | CustomExceptions err){
             System.out.println(err.getMessage());
             }
@@ -280,6 +321,19 @@ public class CouponsDBDAO implements CouponsDAO {
             }
         return null;
         }
+    public static String getCategoryNameStatic(int categoryId){
+        Map<Integer,Object> values = new HashMap<>();
+        values.put(1,categoryId);
+        try {
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_CATEGORY_NAME,values);
+            assert resultSet != null;
+            if(resultSet.next()) {
+                return resultSet.getString("name");
+            }} catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+        return null;
+    }
 
 
     public void addCategory(Category category){
