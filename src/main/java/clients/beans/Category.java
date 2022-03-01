@@ -1,5 +1,7 @@
 package clients.beans;
 
+import java.util.Arrays;
+
 public enum Category {
     /**
      * coupons categories
@@ -17,6 +19,11 @@ public enum Category {
     PETS,
     OTHER;
 
-
+public static Category getValue (String constant){
+    return Arrays.stream(Category.values())
+            .filter(item->item.name().equals(constant))
+            .findFirst()
+            .orElse(null);
+}
 
 }

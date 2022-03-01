@@ -3,6 +3,7 @@ package clients.facade;
 import clients.CustomExceptions;
 import clients.beans.Company;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminFacade extends ClientFacade {
     private final String email;
@@ -28,11 +29,7 @@ public class AdminFacade extends ClientFacade {
     }
 
     public void updateCompany (Company company) {
-        try {
-            this.companiesDBDAO.updateCompany(company);
-        } catch (CustomExceptions e) {
-            System.out.println(e.getMessage());
-        }
+        this.companiesDBDAO.updateCompany(company);
     }
 
     public void deleteCompany (int companyID) {
@@ -43,7 +40,7 @@ public class AdminFacade extends ClientFacade {
         }
     }
 
-    public ArrayList<Company> getAllCompanies(){
+    public List<Company> getAllCompanies(){
         try {
             return this.companiesDBDAO.getAllCompanies();
         } catch (CustomExceptions e) {
@@ -56,11 +53,12 @@ public class AdminFacade extends ClientFacade {
         Company comp = null;
         try {
             comp = this.companiesDBDAO.getOneCompany(companyID);
+
+        assert comp != null;
+        comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());;
         }
-        assert comp != null;
-        comp.setCoupons(this.companiesDBDAO.getCompanyCoupons(companyID));
         return comp;
     }
 

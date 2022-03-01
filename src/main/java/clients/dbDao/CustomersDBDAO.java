@@ -22,12 +22,12 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public boolean isCustomerExist(String email, String password) {
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,email);
-        values.put(2,password);
-       ResultSet resultSet =  DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS,values);
-        assert resultSet != null;
+        Map<Integer, Object> values = new HashMap<>();
         try {
+            values.put(1, email);
+            values.put(2, password);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS, values);
+            assert resultSet != null;
             resultSet.next();
             return resultSet.getInt("1") == 1;
         } catch (SQLException e) {
@@ -39,91 +39,89 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public void addCustomer(Customer customer) throws CustomExceptions {
-    Map<Integer,Object> values = new HashMap<>();
-    values.put(1,customer.getFirstName());
-    values.put(2,customer.getLastName());
-    values.put(3,customer.getEmail());
-    values.put(4,customer.getPassword());
-        if(this.isCustomerExist(customer.getEmail(), customer.getPassword())){
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customer.getFirstName());
+        values.put(2, customer.getLastName());
+        values.put(3, customer.getEmail());
+        values.put(4, customer.getPassword());
+        if (this.isCustomerExist(customer.getEmail(), customer.getPassword())) {
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
         } else {
             DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
         }
 
 
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) throws CustomExceptions {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customer.getFirstName());
+        values.put(2, customer.getLastName());
+        values.put(3, customer.getEmail());
+        values.put(4, customer.getPassword());
+        values.put(5, customer.getId());
+        if (getOneCustomer(customer.getId()) == null) {
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
-
-    @Override
-    public void updateCustomer(Customer customer){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customer.getFirstName());
-        values.put(2,customer.getLastName());
-        values.put(3,customer.getEmail());
-        values.put(4,customer.getPassword());
-        values.put(5,customer.getId());
-        DBTools.runQuery(DBManager.UPDATE_CUSTOMER,values);
+        DBTools.runQuery(DBManager.UPDATE_CUSTOMER, values);
     }
 
     @Override
-    public void deleteCustomer(int customerID){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customerID);
-        DBTools.runQuery(DBManager.DELETE_CUSTOMER,values);
+    public void deleteCustomer(int customerID) throws CustomExceptions {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customerID);
+        if (getOneCustomer(customerID) == null) {
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }
+        DBTools.runQuery(DBManager.DELETE_CUSTOMER, values);
     }
 
     @Override
-    public List<Customer> getAllCustomers(){
-        ResultSet customerResultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
-        List<Customer> allCustomers = new ArrayList<>();
-        while(true){
-            try {
-                assert customerResultSet != null;
-                if (!customerResultSet.next()) break;
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());            }
-            try {
-                allCustomers.add(new Customer(
-                        customerResultSet.getInt("id"),
-                        customerResultSet.getString("firstName"),
-                        customerResultSet.getString("lastName"),
-                        customerResultSet.getString("email"),
-                        customerResultSet.getString("password"),
-                        couponsDBDAO.getCouponsByCustomerId(customerResultSet.getInt("id"))
-                ));
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());                
+    public List<Customer> getAllCustomers() {
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
+        List<Customer> customers = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                if (!resultSet.next()) break;
+                Customer customer = getOneCustomer(resultSet.getInt("id"));
+                System.out.println(customer);
+                customers.add(customer);
             }
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
         }
-        return allCustomers;
+        return customers;
     }
 
     @Override
-    public Customer getOneCustomer(int customerID){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customerID);
-       ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER,values);
+    public Customer getOneCustomer(int customerID) {
+        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customerID);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER, values);
         assert resultSet != null;
-        try{
+        try {
             resultSet.next();
             return new Customer(
                     resultSet.getInt("id"),
-                    resultSet.getString("firstName"),
-                    resultSet.getString("lastName"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
-                     couponsDBDAO.getCouponsByCustomerId(customerID)
+                    couponsDBDAO.getCouponsByCustomerId(customerID)
             );
-        } catch (SQLException e) {
-            System.out.println(EnumExceptions.RESULT_SET_DATA_PROBLEM);
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
             return null;
         }
     }
 
-    public void addCouponToCustomer(int couponId, int customerId){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customerId);
-        values.put(2,couponId);
-        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER,values);
+    public void addCouponToCustomer(int couponId, int customerId) {
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customerId);
+        values.put(2, couponId);
+        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER, values);
     }
 
 

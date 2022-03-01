@@ -23,8 +23,13 @@ public class Coupon {
     private Scanner sc = new Scanner(System.in);
 
     /**
+     * default C`tor
+     */
+    public Coupon() {
+    }
+
+    /**
      *Coupon constructor
-     * @param id coupon ID
      * @param companyId refers to coupons company ownership
      * @param category refers to coupons category type
      * @param title coupons name
@@ -38,7 +43,7 @@ public class Coupon {
 
 
     public Coupon(int id, int companyId, Category category, String title, String description, Date startDate, Date endDate, int amount, double price, String image) {
-        this.id = id;
+        this.id=id;
         this.companyId = companyId;
         this.category = category;
         this.title = title;

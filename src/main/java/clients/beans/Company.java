@@ -1,5 +1,7 @@
 package clients.beans;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
 import clients.db.DBManager;
 import clients.dbDao.CouponsDBDAO;
 
@@ -14,6 +16,9 @@ public class Company {
     private List<Coupon> coupons;
     CouponsDBDAO couponsDBDAO;
 
+    public Company(){
+
+    }
     public Company(int id, String name, String email, String password, List<Coupon> coupons) {
         this.id = id;
         this.name = name;
@@ -26,16 +31,16 @@ public class Company {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int id) throws CustomExceptions {
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_ID);
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name) throws CustomExceptions{
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_NAME);
     }
 
     public String getEmail() {
