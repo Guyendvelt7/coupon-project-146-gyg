@@ -29,7 +29,7 @@ public class CustomersDBDAO implements CustomersDAO {
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS_BY_EMAIL_AND_PASS, values);
             assert resultSet != null;
             resultSet.next();
-            return resultSet.getInt("1") == 1;
+            return resultSet.getInt(1) == 1;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
