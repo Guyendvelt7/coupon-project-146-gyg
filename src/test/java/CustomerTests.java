@@ -46,8 +46,6 @@ private static LoginManager loginManager;
     }
 
 
-
-
     @Test
     public void addCustomer() throws CustomExceptions {
         customersDBDAO.addCustomer(customer);

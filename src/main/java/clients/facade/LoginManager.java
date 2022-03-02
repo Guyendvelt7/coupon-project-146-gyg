@@ -20,9 +20,9 @@ public class LoginManager {
     private static AdminFacade adminFacade;
     private static CustomerFacade customerFacade;
     private static CompanyFacade companyFacade;
-    private static CustomersDBDAO customersDBDAO;
-    private static CompaniesDBDAO companiesDBDAO;
-    private static CouponsDBDAO couponsDBDAO;
+    private static CustomersDBDAO customersDBDAO= new CustomersDBDAO();
+    private static CompaniesDBDAO companiesDBDAO= new CompaniesDBDAO();
+    private static CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
     private LoginManager() {
 
@@ -39,8 +39,7 @@ public class LoginManager {
         //Predicate<String> validation = isValidEmailAddress(email).or(isValidPassword(password));
         switch (clientType) {
             case ADMINISTRATOR:
-                couponsDBDAO = new CouponsDBDAO();
-                if (couponsDBDAO.isCouponExists(email, password)) {
+                if (adminFacade.login(email, password)) {
                     System.out.println("admin connected");
                     return new AdminFacade();
                 } else {
@@ -48,18 +47,16 @@ public class LoginManager {
                 }
 
         case COMPANY:
-            companiesDBDAO = new CompaniesDBDAO();
         if (companiesDBDAO.isCompanyExists(email,password)){
-            Company company = companyFacade.companiesDBDAO.getAllCompanies().stream()
-                    .filter(item -> Objects.equals(item.getPassword(), password))
-                    .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
-            System.out.println(company.getName() + " connected");
-            return new CompanyFacade(company.getId());
+                Company company = companyFacade.companiesDBDAO.getAllCompanies().stream()
+                        .filter(item -> Objects.equals(item.getPassword(), password))
+                        .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+                System.out.println(company.getName() + " connected");
+                return new CompanyFacade(company.getId());
         } else {
             throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
         }
         case CUSTOMER:
-            customersDBDAO = new CustomersDBDAO();
             if(customersDBDAO.isCustomerExist(email,password)){
             Customer customer = customersDBDAO.getAllCustomers().stream()
                     .filter(item -> Objects.equals(item.getPassword(), password))
