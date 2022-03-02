@@ -186,10 +186,17 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public void addCouponPurchase(int customerID, int couponID) throws CustomExceptions {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customerID);
-        values.put(2, couponID);
-        DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
+        if(getCouponsByCustomerId(customerID)==null) {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, customerID);
+            values.put(2, couponID);
+                DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
+            Coupon coupon = getOneCoupon(couponID);
+            coupon.setAmount(coupon.getAmount() - 1);
+            updateCoupon(coupon);
+        }else {
+            throw new CustomExceptions(EnumExceptions.COUPON_PURCHASED);
+        }
     }
 
     /**
@@ -223,7 +230,7 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         try {
             while (resultSet.next()) {
-                couponsByCompany.add(getOneCoupon(resultSet.getInt("coupon_id")));
+                couponsByCompany.add(getOneCoupon(resultSet.getInt("id")));
             }
         } catch (SQLException | CustomExceptions err) {
             System.out.println(err.getMessage());
