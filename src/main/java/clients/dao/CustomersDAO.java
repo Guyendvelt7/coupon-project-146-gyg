@@ -3,8 +3,6 @@ package clients.dao;
 import clients.CustomExceptions;
 import clients.beans.Customer;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface CustomersDAO {

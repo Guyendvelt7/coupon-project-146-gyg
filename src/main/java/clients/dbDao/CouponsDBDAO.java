@@ -5,6 +5,7 @@ import clients.EnumExceptions;
 import clients.beans.Category;
 import clients.beans.CategoryClass;
 import clients.beans.Coupon;
+import clients.beans.Customer;
 import clients.dao.CouponsDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
@@ -15,12 +16,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
  */
 public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
+    CustomersDBDAO customersDBDAO;
     CategoryClass categoryClass = new CategoryClass();
 
     /**
@@ -53,7 +57,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         if (!isCouponExists(coupon.getId())) {
                 values.put(1, coupon.getCompanyId());
-                values.put(2, categoryClass.getCategoryId(coupon.getCategory()));
+                values.put(2, CategoryClass.getCategoryId(coupon.getCategory()));
                 values.put(3, coupon.getTitle());
                 values.put(4, coupon.getDescription());
                 values.put(5, coupon.getStartDate());
@@ -78,7 +82,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         if (isCouponExists(coupon.getId())) {
             values.put(1, coupon.getCompanyId());
-            values.put(2, categoryClass.getCategoryId(coupon.getCategory()));
+            values.put(2, CategoryClass.getCategoryId(coupon.getCategory()));
             values.put(3, coupon.getTitle());
             values.put(4, coupon.getDescription());
             values.put(5, coupon.getStartDate());
@@ -186,7 +190,10 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public void addCouponPurchase(int customerID, int couponID) throws CustomExceptions {
-        if(getCouponsByCustomerId(customerID)==null) {
+        Predicate<Coupon> isInYourList = item->item.getId()==couponID;
+        List<Coupon> coupons = getCouponsByCustomerId(customerID).stream()
+                .filter(isInYourList).collect(Collectors.toList());
+        if(coupons.isEmpty()) {
             Map<Integer, Object> values = new HashMap<>();
             values.put(1, customerID);
             values.put(2, couponID);

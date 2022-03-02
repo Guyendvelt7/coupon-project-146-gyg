@@ -12,9 +12,8 @@ public class DBTools {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = null;
-            statement = connection.prepareStatement(sql);
-            statement.execute();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.execute();
             return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
