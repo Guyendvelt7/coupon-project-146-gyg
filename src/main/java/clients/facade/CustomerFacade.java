@@ -78,12 +78,4 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
       return customersDBDAO.getOneCustomer(customerID);
     }
 
-    public boolean canPurchaseCoupon(Coupon coupon) throws CustomExceptions {
-             if(getCustomerCoupons().stream()
-                    .filter(one->one.getId()==coupon.getId()).count()>0){
-                 return false;
-             }
-        return !coupon.getEndDate().toLocalDate().isBefore(LocalDate.now()) && coupon.getAmount() != 0;
-    }
-
 }

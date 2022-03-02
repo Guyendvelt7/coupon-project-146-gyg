@@ -1,87 +1,76 @@
 import clients.CustomExceptions;
-import clients.EnumExceptions;
 import clients.beans.Coupon;
 import clients.beans.Customer;
+import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
 import clients.facade.ClientFacade;
 import clients.facade.ClientType;
 import clients.facade.CustomerFacade;
 import clients.facade.LoginManager;
-import com.sun.source.tree.AssertTree;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CustomerFacadeTests {
-private static Customer customer;
-private static CustomersDBDAO customersDBDAO;
-private static CouponsDBDAO couponsDBDAO;
-private static LoginManager loginManager;
-private static CustomerFacade customerFacade;
-private static Coupon coupon;
+    private static CustomersDBDAO customersDBDAO;
+    private static Customer customer;
+    private static CouponsDBDAO couponsDBDAO;
+    private static CustomerFacade customerFacade;
+    private static LoginManager loginManager;
+    private static Coupon coupon;
 
-@BeforeClass
-public static void InitAndMessage(){
-    System.out.println("start test and initialize db-dao");
-    customersDBDAO = new CustomersDBDAO();
-    couponsDBDAO = new CouponsDBDAO();
-    customer = new Customer(5, "geri", "glazer", "geris-email", "geris-password", couponsDBDAO.getCouponsByCustomerId(3));
-    loginManager = LoginManager.getInstance();
-    try {
-        coupon = couponsDBDAO.getOneCoupon(1);
-    } catch (CustomExceptions e) {
-        e.printStackTrace();
-    }
 
-    try {
-        customerFacade =  (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(),ClientType.CUSTOMER);
-    } catch (CustomExceptions e) {
-        e.printStackTrace();
-    }
-}
-    @Test
-    public void getCustomerId(){
-    Assert.assertEquals(customerFacade.getCustomerID(),3);
-    }
-    @Test
-    public void Goodlogin(){
-        Assert.assertTrue(customerFacade.login("geris-email","geris-password"));
-    }
-    @Test
-    public void Badlogin(){
-        Assert.assertFalse(customerFacade.login("zeev-email","zeev-password"));
-    }
-    @Test
-    public void purchaseCoupon(){
-    int beforeAmount = coupon.getAmount();
-    customerFacade.purchaseCoupon(coupon);
-    int afterAmount = coupon.getAmount();
-        System.out.println(beforeAmount);
-        System.out.println(afterAmount);
-    //Assert.assertEquals(beforeAmount,afterAmount+1);
-    }
-
-    @Test
-    public void cantPurchaseCoupon(){
-    coupon.setAmount(0);
+    @BeforeClass
+    public static void initializing() {
+        System.out.println("starting initialize");
+        customersDBDAO = new CustomersDBDAO();
+        customer = customersDBDAO.getOneCustomer(5);
+        System.out.println(customer);
+        loginManager = LoginManager.getInstance();
+        couponsDBDAO = new CouponsDBDAO();
         try {
-            Assert.assertFalse(customerFacade.canPurchaseCoupon(coupon));
-        } catch (CustomExceptions e) {
-            e.printStackTrace();
-        }
-    }
-    @Test
-    public void getCustomerCoupons(){
-        try {
-            customerFacade.getCustomerCoupons();
+            coupon = couponsDBDAO.getOneCoupon(2);
+            System.out.println(coupon);
+            customerFacade = (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER);
         } catch (CustomExceptions e) {
             e.printStackTrace();
         }
 
     }
 
+    @Test
+    public void goodLogin() throws CustomExceptions {
+        System.out.println(customer.getEmail());
+        System.out.println(customer.getPassword());
+        Assert.assertTrue((loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER) instanceof CustomerFacade));
+    }
 
+    @Test
+    public void Badlogin() {
+        try {
+            Assert.assertFalse(loginManager.login("zeev-email", "zeev-password", ClientType.CUSTOMER) instanceof CustomerFacade);
+        } catch (CustomExceptions e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test(expected = CustomExceptions.class)
+    public void exceptionlogin() throws CustomExceptions {
+
+        loginManager.login("zeev-email", "zeev-password", ClientType.CUSTOMER);
+
+    }
+
+
+    @Test
+    public void purchaseCoupon() {
+        //int beforeAmount = coupon.getAmount();
+        customerFacade.purchaseCoupon(coupon);
+        //int afterAmount = coupon.getAmount();
+
+        //Assert.assertEquals(beforeAmount,afterAmount+1);
+    }
 
 
 }
