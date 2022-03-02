@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ */
 public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
     CategoryClass categoryClass = new CategoryClass();
@@ -30,7 +33,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, id);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COUPON_BY_ID, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
@@ -126,8 +129,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
-                        resultSet.getInt("start_date"),
-                        resultSet.getInt("end_date"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
                         resultSet.getInt("amount"),
                         resultSet.getDouble("price"),
                         resultSet.getString("image")));
@@ -161,8 +164,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
-                        resultSet.getInt("start_date"),
-                        resultSet.getInt("end_date"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
                         resultSet.getInt("amount"),
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));

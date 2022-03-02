@@ -37,14 +37,14 @@ public class Coupon {
      */
 
 
-    public Coupon(int id, int companyId, Category category, String title, String description, int when2Start, int when2End, int amount, double price, String image) {
+    public Coupon(int id, int companyId, Category category, String title, String description, Date startDate, Date endDate, int amount, double price, String image) {
         this.id=id;
         this.companyId = companyId;
         this.category = category;
         this.title = title;
         this.description = description;
-        setStartDate(when2Start);
-        setEndDate(when2End);
+        this.startDate=startDate;
+        this.endDate=endDate;
         this.amount = amount;
         this.price = price;
         this.image = image;

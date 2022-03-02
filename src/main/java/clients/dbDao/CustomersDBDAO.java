@@ -2,7 +2,6 @@ package clients.dbDao;
 
 import clients.CustomExceptions;
 import clients.EnumExceptions;
-import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomersDAO;
 import clients.db.DBManager;
@@ -15,9 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ */
 public class CustomersDBDAO implements CustomersDAO {
-    //todo: ConnectionPool connectionPool
-    //todo: add exceptions
     private CouponsDBDAO couponsDBDAO;
 
     @Override
@@ -26,7 +26,7 @@ public class CustomersDBDAO implements CustomersDAO {
         try {
             values.put(1, email);
             values.put(2, password);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS_BY_EMAIL_AND_PASS, values);
             assert resultSet != null;
             resultSet.next();
             return resultSet.getInt("1") == 1;
