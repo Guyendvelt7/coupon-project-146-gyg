@@ -12,7 +12,7 @@ import java.util.List;
 import static junit.framework.TestCase.assertTrue;
 
 public class CompanyTest {
-    private static CompaniesDBDAO companiesDBDAO;
+    private static CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
     private static Company company;
 
 

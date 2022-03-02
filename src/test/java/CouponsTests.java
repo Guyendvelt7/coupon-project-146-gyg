@@ -17,7 +17,7 @@ public class CouponsTests {
     @BeforeClass
     public static void initTest() {
         couponsDBDAO = new CouponsDBDAO();
-        coupon= new Coupon(0,2, Category.FOOD, "other",
+        coupon= new Coupon(0,5, Category.FOOD, "other",
                     "not sure",new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*2),new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*30),200, 54,"mmmmm!");
     }
 
@@ -88,7 +88,7 @@ public class CouponsTests {
     @Test
     public void addPurchasedCoupon(){
         try {
-            couponsDBDAO.addCouponPurchase(2, 1);
+            couponsDBDAO.addCouponPurchase(4, 1);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }

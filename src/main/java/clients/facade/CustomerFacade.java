@@ -7,6 +7,7 @@ import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomerFacadeDao;
 import clients.dbDao.CouponsDBDAO;
+import clients.dbDao.CustomersDBDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 
 public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     private int customerID;
+    private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+    private CustomersDBDAO customersDBDAO = new CustomersDBDAO();
 
     public CustomerFacade(int customerID) {
         this.customerID = customerID;
@@ -36,10 +39,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     @Override
     public void purchaseCoupon(Coupon coupon){
         try {
-            if(canPurchaseCoupon(coupon)){
-                coupon.setAmount(coupon.getAmount()-1);
-                couponsDBDAO.addCouponPurchase(coupon.getId(),customerID);
-            }
+                couponsDBDAO.addCouponPurchase(customerID,coupon.getId());
         } catch (CustomExceptions customException) {
             System.out.println(customException.getMessage());
         }
@@ -48,11 +48,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
 
     @Override
     public List<Coupon> getCustomerCoupons() throws CustomExceptions {
-       if (couponsDBDAO.getCouponsByCustomerId(this.customerID).isEmpty()){
-           throw new CustomExceptions(EnumExceptions.NO_COUPONS);
-       } else{
-           return couponsDBDAO.getCouponsByCustomerId(this.customerID);
-       }
+       return couponsDBDAO.getCouponsByCustomerId(this.customerID);
         }
 
     @Override
@@ -82,7 +78,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
       return customersDBDAO.getOneCustomer(customerID);
     }
 
-    private boolean canPurchaseCoupon(Coupon coupon) throws CustomExceptions {
+    public boolean canPurchaseCoupon(Coupon coupon) throws CustomExceptions {
              if(getCustomerCoupons().stream()
                     .filter(one->one.getId()==coupon.getId()).count()>0){
                  return false;

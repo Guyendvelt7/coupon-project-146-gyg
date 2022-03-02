@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
  */
 public class CustomersDBDAO implements CustomersDAO {
-    private CouponsDBDAO couponsDBDAO;
+    private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
     @Override
     public boolean isCustomerExist(String email, String password) {
@@ -83,9 +83,7 @@ public class CustomersDBDAO implements CustomersDAO {
         List<Customer> customers = new ArrayList<>();
         try {
             while (resultSet.next()) {
-                if (!resultSet.next()) break;
                 Customer customer = getOneCustomer(resultSet.getInt("id"));
-                System.out.println(customer);
                 customers.add(customer);
             }
         } catch (SQLException err) {
