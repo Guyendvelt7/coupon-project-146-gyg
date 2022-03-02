@@ -1,17 +1,12 @@
 import clients.CustomExceptions;
 import clients.beans.Category;
-import clients.beans.CategoryClass;
 import clients.beans.Coupon;
 import clients.dbDao.CouponsDBDAO;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Date;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CouponsTests {
@@ -23,7 +18,7 @@ public class CouponsTests {
     public static void initTest() {
         couponsDBDAO = new CouponsDBDAO();
         coupon= new Coupon(0,2, Category.FOOD, "other",
-                    "not sure",1 ,30,200, 54,"mmmmm!");
+                    "not sure",new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*2),new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*30),200, 54,"mmmmm!");
     }
 
     @Test

@@ -7,10 +7,7 @@ import clients.beans.Coupon;
 import clients.dao.CompaniesDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
-import org.checkerframework.checker.units.qual.C;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,14 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ */
 public class CompaniesDBDAO implements CompaniesDAO {
     CouponsDBDAO couponsDBDAO;
+
 
     public boolean isCompanyExistsById(int id) {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, id);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_ID, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
