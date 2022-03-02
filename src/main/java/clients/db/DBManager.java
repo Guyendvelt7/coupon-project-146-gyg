@@ -105,6 +105,9 @@ public class DBManager {
     public static final String DELETE_PURCHASED_COUPON = "DELETE FROM `coupons_project`.`customers_vs_coupons` " +
             "WHERE `customer_id`=? AND `coupon_id`=?;";
 
+    public static final String DELETE_PURCHASED_COUPON_BY_COUPON_ID = "DELETE FROM `coupons_project`.`customers_vs_coupons` " +
+            "WHERE `coupon_id`=?;";
+
     public static final String GET_COUPONS_BY_COMPANIES = "SELECT * FROM `coupons_project`.`coupons` WHERE company_id=?;";
 
     public static final String ADD_COMPANY = "INSERT INTO `coupons_project`.`companies` ( `name`, `email`, `password`) VALUES (?,?,?);";
@@ -133,9 +136,6 @@ public class DBManager {
 
     public static final String GET_ONE_CUSTOMER = "SELECT * FROM `coupons_project`.`customers` WHERE (`id` = ?);";
 
-    public static final String ADD_COUPON_TO_CUSTOMER = "INSERT INTO `coupons_project`.`customers_vs_coupons` " +
-            "(`customer_id`, `coupon_id`) " +
-            "VALUES (?,?);";
     public static final String GET_COUPONS_BY_CUSTOMER = "SELECT * FROM `coupons_project`.`customers_vs_coupons` WHERE `customer_id`=?;";
 
     public static final String GET_ALL_CUSTOMERS = "SELECT * FROM `coupons_project`.`customers`;";

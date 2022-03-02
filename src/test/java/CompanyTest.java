@@ -56,7 +56,7 @@ public class CompanyTest {
     @Test
     public void deleteCompany() {
         try {
-            companiesDBDAO.deleteCompany(company.getId());
+            companiesDBDAO.deleteCompany(4);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }

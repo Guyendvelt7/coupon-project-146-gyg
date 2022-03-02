@@ -19,8 +19,7 @@ import java.util.Map;
  * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
  */
 public class CompaniesDBDAO implements CompaniesDAO {
-    CouponsDBDAO couponsDBDAO;
-
+    CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
     public boolean isCompanyExistsById(int id) {
         Map<Integer, Object> values = new HashMap<>();
@@ -54,7 +53,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, email);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_NAME, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_EMAIL, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
@@ -120,10 +119,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
         DBTools.runQuery(DBManager.DELETE_COMPANY, values);
-        List<Coupon> companyCoupons = getCompanyCoupons(companyId);
-        for (Coupon item : companyCoupons) {
-            couponsDBDAO.deleteCoupon(item.getId());
-        }
     }
 
     @Override
@@ -169,7 +164,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
                             resultSet.getString("password"),
                             coupons
                     );
-                    coupons = couponsDBDAO.getCouponsByCompanyId(companyId);
                 }
             } catch (SQLException err) {
                 System.out.println(err.getMessage());

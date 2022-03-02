@@ -88,7 +88,7 @@ public class CouponsTests {
     @Test
     public void addPurchasedCoupon(){
         try {
-            couponsDBDAO.addCouponPurchase(2, 3);
+            couponsDBDAO.addCouponPurchase(2, 1);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }

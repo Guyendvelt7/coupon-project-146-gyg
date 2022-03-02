@@ -9,15 +9,10 @@ public enum EnumExceptions {
     EMAIL_EXIST("Cannot add existing email."),
     INVALID_EMAIL("Invalid email."),
     ID_NOT_EXIST("Invalid ID."),
-    INVALID_PASSWORD("Invalid password."),
     COUPON_TITLE_EXIST("Cannot add coupon, title already exist."),
     COUPON_PURCHASED("Cannot purchase this item, already in your list."),
-    EMPTY_RESULT_SET("No data in result set, result empty"),
-    NO_COMPANIES("There are no companies in the system"),
     //INVALID ID?
-    NO_COMPANY("There is no company with this id in the system"),
-    //NAME_EXIST?
-    CUSTOMER_ALREADY_EXIST("The customer already exist in the system"),
+    NO_COMPANY("There is no company with this ID in the system"),
     NO_COUPONS("You don't have coupons."),
     NO_COUPONS_BY_CATEGORY("You don't have coupons at this category"),
     NO_COUPONS_BY_PRICE("You don't have coupons under this price"),
