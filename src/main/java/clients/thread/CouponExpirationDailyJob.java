@@ -32,9 +32,10 @@ public class CouponExpirationDailyJob implements Runnable {
                 System.out.println(e.getMessage());
                 System.out.println(EnumExceptions.ID_NOT_EXIST);
             }
-        }
 
+        }
     }
+
     public void stop(){
         this.quit = true;
     }

@@ -8,25 +8,33 @@ public enum EnumExceptions {
     NAME_EXIST("Cannot add existing name."),
     EMAIL_EXIST("Cannot add existing email."),
     INVALID_EMAIL("Invalid email."),
-    ID_NOT_EXIST("Cannot update/remove, invalid ID."),
+    ID_NOT_EXIST("Invalid ID."),
     INVALID_PASSWORD("Invalid password."),
     COUPON_TITLE_EXIST("Cannot add coupon, title already exist."),
     COUPON_PURCHASED("Cannot purchase this item, already in your list."),
-    EMPTY_RESULT_SET("no data in result set, the result set does not! have next"),
-    RESULT_SET_DATA_PROBLEM("problem in the result set data, sql context"),
-    NO_COMPANIES("there are no companies in the system"),
-    NO_COMPANY("there is no company with this id in the system"),
-    CUSTOMER_ALREADY_EXIST("the customer already exist in the system"),
-    NO_COUPONS("you don't have coupons purchased"),
-    NO_COUPONS_BY_CATEGORY("you don't have coupons at this category"),
-    NO_COUPONS_BY_PRICE("you don't have coupons under this price"),
-    COMPANY_ALREADY_EXIST("the company is already exist in the system"),
-    ID_COMPANY_ALREADY_EXIST("the id company is already exist in the system"),
+    EMPTY_RESULT_SET("No data in result set, result empty"),
+    NO_COMPANIES("There are no companies in the system"),
+    //INVALID ID?
+    NO_COMPANY("There is no company with this id in the system"),
+    //NAME_EXIST?
+    CUSTOMER_ALREADY_EXIST("The customer already exist in the system"),
+    NO_COUPONS("You don't have coupons."),
+    NO_COUPONS_BY_CATEGORY("You don't have coupons at this category"),
+    NO_COUPONS_BY_PRICE("You don't have coupons under this price"),
+    //NAME_EXIST?
+    COMPANY_ALREADY_EXIST("The company already exist in the system"),
+    //WTF?
+    ID_COMPANY_ALREADY_EXIST("The id company is already exist in the system"),
+    //NO_COUPONS
     NO_COUPONS_COMPANY("company doesn't have coupons"),
-    COMPANY_IS_NOT_EXIST("the company is not exist in the system"),
-    CATEGORY_IS_NOT_EXIST("not such category"),
-    No_COUPON("THERE IS NO COUPON WITH THIS ID");
-    ;
+    //COUPON_PURCHASED??
+    COUPON_ID_EXIST("This coupon already exist in Database"),
+    CAN_NOT_CHANGE_NAME("you can't change company name"),
+    CAN_NOT_CHANGE_ID("you can't change company id"),
+    //NAME EXIST
+    COMPANY_NAME_ALREADY_EXIST("Company name already exist"),
+    //EMAIL_EXIST?
+    COMPANY_EMAIL_ALREADY_EXIST("Company email already exist");
 
     private String message;
 

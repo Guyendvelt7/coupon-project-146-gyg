@@ -2,6 +2,7 @@ package clients.dbDao;
 
 import clients.CustomExceptions;
 import clients.EnumExceptions;
+import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomersDAO;
 import clients.db.DBManager;
@@ -22,15 +23,13 @@ public class CustomersDBDAO implements CustomersDAO {
     @Override
     public boolean isCustomerExist(String email, String password) {
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1, email);
-        values.put(2, password);
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS, values);
-        if (resultSet == null) {
-            return false;
-        }
         try {
+            values.put(1, email);
+            values.put(2, password);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS, values);
+            assert resultSet != null;
             resultSet.next();
-            return resultSet.getInt(1) == 1;
+            return resultSet.getInt("1") == 1;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -49,7 +48,6 @@ public class CustomersDBDAO implements CustomersDAO {
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
         } else {
             DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
-            System.out.println("customer added");
         }
 
 
@@ -81,20 +79,20 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public List<Customer> getAllCustomers() {
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS,new HashMap<>());
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS, new HashMap<>());
         List<Customer> customers = new ArrayList<>();
         try {
             while (resultSet.next()) {
+                if (!resultSet.next()) break;
                 Customer customer = getOneCustomer(resultSet.getInt("id"));
+                System.out.println(customer);
                 customers.add(customer);
             }
-
         } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
         return customers;
     }
-
 
     @Override
     public Customer getOneCustomer(int customerID) {
@@ -119,12 +117,13 @@ public class CustomersDBDAO implements CustomersDAO {
         }
     }
 
-    public void addCouponToCustomer(int couponId, int customerId) {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customerId);
-        values.put(2, couponId);
-        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER, values);
-    }
+    //todo: CouponDBDAO method: addPurchasedCoupon-NOT needed here
+//    public void addCouponToCustomer(int couponId, int customerId) {
+//        Map<Integer, Object> values = new HashMap<>();
+//        values.put(1, customerId);
+//        values.put(2, couponId);
+//        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER, values);
+//    }
 
 
 }

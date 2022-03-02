@@ -7,7 +7,6 @@ import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dao.CustomerFacadeDao;
 import clients.dbDao.CouponsDBDAO;
-import clients.dbDao.CustomersDBDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +17,6 @@ import java.util.stream.Collectors;
 
 public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     private int customerID;
-    private CustomersDBDAO customersDBDAO = new CustomersDBDAO();
-    private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
     public CustomerFacade(int customerID) {
         this.customerID = customerID;
@@ -41,9 +38,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         try {
             if(canPurchaseCoupon(coupon)){
                 coupon.setAmount(coupon.getAmount()-1);
-                customersDBDAO.addCouponToCustomer(coupon.getId(),customerID);
-            } else{
-                System.out.println("you cant purchase this coupon"); //todo: replace this message to customException
+                couponsDBDAO.addCouponPurchase(coupon.getId(),customerID);
             }
         } catch (CustomExceptions customException) {
             System.out.println(customException.getMessage());
@@ -54,7 +49,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
     @Override
     public List<Coupon> getCustomerCoupons() throws CustomExceptions {
        if (couponsDBDAO.getCouponsByCustomerId(this.customerID).isEmpty()){
-           return new ArrayList<>();
+           throw new CustomExceptions(EnumExceptions.NO_COUPONS);
        } else{
            return couponsDBDAO.getCouponsByCustomerId(this.customerID);
        }
@@ -87,7 +82,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
       return customersDBDAO.getOneCustomer(customerID);
     }
 
-    public boolean canPurchaseCoupon(Coupon coupon) throws CustomExceptions {
+    private boolean canPurchaseCoupon(Coupon coupon) throws CustomExceptions {
              if(getCustomerCoupons().stream()
                     .filter(one->one.getId()==coupon.getId()).count()>0){
                  return false;

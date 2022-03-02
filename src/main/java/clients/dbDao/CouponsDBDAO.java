@@ -3,23 +3,30 @@ package clients.dbDao;
 import clients.CustomExceptions;
 import clients.EnumExceptions;
 import clients.beans.Category;
-import clients.beans.Company;
+import clients.beans.CategoryClass;
 import clients.beans.Coupon;
 import clients.dao.CouponsDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
-import org.checkerframework.checker.units.qual.C;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
-    CustomersDBDAO customersDBDAO;
+    CategoryClass categoryClass = new CategoryClass();
 
-    public boolean isCouponExistsById(int id){
+    /**
+     * Checks the existence of a coupon in the table
+     *
+     * @param id use coupon id
+     * @return true or false
+     */
+    public boolean isCouponExists(int id) {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, id);
@@ -33,37 +40,29 @@ public class CouponsDBDAO implements CouponsDAO {
         return false;
     }
 
-
-    public boolean isCouponExists(String email,String password){
-        Map<Integer, Object> values = new HashMap<>();
-        try {
-            values.put(1, email);
-            values.put(2,password);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON_BY_EMAIL_AND_PASS, values);
-            assert resultSet != null;
-            resultSet.next();
-            return (resultSet.getInt(1) == 1);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
-
-
-
+    /**
+     * insert new coupon info to database
+     *
+     * @param coupon coupon object
+     */
     @Override
     public void addCoupon(Coupon coupon) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
-        values.put(1, coupon.getCompanyId());
-        values.put(2, getCategoryId(coupon.getCategory()));
-        values.put(3, coupon.getTitle());
-        values.put(4, coupon.getDescription());
-        values.put(5, coupon.getStartDate());
-        values.put(6, coupon.getEndDate());
-        values.put(7, coupon.getAmount());
-        values.put(8, coupon.getPrice());
-        values.put(9, coupon.getImage());
-        DBTools.runQuery(DBManager.CREATE_NEW_COUPON, values);
+        if (!isCouponExists(coupon.getId())) {
+                values.put(1, coupon.getCompanyId());
+                values.put(2, categoryClass.getCategoryId(coupon.getCategory()));
+                values.put(3, coupon.getTitle());
+                values.put(4, coupon.getDescription());
+                values.put(5, coupon.getStartDate());
+                values.put(6, coupon.getEndDate());
+                values.put(7, coupon.getAmount());
+                values.put(8, coupon.getPrice());
+                values.put(9, coupon.getImage());
+                DBTools.runQuery(DBManager.CREATE_NEW_COUPON, values);
+        } else {
+            throw new CustomExceptions(EnumExceptions.COUPON_ID_EXIST);
+        }
+
     }
 
     /**
@@ -73,10 +72,10 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public void updateCoupon(Coupon coupon) throws CustomExceptions {
-        if (isCouponExistsById(coupon.getId())) {
-            Map<Integer, Object> values = new HashMap<>();
+        Map<Integer, Object> values = new HashMap<>();
+        if (isCouponExists(coupon.getId())) {
             values.put(1, coupon.getCompanyId());
-            values.put(2, coupon.getCategory());
+            values.put(2, categoryClass.getCategoryId(coupon.getCategory()));
             values.put(3, coupon.getTitle());
             values.put(4, coupon.getDescription());
             values.put(5, coupon.getStartDate());
@@ -85,9 +84,8 @@ public class CouponsDBDAO implements CouponsDAO {
             values.put(8, coupon.getPrice());
             values.put(9, coupon.getImage());
             values.put(10, coupon.getId());
-
             DBTools.runQuery(DBManager.UPDATE_COUPON, values);
-        }else {
+        } else {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
     }
@@ -99,16 +97,14 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public void deleteCoupon(int couponID) throws CustomExceptions {
-        if (isCouponExistsById(couponID)) {
-            Map<Integer, Object> values = new HashMap<>();
+        Map<Integer, Object> values = new HashMap<>();
+        if (isCouponExists(couponID)) {
             values.put(1, couponID);
             DBTools.runQuery(DBManager.DELETE_COUPON, values);
-        }else {
+        } else {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
     }
-
-
 
     /**
      * gets all coupons from database by specified sql query
@@ -118,7 +114,8 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public List<Coupon> getAllCoupons() throws CustomExceptions {
         List<Coupon> coupons = new ArrayList<>();
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS);
+        Map<Integer,Object> param = new HashMap<>();
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS,param);
         while (true) {
             try {
                 assert resultSet != null;
@@ -126,16 +123,16 @@ public class CouponsDBDAO implements CouponsDAO {
                 coupons.add(new Coupon(
                         resultSet.getInt("id"),
                         resultSet.getInt("company_id"),
-                        Category.valueOf(getCategoryName(resultSet.getInt("category_id")).toUpperCase()),
+                        Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
+                        resultSet.getInt("start_date"),
+                        resultSet.getInt("end_date"),
                         resultSet.getInt("amount"),
                         resultSet.getDouble("price"),
                         resultSet.getString("image")));
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.out.println("SQL exception....");
             }
 
         }
@@ -147,6 +144,35 @@ public class CouponsDBDAO implements CouponsDAO {
      *
      * @return coupon object
      */
+    @Override
+    public Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
+        if (!isCouponExists(coupon_id)) {
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+        }
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, coupon_id);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON, values);
+        try {
+            assert resultSet != null;
+            if (resultSet.next()) {
+                return new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getInt("start_date"),
+                        resultSet.getInt("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
+            }
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+
+        }
+        return null;
+    }
 
     /**
      * gets purchased coupon from customer and updates customer table and coupon amount in coupon table
@@ -182,10 +208,11 @@ public class CouponsDBDAO implements CouponsDAO {
      * @param companyId to locate company and said coupons
      * @return arrayLis of companies coupons
      */
-    public List<Coupon> getCouponsByCompanyId(int companyId) throws CustomExceptions {
+    /*public List<Coupon> getCouponsByCompanyId(int companyId) throws CustomExceptions {
+        companiesDBDAO = new CompaniesDBDAO();
+        List<Coupon> coupons = new ArrayList<>();
+        Map<Integer, Object> value = new HashMap<>();
         if (companiesDBDAO.isCompanyExistsById(companyId)) {
-            List<Coupon> coupons = new ArrayList<>();
-            Map<Integer, Object> value = new HashMap<>();
             value.put(1, companyId);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, value);
             try {
@@ -206,100 +233,58 @@ public class CouponsDBDAO implements CouponsDAO {
                     coupons.add(coupon);
                 }
             } catch (SQLException e) {
-                System.out.println("SQL exception...");
+                System.out.println(e.getMessage());
             }
             return coupons;
         } else {
-            throw new CustomExceptions(EnumExceptions.COMPANY_IS_NOT_EXIST);
+            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
         }
-    }
-    public  Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
-        if(!isCouponExistsById(coupon_id)){
-            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+    }*/
+    public List<Coupon> getCouponsByCompanyId(int companyId) {
+        List<Coupon> couponsByCompany = new ArrayList<>();
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, companyId);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_COMPANIES, values);
+        if (resultSet == null) {
+            return null;
         }
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,coupon_id);
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON,values);
         try {
-            assert resultSet != null;
-            if (resultSet.next()) {
-                return new Coupon(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("company_id"),
-                        Category.valueOf(getCategoryName(resultSet.getInt("category_id"))),
-                        resultSet.getString("title"),
-                        resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
-                        resultSet.getInt("amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image"));
+            while (resultSet.next()) {
+                Coupon coupon = getOneCoupon(resultSet.getInt("coupon_id"));
+                couponsByCompany.add(coupon);
             }
-        } catch (SQLException err) {
+        } catch (SQLException | CustomExceptions err) {
             System.out.println(err.getMessage());
-
         }
-        return null;
+        return couponsByCompany;
     }
-
 
     /**
-     * gets al coupons purchased by one specific customer
+     * gets all coupons purchased by one specific customer
      *
      * @param customerID to locate said customer and it's coupons
      * @return arrayList of customer purchased coupons
      */
-    public  List<Coupon> getCouponsByCustomerId(int customerID){
-        List<Coupon> couponByCustomer = new ArrayList<>();
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,customerID);
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER,values);
-        if(resultSet==null) return null;
-        try{
-        while(resultSet.next()){
-            Coupon coupon = getOneCoupon(resultSet.getInt("coupon_id"));
-            couponByCustomer.add(coupon);
-            }}catch(SQLException | CustomExceptions err){
-            System.out.println(err.getMessage());
-            }
-        return couponByCustomer;
+    public List<Coupon> getCouponsByCustomerId(int customerID) {
+        List<Coupon> couponsByCustomer = new ArrayList<>();
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, customerID);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER, values);
+        if (resultSet == null) {
+            return null;
         }
-
-    public int getCategoryId(Category category){
-        int categoryId=0;
-        Map<Integer, Object> map = new HashMap<>();
-        map.put(1, Category.valueOf(category.name()));
         try {
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CATEGORY_ID, map);
-            assert resultSet != null;
-            if (resultSet.next()) {
-                categoryId =resultSet.getInt("id");
+            while (resultSet.next()) {
+                Coupon coupon = getOneCoupon(resultSet.getInt("coupon_id"));
+                couponsByCustomer.add(coupon);
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return categoryId;
-    }
-
-    public String getCategoryName(int categoryId){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,categoryId);
-        try {
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_CATEGORY_NAME,values);
-            assert resultSet != null;
-            if(resultSet.next()) {
-                return resultSet.getString("name");
-            }} catch (SQLException err) {
+        } catch (SQLException | CustomExceptions err) {
             System.out.println(err.getMessage());
-            }
-        return null;
         }
-
-    public void addCategory(Category category){
-        Map<Integer,Object> values = new HashMap<>();
-        values.put(1,category.name());
-        DBTools.runQuery(DBManager.ADD_CATEGORY,values);
+        return couponsByCustomer;
     }
-
 
 }
+
+
+

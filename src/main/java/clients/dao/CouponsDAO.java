@@ -41,7 +41,6 @@ public interface CouponsDAO {
      * get one coupon info by SQL query by ID
      * @return one coupon object
      */
-
     public Coupon getOneCoupon(int coupon_id) throws CustomExceptions;
 
     /**

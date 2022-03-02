@@ -1,5 +1,8 @@
 package clients.beans;
 
+import clients.CustomExceptions;
+import clients.EnumExceptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +27,8 @@ public class Customer {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int id) throws CustomExceptions {
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_ID);
     }
 
     public String getFirstName() {

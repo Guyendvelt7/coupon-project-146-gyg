@@ -53,7 +53,7 @@ public class DBTools {
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return false;
         } finally {
             ConnectionPool.getInstance().restoreConnection(connection);

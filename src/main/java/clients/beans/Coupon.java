@@ -1,7 +1,6 @@
 package clients.beans;
 
 import java.sql.Date;
-import java.text.ParseException;
 
 /**
  * Coupon class
@@ -18,10 +17,14 @@ public class Coupon {
     private int amount;
     private double price;
     private String image;
+    /**
+     * default C`tor
+     */
+    public Coupon() {
+    }
 
     /**
      *Coupon constructor
-     * @param id coupon ID
      * @param companyId refers to coupons company ownership
      * @param category refers to coupons category type
      * @param title coupons name
@@ -33,27 +36,15 @@ public class Coupon {
      * @param image visual of coupon description
      */
 
-    public Coupon(int id, int companyId, Category category, String title, String description, Date startDate, Date endDate, int amount, double price, String image) {
-        this.id = id;
+
+    public Coupon(int id, int companyId, Category category, String title, String description, int when2Start, int when2End, int amount, double price, String image) {
+        this.id=id;
         this.companyId = companyId;
         this.category = category;
         this.title = title;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.amount = amount;
-        this.price = price;
-        this.image = image;
-    }
-
-
-    public Coupon(int companyId, Category category, String title, String description, Date startDate, Date endDate, int amount, double price, String image) {
-        this.companyId = companyId;
-        this.category = category;
-        this.title = title;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        setStartDate(when2Start);
+        setEndDate(when2End);
         this.amount = amount;
         this.price = price;
         this.image = image;
@@ -103,47 +94,16 @@ public class Coupon {
         return startDate;
     }
 
-    /*
-    public void setStartDate(Date startDate) {
-
-        SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
-        System.out.println("set start date of coupon by format dd/MM/yyyy");
-        String startDateString = sc.next();
-        try {
-            startDate = (Date) sdf.parse(startDateString);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-        }
-        this.startDate = startDate;
-    }
-
-     */
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartDate(int whenToStart) {
+        this.startDate = new Date(System.currentTimeMillis()+ 24L *60*60*1000*whenToStart);
     }
 
     public Date getEndDate() {
         return endDate;
     }
 
-    /*
-    public void setEndDate(Date endDate) {
-
-        SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
-        System.out.println("set end date of coupon by format dd/MM/yyyy");
-        String endDateString = sc.next();
-        try {
-            endDate = (Date) sdf.parse(endDateString);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-        }
-        this.endDate = endDate;
-    }
-*/
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEndDate(int hawManyDays) {
+        this.endDate = new Date(System.currentTimeMillis()+ 24L *60*60*1000*hawManyDays);
     }
 
     public int getAmount() {

@@ -7,7 +7,10 @@ import clients.beans.Coupon;
 import clients.dao.CompaniesDAO;
 import clients.db.DBManager;
 import clients.db.DBTools;
+import org.checkerframework.checker.units.qual.C;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,13 +19,41 @@ import java.util.List;
 import java.util.Map;
 
 public class CompaniesDBDAO implements CompaniesDAO {
-    CouponsDBDAO couponsDBDAO= new CouponsDBDAO();
+    CouponsDBDAO couponsDBDAO;
 
     public boolean isCompanyExistsById(int id) {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, id);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_SINGLE_COMPANY, values);
+            assert resultSet != null;
+            resultSet.next();
+            return (resultSet.getInt(1) == 1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isCompanyExistsByName(String name) {
+        Map<Integer, Object> values = new HashMap<>();
+        try {
+            values.put(1, name);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_NAME, values);
+            assert resultSet != null;
+            resultSet.next();
+            return (resultSet.getInt(1) == 1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isCompanyExistsByEmail(String email) {
+        Map<Integer, Object> values = new HashMap<>();
+        try {
+            values.put(1, email);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_NAME, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
@@ -54,46 +85,55 @@ public class CompaniesDBDAO implements CompaniesDAO {
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
-        if (isCompanyExists(company.getEmail(),company.getPassword())){
-            throw new CustomExceptions(EnumExceptions.COMPANY_ALREADY_EXIST);
-        }else {
+        if (isCompanyExistsByName(company.getName())) {
+            throw new CustomExceptions(EnumExceptions.COMPANY_NAME_ALREADY_EXIST);
+        } else if (isCompanyExistsByEmail(company.getEmail())) {
+            throw new CustomExceptions(EnumExceptions.COMPANY_EMAIL_ALREADY_EXIST);
+        } else {
             DBTools.runQuery(DBManager.ADD_COMPANY, values);
         }
     }
 
     @Override
-    public void updateCompany(Company company) throws CustomExceptions{
+    public void updateCompany(Company company) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
-        values.put(4, company.getId());
-//        if (getOneCompany(company.getId())!=null){
-//            throw new CustomExceptions(EnumExceptions.ID_COMPANY_ALREADY_EXIST);
-//        }
-       DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
+        if (!isCompanyExistsById(company.getId())){
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }else if (isCompanyExistsByName(company.getName())){
+            throw new CustomExceptions(EnumExceptions.COMPANY_NAME_ALREADY_EXIST);
+        }else if(isCompanyExistsByEmail(company.getEmail())){
+            throw new CustomExceptions(EnumExceptions.COMPANY_EMAIL_ALREADY_EXIST);
+        }else {
+            DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
+        }
     }
 
     @Override
-    public void deleteCompany(int companyId) throws CustomExceptions{
+    public void deleteCompany(int companyId) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, companyId);
-        if (getOneCompany(companyId)==null){
+        if (getOneCompany(companyId) == null) {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
         DBTools.runQuery(DBManager.DELETE_COMPANY, values);
+        List<Coupon> companyCoupons = getCompanyCoupons(companyId);
+        for (Coupon item : companyCoupons) {
+            couponsDBDAO.deleteCoupon(item.getId());
+        }
     }
-  
+
     @Override
-    public ArrayList<Company> getAllCompanies() throws CustomExceptions{
-        ArrayList<Company> allCompanies = new ArrayList<>();
-        ResultSet resultSet = null;
+    public List<Company> getAllCompanies() throws CustomExceptions {
+        List<Company> allCompanies = new ArrayList<>();
+        Map<Integer, Object> param = new HashMap<>();
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES, param);
         try {
-            resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES,null);
             while (true) {
                 assert resultSet != null;
                 if (!resultSet.next()) break;
-                ArrayList<Coupon> coupons = new ArrayList<>();
                 Company company = new Company(
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
@@ -106,15 +146,12 @@ public class CompaniesDBDAO implements CompaniesDAO {
         } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
-        if (allCompanies.size()==0){
-            throw new CustomExceptions(EnumExceptions.NO_COMPANIES);
-        }
         return allCompanies;
     }
 
     @Override
     public Company getOneCompany(int companyId) throws CustomExceptions {
-        if (isCompanyExistsById(companyId)){
+        if (isCompanyExistsById(companyId)) {
             Company company = null;
             List<Coupon> coupons = null;
             Map<Integer, Object> map = new HashMap<>();
@@ -131,26 +168,27 @@ public class CompaniesDBDAO implements CompaniesDAO {
                             resultSet.getString("password"),
                             coupons
                     );
+                    coupons = couponsDBDAO.getCouponsByCompanyId(companyId);
                 }
             } catch (SQLException err) {
-                err.printStackTrace();
+                System.out.println(err.getMessage());
             }
             return company;
-        }else{
+        } else {
             throw new CustomExceptions(EnumExceptions.NO_COMPANY);
         }
     }
 
-    public List<Coupon> getCompanyCoupons (int companyId){
+    public List<Coupon> getCompanyCoupons(int companyId) {
         Map<Integer, Object> value = new HashMap<>();
         value.put(1, companyId);
         try {
-            if (couponsDBDAO.getCouponsByCompanyId(companyId)==null){
+            if (couponsDBDAO.getCouponsByCompanyId(companyId) == null) {
                 throw new CustomExceptions(EnumExceptions.NO_COUPONS_COMPANY);
             }
             return couponsDBDAO.getCouponsByCompanyId(companyId);
-        } catch (CustomExceptions e) {
-            e.printStackTrace();
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
             return null;
         }
     }
