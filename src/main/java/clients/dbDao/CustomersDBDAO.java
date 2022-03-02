@@ -79,7 +79,7 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public List<Customer> getAllCustomers() {
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS, new HashMap<>());
         List<Customer> customers = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -96,7 +96,7 @@ public class CustomersDBDAO implements CustomersDAO {
 
     @Override
     public Customer getOneCustomer(int customerID) {
-        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+        couponsDBDAO = new CouponsDBDAO();
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, customerID);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER, values);
@@ -117,12 +117,13 @@ public class CustomersDBDAO implements CustomersDAO {
         }
     }
 
-    public void addCouponToCustomer(int couponId, int customerId) {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customerId);
-        values.put(2, couponId);
-        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER, values);
-    }
+    //todo: CouponDBDAO method: addPurchasedCoupon-NOT needed here
+//    public void addCouponToCustomer(int couponId, int customerId) {
+//        Map<Integer, Object> values = new HashMap<>();
+//        values.put(1, customerId);
+//        values.put(2, couponId);
+//        DBTools.runQuery(DBManager.ADD_COUPON_TO_CUSTOMER, values);
+//    }
 
 
 }

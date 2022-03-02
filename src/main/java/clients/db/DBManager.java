@@ -159,9 +159,8 @@ public class DBManager {
             "INSERT INTO `coupons_project`.`customers` " +
                     "( `first_name`, `last_name`, `email`, `password`) VALUES (?,?,?,?);";
 
-    public static final String UPDATE_CUSTOMER =
-            "UPDATE `coupons_project`.`customer` SET `first_name` = ?, " +
-                    "`last_name` = ?, `email` = ? `password` = ? WHERE (`id` = ?);";
+    public static final String UPDATE_CUSTOMER = "UPDATE `coupons_project`.`customers` SET `first_name` = ?,"+
+            " `last_name` = ?, `email` = ?, `password` = ? WHERE (`id` = ?);";
 
     public static final String DELETE_CUSTOMER =
             "DELETE FROM `coupons_project`.`customers` WHERE (`id` = ?);";

@@ -95,13 +95,20 @@ public class CompaniesDBDAO implements CompaniesDAO {
     }
 
     @Override
-    public void updateCompany(Company company) {
+    public void updateCompany(Company company) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, company.getName());
         values.put(2, company.getEmail());
         values.put(3, company.getPassword());
-        values.put(4, company.getId());
-        DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
+        if (!isCompanyExistsById(company.getId())){
+            throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }else if (isCompanyExistsByName(company.getName())){
+            throw new CustomExceptions(EnumExceptions.COMPANY_NAME_ALREADY_EXIST);
+        }else if(isCompanyExistsByEmail(company.getEmail())){
+            throw new CustomExceptions(EnumExceptions.COMPANY_EMAIL_ALREADY_EXIST);
+        }else {
+            DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
+        }
     }
 
     @Override

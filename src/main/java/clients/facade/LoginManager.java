@@ -6,6 +6,7 @@ import clients.beans.Company;
 import clients.beans.Customer;
 import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
+import clients.dbDao.CustomersDBDAO;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -19,8 +20,9 @@ public class LoginManager {
     private static AdminFacade adminFacade;
     private static CustomerFacade customerFacade;
     private static CompanyFacade companyFacade;
-    private static CompaniesDBDAO companiesDBDAO;
-    private static CouponsDBDAO couponsDBDAO;
+    private static CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
+    private static CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+    private static CustomersDBDAO customersDBDAO = new CustomersDBDAO();
 
 
     static Predicate<String> isEmailValid = email -> email.contains("@")
@@ -46,7 +48,6 @@ public class LoginManager {
     public static ClientFacade login(String email, String password, ClientType clientType) throws CustomExceptions {
         isEmailValid.test(email);
         isPasswordValid.test(password);
-
         switch (clientType) {
             case ADMINISTRATOR:
                 if (adminFacade.login(email, password)) {
@@ -55,26 +56,26 @@ public class LoginManager {
                 } else {
                     throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
                 }
-
             case COMPANY:
-                if (companyFacade.login(email, password)) {
-                    List<Company> companies = companyFacade.companiesDBDAO.getAllCompanies().stream()
+                if (companiesDBDAO.isCompanyExists(email, password)) {
+                    Company company = companyFacade.companiesDBDAO.getAllCompanies().stream()
                             .filter(item -> Objects.equals(item.getPassword(), password))
-                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList());
-                    System.out.println(companies.get(0).getName() + " connected");
-                    return new CompanyFacade(companies.get(0).getId());
+                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+                    System.out.println(company.getName() + " connected");
+                    return new CompanyFacade(company.getId());
                 } else {
                     throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
                 }
             case CUSTOMER:
-                if (customerFacade.login(email, password)) {
-                    List<Customer> customers = customerFacade.customersDBDAO.getAllCustomers().stream()
+                if (customersDBDAO.isCustomerExist(email, password)) {
+                    Customer customer = customersDBDAO.getAllCustomers().stream()
                             .filter(item -> Objects.equals(item.getPassword(), password))
-                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList());
-                    System.out.println(customers.get(0).getFirstName() + " connected");
-                    return new CustomerFacade(customers.get(0).getId());
+                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+                    System.out.println(customer.getFirstName() + " connected");
+                    return new CustomerFacade(customer.getId());
                 } else {
-                    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+                    System.out.println("customer doesnt exists");
+                    //throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
                 }
             default:
                 System.out.println("wrong client type");

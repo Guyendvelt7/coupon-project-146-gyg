@@ -38,7 +38,7 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         try {
             if(canPurchaseCoupon(coupon)){
                 coupon.setAmount(coupon.getAmount()-1);
-                customersDBDAO.addCouponToCustomer(coupon.getId(),customerID);
+                couponsDBDAO.addCouponPurchase(coupon.getId(),customerID);
             }
         } catch (CustomExceptions customException) {
             System.out.println(customException.getMessage());

@@ -32,8 +32,6 @@ public class CompanyTest {
         }
     }
 
-
-
     @Test
     public void companyDoesNotExist() {
         Assert.assertFalse(companiesDBDAO.isCompanyExists("skfj@ggg.com", "dfg5yh"));
@@ -46,8 +44,13 @@ public class CompanyTest {
 
     @Test
     public void updateCompany() {
+        //todo: not working
         company.setPassword("1234");
-        companiesDBDAO.updateCompany(company);
+        try {
+            companiesDBDAO.updateCompany(company);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
     @Test

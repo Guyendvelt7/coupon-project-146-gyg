@@ -126,8 +126,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
+                        resultSet.getInt("start_date"),
+                        resultSet.getInt("end_date"),
                         resultSet.getInt("amount"),
                         resultSet.getDouble("price"),
                         resultSet.getString("image")));
@@ -151,7 +151,7 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, coupon_id);
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON);
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON, values);
         try {
             assert resultSet != null;
             if (resultSet.next()) {
@@ -161,8 +161,8 @@ public class CouponsDBDAO implements CouponsDAO {
                         Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
                         resultSet.getString("title"),
                         resultSet.getString("description"),
-                        resultSet.getDate("start_date"),
-                        resultSet.getDate("end_date"),
+                        resultSet.getInt("start_date"),
+                        resultSet.getInt("end_date"),
                         resultSet.getInt("amount"),
                         resultSet.getDouble("price"),
                         resultSet.getString("image"));

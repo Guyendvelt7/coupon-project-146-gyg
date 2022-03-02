@@ -29,7 +29,11 @@ public class AdminFacade extends ClientFacade {
     }
 
     public void updateCompany (Company company) {
-        this.companiesDBDAO.updateCompany(company);
+        try {
+            this.companiesDBDAO.updateCompany(company);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
     public void deleteCompany (int companyID) {

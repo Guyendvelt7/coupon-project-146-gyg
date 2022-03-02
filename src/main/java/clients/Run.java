@@ -1,7 +1,15 @@
 package clients;
 
+import clients.beans.Coupon;
 import clients.db.DBManager;
 import clients.db.DBTools;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Run {
     public static void main(String[] args) {
@@ -61,4 +69,7 @@ public class Run {
 //        allOK = DBTools.runQuery(ALTER_ADD_NEW_FK_COUPONRID_ONDELETE_CASCADE);
 //        System.out.println("Command run successfully: " + allOK);
     }
+
+
+
 }

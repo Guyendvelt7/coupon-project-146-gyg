@@ -22,7 +22,7 @@ public class CustomerTests {
     @BeforeClass
     public static void message() {
         System.out.println("start test and initialize db-dao");
-        customer = new Customer(5, "yoav", "hacmon", "yoavs-email", "yoavs-password", null);
+        customer = new Customer(5, "golan", "klain", "golans email", "golans-password", null);
         customersDBDAO = new CustomersDBDAO();
         couponsDBDAO = new CouponsDBDAO();
         loginManager = LoginManager.getInstance();
@@ -56,6 +56,7 @@ public class CustomerTests {
 
     @Test
     public void updateCustomer() {
+        customer=new Customer(1, "yoav", "hachmon", "yoavs-pemail", "yoavs-password", null);
         customer.setEmail("yoyo123-email");
         try {
             customersDBDAO.updateCustomer(customer);
@@ -67,7 +68,7 @@ public class CustomerTests {
     @Test
     public void deleteCustomer() {
         try {
-            customersDBDAO.deleteCustomer(8);
+            customersDBDAO.deleteCustomer(3);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }
@@ -75,31 +76,19 @@ public class CustomerTests {
 
     @Test
     public void getAllCustomers() {
-        List<Customer> customers = customersDBDAO.getAllCustomers();
-        customers.forEach(System.out::println);
+        //todo: check returns the same line twice
+        System.out.println(customersDBDAO.getAllCustomers());
     }
 
-    //customersDBDAO.getAllCustomers();
     @Test
     public void getOneCustomer() {
         System.out.println(customersDBDAO.getOneCustomer(4));
     }
 
     @Test
-    public void getOneCoupons() throws CustomExceptions {
-        Coupon coupon = couponsDBDAO.getOneCoupon(1);
-        System.out.println(coupon);
-    }
-
-    @Test
     public void getCouponsByCustomerId() throws CustomExceptions {
         List<Coupon> coupons = couponsDBDAO.getCouponsByCustomerId(3);
         System.out.println(coupons);
-    }
-
-    @Test
-    public void addCouponToCustomer() {
-        customersDBDAO.addCouponToCustomer(1, 3);
     }
 
 }

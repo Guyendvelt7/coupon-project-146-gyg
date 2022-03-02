@@ -12,6 +12,7 @@ public class CategoryClass {
 
 
     public static void addCategory(Category category) {
+        //todo: add if name== getValue return
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, Category.valueOf(category.name()));
         DBTools.runQuery(DBManager.ADD_CATEGORY, values);
