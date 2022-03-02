@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Tester {
-   public static void main(String[] args) throws CustomExceptions {
+    public static void main(String[] args) throws CustomExceptions {
 //      DBTools.runQuery(DBManager.CREATED_DB);
 //      DBTools.runQuery(DBManager.CREATE_COMPANY_TABLE);
 //      DBTools.runQuery(DBManager.CREATE_COUPONS_TABLE);
@@ -25,10 +25,10 @@ public class Tester {
 //      DBTools.runQuery(DBManager.CREATE_CUSTOMER_VS_COUPONS_TABLE)
 
 //      Company company = new Company(12,"gay's company","gay@org.com","123456",null);
-      //Coupon coupon = new Coupon(1,1, Category.FOOD,"MY COUPON","the best", new Date(LocalDate.now().toEpochDay()),new Date(LocalDate.now().toEpochDay()),3,20,"bla bla");
+        //Coupon coupon = new Coupon(1,1, Category.FOOD,"MY COUPON","the best", new Date(LocalDate.now().toEpochDay()),new Date(LocalDate.now().toEpochDay()),3,20,"bla bla");
 //     CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
-      //CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-      //couponsDBDAO.addCoupon(coupon);
+        //CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+        //couponsDBDAO.addCoupon(coupon);
 //      companiesDBDAO.deleteCompany(1);
 // companiesDBDAO.addCompany(company);
 //      System.out.println(companiesDBDAO.isCompanyExists("ger@org.com","12345"));
@@ -42,17 +42,17 @@ public class Tester {
 //           addCategory(item);
 //       }
 
-   }
-
+    }
 
 
     public static void addCategory(Category category) {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, Category.valueOf(category.name()));
-            DBTools.runQuery(DBManager.ADD_CATEGORY, values);
+        DBTools.runQuery(DBManager.ADD_CATEGORY, values);
 
     }
-    public static void deleteCategory(int categoryId){
+
+    public static void deleteCategory(int categoryId) {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, categoryId);
         DBTools.runQuery(DBManager.DELETE_CATEGORY, values);
