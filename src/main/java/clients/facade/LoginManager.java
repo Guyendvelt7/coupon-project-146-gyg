@@ -45,35 +45,32 @@ public class LoginManager {
                     throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
                 }
 
-        case COMPANY:
-        if (companiesDBDAO.isCompanyExists(email,password)){
-                Company company = companyFacade.companiesDBDAO.getAllCompanies().stream()
-                        .filter(item -> Objects.equals(item.getPassword(), password))
-                        .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
-                System.out.println(company.getName() + " connected");
-                return new CompanyFacade(company.getId());
-        } else {
-            throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+            case COMPANY:
+                if (companiesDBDAO.isCompanyExists(email, password)) {
+                    Company company = companyFacade.companiesDBDAO.getAllCompanies().stream()
+                            .filter(item -> Objects.equals(item.getPassword(), password))
+                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+                    System.out.println(company.getName() + " connected");
+                    return new CompanyFacade(company.getId());
+                } else {
+                    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+                }
+            case CUSTOMER:
+                if (customersDBDAO.isCustomerExist(email, password)) {
+                    Customer customer = customersDBDAO.getAllCustomers().stream()
+                            .filter(item -> Objects.equals(item.getPassword(), password))
+                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
+                    System.out.println(customer.getFirstName() + " connected");
+                    return new CustomerFacade(customer.getId());
+                } else {
+                    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+                }
+
+            default:
+                System.out.println("wrong client type");
+                return null;
         }
-        case CUSTOMER:
-            if(customersDBDAO.isCustomerExist(email,password)){
-            Customer customer = customersDBDAO.getAllCustomers().stream()
-                    .filter(item -> Objects.equals(item.getPassword(), password))
-                    .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
-                System.out.println(customer.getFirstName() + " connected");
-                return new CustomerFacade(customer.getId());
-            } else {
-                System.out.println("customer doesnt exists");
-                //throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
-            }
-
-
-        default:
-        System.out.println("wrong client type");
-        return null;
     }
-}
-
     private static Predicate<String> isValidEmailAddress(String email) {
         return (Predicate<String>) emailAdd -> email.contains("@")
                 && email.contains(".com");

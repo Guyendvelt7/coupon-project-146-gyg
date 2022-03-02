@@ -25,10 +25,10 @@ public class Tester {
 //      DBTools.runQuery(DBManager.CREATE_CUSTOMER_VS_COUPONS_TABLE)
 
 //      Company company = new Company(12,"gay's company","gay@org.com","123456",null);
-      Coupon coupon = new Coupon(1,1, Category.FOOD,"MY COUPON","the best", new Date(LocalDate.now().toEpochDay()),new Date(LocalDate.now().toEpochDay()),3,20,"bla bla");
+      //Coupon coupon = new Coupon(1,1, Category.FOOD,"MY COUPON","the best", new Date(LocalDate.now().toEpochDay()),new Date(LocalDate.now().toEpochDay()),3,20,"bla bla");
 //     CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
-      CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-      couponsDBDAO.addCoupon(coupon);
+      //CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+      //couponsDBDAO.addCoupon(coupon);
 //      companiesDBDAO.deleteCompany(1);
 // companiesDBDAO.addCompany(company);
 //      System.out.println(companiesDBDAO.isCompanyExists("ger@org.com","12345"));
@@ -41,7 +41,10 @@ public class Tester {
 //       for (Category item:categories) {
 //           addCategory(item);
 //       }
+
    }
+
+
 
     public static void addCategory(Category category) {
         Map<Integer, Object> values = new HashMap<>();

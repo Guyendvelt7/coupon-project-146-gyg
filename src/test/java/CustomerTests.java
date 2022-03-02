@@ -118,10 +118,5 @@ private static LoginManager loginManager;
             System.out.println(coupons);
     }
 
-    @Test
-    public void addCouponToCustomer(){
-        customersDBDAO.addCouponToCustomer(1,3);
-    }
-
 
 }
