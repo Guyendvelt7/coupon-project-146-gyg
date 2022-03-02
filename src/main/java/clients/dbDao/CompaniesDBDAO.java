@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CompaniesDBDAO implements CompaniesDAO {
-    CouponsDBDAO couponsDBDAO;
+    CouponsDBDAO couponsDBDAO= new CouponsDBDAO();
 
     public boolean isCompanyExistsById(int id) {
         Map<Integer, Object> values = new HashMap<>();
@@ -89,7 +89,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         ArrayList<Company> allCompanies = new ArrayList<>();
         ResultSet resultSet = null;
         try {
-            resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
+            resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES,null);
             while (true) {
                 assert resultSet != null;
                 if (!resultSet.next()) break;

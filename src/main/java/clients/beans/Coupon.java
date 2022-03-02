@@ -2,8 +2,6 @@ package clients.beans;
 
 import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 /**
  * Coupon class
@@ -20,7 +18,6 @@ public class Coupon {
     private int amount;
     private double price;
     private String image;
-    private Scanner sc = new Scanner(System.in);
 
     /**
      *Coupon constructor
@@ -106,7 +103,9 @@ public class Coupon {
         return startDate;
     }
 
+    /*
     public void setStartDate(Date startDate) {
+
         SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
         System.out.println("set start date of coupon by format dd/MM/yyyy");
         String startDateString = sc.next();
@@ -118,11 +117,19 @@ public class Coupon {
         this.startDate = startDate;
     }
 
+     */
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
     public Date getEndDate() {
         return endDate;
     }
 
+    /*
     public void setEndDate(Date endDate) {
+
         SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
         System.out.println("set end date of coupon by format dd/MM/yyyy");
         String endDateString = sc.next();
@@ -131,6 +138,11 @@ public class Coupon {
         } catch (ParseException e) {
             System.out.println(e.getMessage());
         }
+        this.endDate = endDate;
+    }
+*/
+
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

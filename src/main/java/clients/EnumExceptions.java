@@ -24,7 +24,8 @@ public enum EnumExceptions {
     ID_COMPANY_ALREADY_EXIST("the id company is already exist in the system"),
     NO_COUPONS_COMPANY("company doesn't have coupons"),
     COMPANY_IS_NOT_EXIST("the company is not exist in the system"),
-    CATEGORY_IS_NOT_EXIST("not such category");
+    CATEGORY_IS_NOT_EXIST("not such category"),
+    No_COUPON("THERE IS NO COUPON WITH THIS ID");
     ;
 
     private String message;

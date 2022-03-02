@@ -25,7 +25,6 @@ public class LoginManager {
     private static CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
     private LoginManager() {
-
     }
 
     public static LoginManager getInstance() {

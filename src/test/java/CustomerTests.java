@@ -23,6 +23,7 @@ import java.util.List;
 public class CustomerTests {
 private static CustomersDBDAO customersDBDAO;
 private static CouponsDBDAO couponsDBDAO;
+private static CompaniesDBDAO companiesDBDAO;
 private static Customer customer;
 private static LoginManager loginManager;
     @BeforeClass
@@ -31,6 +32,8 @@ private static LoginManager loginManager;
         customer = new Customer(5, "yoav", "hacmon", "yoavs-email", "yoavs-password", null);
         customersDBDAO = new CustomersDBDAO();
         couponsDBDAO = new CouponsDBDAO();
+        companiesDBDAO = new CompaniesDBDAO();
+
         loginManager = LoginManager.getInstance();
     }
 
@@ -40,6 +43,7 @@ private static LoginManager loginManager;
         try {
             ClientFacade customerFacade =  loginManager.login("golans-email","golans-password",customerType);
             Assert.assertTrue(customerFacade instanceof CustomerFacade);
+            Assert.assertEquals(((CustomerFacade) customerFacade).getCustomerID(),4);
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());
         }
@@ -78,6 +82,14 @@ private static LoginManager loginManager;
             customersDBDAO.deleteCustomer(8);
         } catch (CustomExceptions e) {
             System.out.println(e.getMessage());
+        }
+    }
+    @Test
+    public void getAllCompanies(){
+        try {
+            List<Company> companies = companiesDBDAO.getAllCompanies();
+        } catch (CustomExceptions e) {
+            e.printStackTrace();
         }
     }
 
