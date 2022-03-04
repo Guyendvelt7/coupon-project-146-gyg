@@ -1,6 +1,6 @@
 package clients;
 
-import static clients.TestAll.testAll;
+import static clients.System.testAll;
 /**
  * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
  * 03.2022
