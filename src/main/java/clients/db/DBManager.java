@@ -1,7 +1,13 @@
 package clients.db;
 
-import java.security.PublicKey;
+/**
+* @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+* 03.2022
+*/
 
+/**
+ * SQL declaration statements
+ */
 public class DBManager {
 
     public static final String URL = "jdbc:mysql://localhost:3306";
@@ -140,8 +146,12 @@ public class DBManager {
 
     public static final String GET_ALL_CUSTOMERS = "SELECT * FROM `coupons_project`.`customers`;";
 
-    public static final String IS_CUSTOMER_EXISTS_BY_EMAIL_AND_PASS = "SELECT COUNT(*) FROM `coupons_project`.`customers` WHERE `email` = ? and `password` = ?";
+    public static final String IS_CUSTOMER_EXISTS_BY_EMAIL_AND_PASS = "SELECT COUNT(*) FROM `coupons_project`.`customers` WHERE `email` = ? and `password` = ?;";
+
+    public static final String IS_CUSTOMER_EXISTS_BY_EMAIL = "SELECT COUNT(*) FROM `coupons_project`.`customers` WHERE `email` = ?;";
 
     public static final String GET_CATEGORY_NAME = "SELECT `name` FROM `coupons_project`.`categories` WHERE id=?;";
+
+    public static final String COUNT_CUSTOMER_BY_ID = "SELECT COUNT(*) FROM `coupons_project`.`customers` WHERE `id` = ?;";
 }
 

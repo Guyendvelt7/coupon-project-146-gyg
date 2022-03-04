@@ -1,6 +1,10 @@
 package clients.beans;
 
 import java.util.Arrays;
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
+ */
 
 public enum Category {
     /**
@@ -18,12 +22,4 @@ public enum Category {
     PERSONAL_CARE,
     PETS,
     OTHER;
-
-public static Category getValue (String constant){
-    return Arrays.stream(Category.values())
-            .filter(item->item.name().equals(constant))
-            .findFirst()
-            .orElse(null);
-}
-
 }

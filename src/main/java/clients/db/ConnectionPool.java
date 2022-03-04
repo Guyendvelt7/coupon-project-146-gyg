@@ -4,49 +4,65 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Stack;
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ *  * 03.2022
+ */
 
+/**
+ * ConnectionPool class: a pool of connections that allow interaction with the database
+ * if no connection is available request for connection is put on hold
+ */
 public class ConnectionPool {
 
     private static final int NUMBER_OF_CONNECTIONS = 10;
-    private static ConnectionPool instance=null;
-    private  final Stack<Connection> connections = new Stack<>();
+    private static ConnectionPool instance = null;
+    private final Stack<Connection> connections = new Stack<>();
 
+    /**
+     * SINGLETON constructor.
+     * private, internal use only
+     * initialize communication to database
+     */
     private ConnectionPool() {
+        //todo: delete s.out before project submit
         System.out.println("Instance created...");
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(DBManager.URL, DBManager.SQL_USER, DBManager.SQL_PASS);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
         }
         connections.push(connection);
     }
 
-
-    public void closeAllConnections()  {
-
-        synchronized (connections){
-            while (connections.size()<NUMBER_OF_CONNECTIONS){
+    /**
+     * close all database communication
+     */
+    public void closeAllConnections() {
+        synchronized (connections) {
+            while (connections.size() < NUMBER_OF_CONNECTIONS) {
                 try {
                     connections.wait();
-                } catch (InterruptedException e) {
-
-                    e.printStackTrace();
-
-                    System.out.println(e.getMessage());
-
+                } catch (InterruptedException err) {
+                    System.out.println(err.getMessage());
                 }
             }
             connections.removeAllElements();
         }
     }
 
-    public static ConnectionPool getInstance(){
-        //check if instance is null
-        if(instance==null){
-            //critical code, check that no other thread pass in same time
-            synchronized (ConnectionPool.class){
-                if (instance==null){
+    /**
+     * create one instance of ConnectionPool class only
+     * uses synchronized to the entire class to prevent use of other methods while this is in process
+     * double check to prevent the creation of two instances
+     *
+     * @return connection to database
+     */
+    public static ConnectionPool getInstance() {
+        if (instance == null) {
+            synchronized (ConnectionPool.class) {
+                if (instance == null) {
                     instance = new ConnectionPool();
                 }
             }
@@ -54,28 +70,22 @@ public class ConnectionPool {
         return instance;
     }
 
-
-    public Connection getConnection(){
-
+    public Connection getConnection() {
         synchronized (connections) {
             if (connections.isEmpty()) {
-                //wait until a connection is available
                 try {
                     connections.wait();
-                } catch (InterruptedException e) {
-
-                    System.out.println(e.getMessage());
-
+                } catch (InterruptedException err) {
+                    System.out.println(err.getMessage());
                 }
             }
             return connections.pop();
         }
     }
 
-    public void restoreConnection(Connection connection){
-        synchronized (connections){
+    public void restoreConnection(Connection connection) {
+        synchronized (connections) {
             connections.push(connection);
-            //notify to waiting users that there is a connection available
             connections.notify();
         }
     }

@@ -1,12 +1,24 @@
 package clients.db;
 
 import clients.beans.Category;
-import clients.beans.Coupon;
 
 import java.sql.*;
 import java.util.Map;
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
+ */
 
+/**
+ * database query executions methods
+ */
 public class DBTools {
+
+    /**
+     * methods to get connection from ConnectionPool, statement declaration initialization and execution
+     *
+     * @return true if information retrieved successfully or false if no information found
+     */
 
     public static boolean runQuery(String sql) {
         Connection connection = null;

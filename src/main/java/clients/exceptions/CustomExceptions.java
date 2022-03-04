@@ -1,4 +1,4 @@
-package clients;
+package clients.exceptions;
 
 public class CustomExceptions extends Exception{
 

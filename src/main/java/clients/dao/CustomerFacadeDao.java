@@ -1,13 +1,18 @@
 package clients.dao;
 
-import clients.CustomExceptions;
+import clients.exceptions.CustomExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.beans.Customer;
 
-import java.sql.SQLException;
 import java.util.List;
-
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ *  * 03.2022
+ */
+/**
+ * interface: implemented by CustomerFacade
+ */
 public interface CustomerFacadeDao {
 
     void purchaseCoupon(Coupon coupon);

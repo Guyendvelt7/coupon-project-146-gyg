@@ -1,7 +1,5 @@
-import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.facade.AdminFacade;
-import org.junit.Test;
 
 import java.util.List;
 

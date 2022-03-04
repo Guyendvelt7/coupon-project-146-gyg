@@ -1,13 +1,18 @@
 package clients.beans;
 
-import clients.CustomExceptions;
-import clients.EnumExceptions;
-import clients.db.DBManager;
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
 import clients.dbDao.CouponsDBDAO;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Yoav, Guy and Geri
+ */
+
+/**
+ * define entity basic information
+ */
 public class Company {
     private int id;
     private String name;
@@ -16,9 +21,20 @@ public class Company {
     private List<Coupon> coupons;
     CouponsDBDAO couponsDBDAO;
 
+    /**
+     * default C`tor
+     */
     public Company(){
-
     }
+
+    /**
+     * Full constructor
+     * @param id company identifier
+     * @param name company name
+     * @param email company e-mail address
+     * @param password company password
+     * @param coupons list of company's coupons
+     */
     public Company(int id, String name, String email, String password, List<Coupon> coupons) {
         this.id = id;
         this.name = name;
@@ -32,7 +48,7 @@ public class Company {
     }
 
     public void setId(int id) throws CustomExceptions {
-        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_ID);
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_THIS_VARIABLE);
     }
 
     public String getName() {

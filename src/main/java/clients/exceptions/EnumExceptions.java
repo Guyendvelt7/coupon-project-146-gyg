@@ -1,4 +1,4 @@
-package clients;
+package clients.exceptions;
 
 /**
  * keys to exceptions
@@ -14,6 +14,9 @@ public enum EnumExceptions {
     //INVALID ID?
     NO_COMPANY("There is no company with this ID in the system"),
     NO_COUPONS("You don't have coupons."),
+    COUPONS_OUT_OF_STOCK("coupons out of stock."),
+    COUPON_EXPIRED("The coupon has expired"),
+    NO_CUSTOMER("There is no customer with this ID in the system"),
     NO_COUPONS_BY_CATEGORY("You don't have coupons at this category"),
     NO_COUPONS_BY_PRICE("You don't have coupons under this price"),
     //NAME_EXIST?
@@ -24,12 +27,9 @@ public enum EnumExceptions {
     NO_COUPONS_COMPANY("company doesn't have coupons"),
     //COUPON_PURCHASED??
     COUPON_ID_EXIST("This coupon already exist in Database"),
-    CAN_NOT_CHANGE_NAME("you can't change company name"),
-    CAN_NOT_CHANGE_ID("you can't change company id"),
-    //NAME EXIST
-    COMPANY_NAME_ALREADY_EXIST("Company name already exist"),
-    //EMAIL_EXIST?
-    COMPANY_EMAIL_ALREADY_EXIST("Company email already exist");
+    CAN_NOT_CHANGE_NAME("you can't change company/customer/coupon name"),
+    CAN_NOT_CHANGE_THIS_VARIABLE("you can't change company/customer/coupon id");
+
 
     private String message;
 

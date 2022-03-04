@@ -1,4 +1,4 @@
-import clients.CustomExceptions;
+import clients.exceptions.CustomExceptions;
 import clients.beans.Company;
 import clients.beans.Coupon;
 import clients.dbDao.CompaniesDBDAO;
@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
@@ -19,7 +18,7 @@ public class CompanyTest {
     @BeforeClass
     public static void init() {
         companiesDBDAO = new CompaniesDBDAO();
-        company = new Company(4, "Bug", "bug@oketz.com", "53d7jh",
+        company = new Company(4, "Shachar", "shachar@yaks.com", "pjj123",
                 List.of(new Coupon(), new Coupon(), new Coupon()));
     }
 
@@ -65,6 +64,7 @@ public class CompanyTest {
     @Test
     public void getAllCompanies() {
         try {
+            companiesDBDAO=new CompaniesDBDAO();
             List<Company> companyList = companiesDBDAO.getAllCompanies();
             companyList.forEach(System.out::println);
         } catch (CustomExceptions customExceptions) {
@@ -75,7 +75,7 @@ public class CompanyTest {
     @Test
     public void getOneCompany() {
         try {
-            System.out.println(companiesDBDAO.getOneCompany(2));
+            System.out.println(companiesDBDAO.getOneCompany(5));
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }

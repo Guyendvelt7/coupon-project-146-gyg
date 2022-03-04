@@ -1,11 +1,17 @@
 package clients.beans;
 
-import clients.CustomExceptions;
-import clients.EnumExceptions;
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Yoav, Guy and Geri
+ */
+
+/**
+ * define entity basic information
+ */
 public class Customer {
     private int id;
     private String firstName;
@@ -14,6 +20,21 @@ public class Customer {
     private String password;
     private List<Coupon> coupons;
 
+    /**
+     * default C`tor
+     */
+    public Customer() {
+    }
+
+    /**
+     * Full constructor
+     * @param id customer identifier
+     * @param firstName customer first name
+     * @param lastName customer last name
+     * @param email customer e-mail address
+     * @param password customer password
+     * @param coupons list of customer coupons
+     */
     public Customer(int id, String firstName, String lastName, String email, String password, List<Coupon> coupons) {
         this.id = id;
         this.firstName = firstName;
@@ -28,7 +49,7 @@ public class Customer {
     }
 
     public void setId(int id) throws CustomExceptions {
-        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_ID);
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_THIS_VARIABLE);
     }
 
     public String getFirstName() {

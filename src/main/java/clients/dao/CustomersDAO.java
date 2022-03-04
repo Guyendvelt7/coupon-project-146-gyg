@@ -1,13 +1,23 @@
 package clients.dao;
 
-import clients.CustomExceptions;
+import clients.exceptions.CustomExceptions;
 import clients.beans.Customer;
 
 import java.util.List;
-
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ *  * 03.2022
+ */
+/**
+ * interface: implemented by CustomerDBDAO
+ */
 public interface CustomersDAO {
 
     public boolean isCustomerExist(String name, String password);
+
+    /**
+     *CRUD
+     */
 
     public void addCustomer(Customer customer) throws CustomExceptions;
 
@@ -17,5 +27,5 @@ public interface CustomersDAO {
 
     public List<Customer> getAllCustomers() throws CustomExceptions;
 
-    public Customer getOneCustomer(int customerID);
+    public Customer getOneCustomer(int customerID) throws CustomExceptions;
 }

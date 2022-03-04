@@ -1,22 +1,30 @@
 package clients.thread;
 
-import clients.CustomExceptions;
-import clients.EnumExceptions;
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
 import clients.beans.Coupon;
 import clients.dbDao.CouponsDBDAO;
-
-import java.sql.Date;
-import java.sql.SQLException;
 import java.time.LocalDate;
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
+ */
 
+/**
+ * Daily task to check and remove expired coupons from database
+ */
 public class CouponExpirationDailyJob implements Runnable {
-    private CouponsDBDAO myCoupons;
+    private CouponsDBDAO myCoupons = new CouponsDBDAO();
     private boolean quit = false;
 
     public CouponExpirationDailyJob(CouponsDBDAO myCoupons) {
         this.myCoupons = myCoupons;
     }
-
+//todo: מימוש הט'רד צריך להתבמע בקלאס נוסף לבדוק ב-
+//https://github.com/GeneralScar/CouponSystem/blob/fce8be6e2c09c9d50fb2c3d7a9bc3dcc8dbd411c/ProjectCoupun/src/infra/CouponSystem.java#L42
+//use of daemon thread?
+//check if thread isAlive()
+//where do we start() te new Thread?
     @Override
     public void run() {
         while (!quit) {

@@ -1,10 +1,16 @@
 package clients.beans;
 
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
+
 import java.sql.Date;
 
 /**
- * Coupon class
  * @author Yoav, Guy and Geri
+ */
+
+/**
+ * define entity basic information
  */
 public class Coupon {
     private int id;
@@ -17,6 +23,7 @@ public class Coupon {
     private int amount;
     private double price;
     private String image;
+
     /**
      * default C`tor
      */
@@ -24,7 +31,8 @@ public class Coupon {
     }
 
     /**
-     *Coupon constructor
+     *Full constructor
+     * @param id coupon identifier
      * @param companyId refers to coupons company ownership
      * @param category refers to coupons category type
      * @param title coupons name
@@ -35,8 +43,6 @@ public class Coupon {
      * @param price coupons purchase value
      * @param image visual of coupon description
      */
-
-
     public Coupon(int id, int companyId, Category category, String title, String description, Date startDate, Date endDate, int amount, double price, String image) {
         this.id=id;
         this.companyId = companyId;
@@ -54,16 +60,16 @@ public class Coupon {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int id) throws CustomExceptions {
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_THIS_VARIABLE);
     }
 
     public int getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(int companyId) {
-        this.companyId = companyId;
+    public void setCompanyId(int companyId) throws CustomExceptions {
+        throw new CustomExceptions(EnumExceptions.CAN_NOT_CHANGE_THIS_VARIABLE);
     }
 
     public Category getCategory() {

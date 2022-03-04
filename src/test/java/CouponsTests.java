@@ -1,4 +1,4 @@
-import clients.CustomExceptions;
+import clients.exceptions.CustomExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.dbDao.CouponsDBDAO;
@@ -17,8 +17,8 @@ public class CouponsTests {
     @BeforeClass
     public static void initTest() {
         couponsDBDAO = new CouponsDBDAO();
-        coupon= new Coupon(0,5, Category.FOOD, "other",
-                    "not sure",new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*2),new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*30),200, 54,"mmmmm!");
+        coupon= new Coupon(0,1, Category.ENTERTAINMENT, "LunaPark",
+                    "Fun Fun",new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*2),new Date(System.currentTimeMillis()+ 24L * 60 * 60 * 1000*60),50, 150,"Yey!");
     }
 
     @Test
@@ -43,8 +43,8 @@ public class CouponsTests {
 
     @Test
     public void updateCoupon(){
-        coupon.setCategory(Category.ENTERTAINMENT);
         try {
+        coupon.setCategory(Category.ENTERTAINMENT);
             couponsDBDAO.updateCoupon(coupon);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
@@ -81,14 +81,20 @@ public class CouponsTests {
 
     @Test
     public void getCouponsByCustomerId()  {
-        List<Coupon> coupons = couponsDBDAO.getCouponsByCustomerId(3);
-        System.out.println(coupons);
+        List<Coupon> coupons = couponsDBDAO.getCouponsByCustomerId(5);
+        coupons.forEach(System.out::println);
+    }
+
+    @Test
+    public void getCouponsByCompanyId(){
+        List<Coupon> couponList = couponsDBDAO.getCouponsByCompanyId(1);
+        couponList.forEach(System.out::println);
     }
 
     @Test
     public void addPurchasedCoupon(){
         try {
-            couponsDBDAO.addCouponPurchase(4, 1);
+            couponsDBDAO.addCouponPurchase(4, 5);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }

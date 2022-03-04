@@ -1,19 +1,25 @@
 package clients.dao;
 
-import clients.CustomExceptions;
+import clients.exceptions.CustomExceptions;
 import clients.beans.Company;
-import clients.beans.Coupon;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
+ */
+/**
+ * interface: implemented by CompanyDBDAO
+ */
 public interface CompaniesDAO {
 
     public boolean isCompanyExists(String email, String password);
 
-    //CRUD
+    /**
+     *CRUD
+     */
+
     public void addCompany(Company company) throws CustomExceptions;
 
     public void updateCompany(Company company) throws CustomExceptions;

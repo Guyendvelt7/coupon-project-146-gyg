@@ -1,10 +1,18 @@
 package clients.facade;
 
-import clients.CustomExceptions;
+import clients.exceptions.CustomExceptions;
 import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
+/**
+ * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
+ */
 
+/**
+ * implemented by all facade classes
+ * allows access to DBDAO methods
+ */
 public abstract class ClientFacade {
 
     protected CouponsDBDAO couponsDBDAO;
