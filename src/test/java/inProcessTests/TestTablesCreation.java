@@ -1,6 +1,7 @@
+package inProcessTests;
+
 import clients.db.DBManager;
 import clients.db.DBTools;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

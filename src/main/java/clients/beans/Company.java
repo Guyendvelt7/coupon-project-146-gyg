@@ -7,7 +7,8 @@ import clients.dbDao.CouponsDBDAO;
 import java.util.List;
 
 /**
- * @author Yoav, Guy and Geri
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
  */
 
 /**

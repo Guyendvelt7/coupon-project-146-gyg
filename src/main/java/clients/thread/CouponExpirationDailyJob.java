@@ -6,7 +6,7 @@ import clients.beans.Coupon;
 import clients.dbDao.CouponsDBDAO;
 import java.time.LocalDate;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -33,12 +33,9 @@ public class CouponExpirationDailyJob implements Runnable {
                     }
                 }
                 Thread.sleep(1000 * 60 * 60 * 24);
-
             } catch (InterruptedException | CustomExceptions e) {
                 System.out.println(e.getMessage());
-                System.out.println(EnumExceptions.ID_NOT_EXIST);
             }
-
         }
     }
 

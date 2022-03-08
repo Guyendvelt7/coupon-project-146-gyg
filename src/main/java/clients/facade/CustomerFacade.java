@@ -1,36 +1,44 @@
 package clients.facade;
 
-import clients.exceptions.CustomExceptions;
-import clients.exceptions.EnumExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.beans.Customer;
-import clients.dao.CustomerFacadeDao;
-import clients.dbDao.CouponsDBDAO;
+import clients.db.DBManager;
+import clients.db.DBTools;
 import clients.dbDao.CustomersDBDAO;
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
 /**
  * incorporation of all accessible methods to a customer
  */
-public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
+public class CustomerFacade extends ClientFacade {
     private int customerID;
-    private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-    private CustomersDBDAO customersDBDAO = new CustomersDBDAO();
+    CustomersDBDAO customersDBDAO = new CustomersDBDAO();
 
-    //todo: check if customer id necessary and also getCustomerID()
-    public CustomerFacade(int customerID) {
-        this.customerID = customerID;
+    /**
+     * Empty Customer constructor
+     */
+    public CustomerFacade() {
     }
 
     public int getCustomerID() {
         return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
     }
 
     /**
@@ -42,16 +50,24 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
      */
     @Override
     public boolean login(String email, String password) {
-        try {
-            return email.equals(customersDBDAO.getOneCustomer(customerID).getEmail()) &&
-                    password.equals(customersDBDAO.getOneCustomer(customerID).getPassword());
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-            return false;
+        if (customersDBDAO.isCustomerExist(email, password)) {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, email);
+            values.put(2, password);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_CUSTOMER_ID_BY_EMAIL_AND_PASSWORD, values);
+            int id = 0;
+            try {
+                resultSet.next();
+                id = resultSet.getInt("id");
+            } catch (SQLException err) {
+                System.out.println(err.getMessage());
+            }
+            setCustomerID(id);
+            return true;
         }
+        return false;
     }
 
-    @Override
     public void purchaseCoupon(Coupon coupon) {
         try {
             couponsDBDAO.addCouponPurchase(customerID, coupon.getId());
@@ -60,12 +76,10 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         }
     }
 
-    @Override
     public List<Coupon> getCustomerCoupons() throws CustomExceptions {
         return couponsDBDAO.getCouponsByCustomerId(this.customerID);
     }
 
-    @Override
     public List<Coupon> getCustomerCoupons(Category category) throws CustomExceptions {
         List<Coupon> categoryList = getCustomerCoupons().stream()
                 .filter(item -> item.getCategory().equals(category))
@@ -76,7 +90,6 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         return categoryList;
     }
 
-    @Override
     public List<Coupon> getCustomerCoupons(double maxPrice) throws CustomExceptions {
         List<Coupon> priceList = getCustomerCoupons().stream()
                 .filter(item -> item.getPrice() <= maxPrice)
@@ -87,14 +100,8 @@ public class CustomerFacade extends ClientFacade implements CustomerFacadeDao {
         return priceList;
     }
 
-    @Override
     public Customer getCustomerDetails() {
-        try {
-            return customersDBDAO.getOneCustomer(customerID);
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-            return null;
-        }
+        return customersDBDAO.getOneCustomer(customerID);
     }
 
 }

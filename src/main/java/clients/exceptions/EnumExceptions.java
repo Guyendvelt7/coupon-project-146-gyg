@@ -1,35 +1,45 @@
 package clients.exceptions;
+/**
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ *  * 03.2022
+ */
 
 /**
  * keys to exceptions
  */
 public enum EnumExceptions {
-
+    /**
+     * General exceptions
+     */
     NAME_EXIST("Cannot add existing name."),
     EMAIL_EXIST("Cannot add existing email."),
-    INVALID_EMAIL("Invalid email."),
-    ID_NOT_EXIST("Invalid ID."),
+    ID_NOT_EXIST("ID not exist in database."),
+    CAN_NOT_CHANGE_NAME("Can't change company/customer/coupon name"),
+    CAN_NOT_CHANGE_THIS_VARIABLE("Can't change company/customer/coupon id"),
+    /**
+     * coupons exceptions
+     */
     COUPON_TITLE_EXIST("Cannot add coupon, title already exist."),
     COUPON_PURCHASED("Cannot purchase this item, already in your list."),
-    //INVALID ID?
-    NO_COMPANY("There is no company with this ID in the system"),
-    NO_COUPONS("You don't have coupons."),
-    COUPONS_OUT_OF_STOCK("coupons out of stock."),
-    COUPON_EXPIRED("The coupon has expired"),
-    NO_CUSTOMER("There is no customer with this ID in the system"),
-    NO_COUPONS_BY_CATEGORY("You don't have coupons at this category"),
-    NO_COUPONS_BY_PRICE("You don't have coupons under this price"),
-    //NAME_EXIST?
-    COMPANY_ALREADY_EXIST("The company already exist in the system"),
-    //WTF?
-    ID_COMPANY_ALREADY_EXIST("The id company is already exist in the system"),
-    //NO_COUPONS
-    NO_COUPONS_COMPANY("company doesn't have coupons"),
-    //COUPON_PURCHASED??
-    COUPON_ID_EXIST("This coupon already exist in Database"),
-    CAN_NOT_CHANGE_NAME("you can't change company/customer/coupon name"),
-    CAN_NOT_CHANGE_THIS_VARIABLE("you can't change company/customer/coupon id");
-
+    NO_COUPONS("No coupons in database."),
+    COUPONS_OUT_OF_STOCK("Coupons out of stock."),
+    NO_COUPONS_BY_CATEGORY("No coupons in this category."),
+    NO_COUPONS_BY_PRICE("No coupons under this price."),
+    /**
+     * company exceptions
+     */
+    NO_COMPANY("No company with this ID in database."),
+    COMPANY_DOES_NOT_HAVE_THIS_COUPON("Company doesn't have this coupon."),
+    /**
+     * category exceptions
+     */
+    CATEGORY_EXIST("Category already exist in database."),
+    CATEGORY_NOT_EXIST("Category doesn't exist in database."),
+    /**
+     * login exceptions
+     */
+    NOT_ADMIN("You are not Administrator Kapara."),
+    FAIL_2_CONNECT("Fail to connect, please check entered email and password for error.");
 
     private String message;
 

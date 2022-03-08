@@ -1,3 +1,5 @@
+package inProcessTests;
+
 import clients.exceptions.CustomExceptions;
 import clients.beans.Category;
 import clients.beans.Coupon;
@@ -62,12 +64,8 @@ public class CouponsTests {
 
     @Test
     public void getAllCoupons(){
-        try {
-            List<Coupon> couponList = couponsDBDAO.getAllCoupons();
-            couponList.forEach(System.out::println);
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-        }
+        List<Coupon> couponList = couponsDBDAO.getAllCoupons();
+        couponList.forEach(System.out::println);
     }
 
     @Test

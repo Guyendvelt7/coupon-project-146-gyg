@@ -5,7 +5,7 @@ import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 

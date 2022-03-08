@@ -15,31 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 public class CustomersDBDAO implements CustomersDAO {
     private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-
-    /**
-     * Checks the existence of a customer in database by customer ID
-     *
-     * @param id input customer id
-     * @return true or false
-     */
-    public boolean isCustomerExistsById(int id) {
-        Map<Integer, Object> values = new HashMap<>();
-        try {
-            values.put(1, id);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_CUSTOMER_BY_ID, values);
-            assert resultSet != null;
-            resultSet.next();
-            return (resultSet.getInt(1) == 1);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
 
     /**
      * Checks the existence of a customer in database by customer email and password
@@ -65,6 +45,26 @@ public class CustomersDBDAO implements CustomersDAO {
     }
 
     /**
+     * Checks the existence of a customer in database by customer email
+     *
+     * @param email input customer email
+     * @return true or false
+     */
+    public boolean isCustomerExistsById(String email) {
+        Map<Integer, Object> values = new HashMap<>();
+        try {
+            values.put(1, email);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_CUSTOMER_EXISTS_BY_EMAIL, values);
+            assert resultSet != null;
+            resultSet.next();
+            return (resultSet.getInt(1) == 1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * insert new customer info into database
      *
      * @param customer input customer object
@@ -72,13 +72,12 @@ public class CustomersDBDAO implements CustomersDAO {
      */
     @Override
     public void addCustomer(Customer customer) throws CustomExceptions {
-        //todo: check if necessary add a hole method just to check only by email (efficiency) yoavs change
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, customer.getFirstName());
         values.put(2, customer.getLastName());
         values.put(3, customer.getEmail());
         values.put(4, customer.getPassword());
-        if (this.isCustomerExist(customer.getEmail(), customer.getPassword())) {
+        if (this.isCustomerExistsById(customer.getEmail())) {
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
         } else {
             DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
@@ -125,19 +124,17 @@ public class CustomersDBDAO implements CustomersDAO {
      * gets list of all customers in database
      *
      * @return list of customers
-     * @throws CustomExceptions alerts user if database is empty
      */
     @Override
-    public List<Customer> getAllCustomers() throws CustomExceptions {
+    public List<Customer> getAllCustomers() {
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS, new HashMap<>());
         List<Customer> customers = new ArrayList<>();
-        Customer customer = new Customer();
         try {
             while (resultSet.next()) {
-                customer = getOneCustomer(resultSet.getInt("id"));
+                Customer customer = getOneCustomer(resultSet.getInt("id"));
                 customers.add(customer);
             }
-        } catch (SQLException | CustomExceptions err) {
+        } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
         return customers;
@@ -148,32 +145,29 @@ public class CustomersDBDAO implements CustomersDAO {
      *
      * @param customerID input customer ID
      * @return customer object info
-     * @throws CustomExceptions alerts user if database is empty
      */
     @Override
-    public Customer getOneCustomer(int customerID) throws CustomExceptions {
+    public Customer getOneCustomer(int customerID) {
         couponsDBDAO = new CouponsDBDAO();
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, customerID);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER, values);
-        assert resultSet != null;
-        if (isCustomerExistsById(customerID)) {
-            try {
-                resultSet.next();
-                return new Customer(
-                        resultSet.getInt("id"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),
-                        resultSet.getString("email"),
-                        resultSet.getString("password"),
-                        couponsDBDAO.getCouponsByCustomerId(customerID)
-                );
-            } catch (SQLException err) {
-                System.out.println(err.getMessage());
-                return null;
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NO_CUSTOMER);
+        if (resultSet == null) {
+            return null;
+        }
+        try {
+            resultSet.next();
+            return new Customer(
+                    resultSet.getInt("id"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password"),
+                    couponsDBDAO.getCouponsByCustomerId(customerID)
+            );
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+            return null;
         }
     }
 }

@@ -6,7 +6,7 @@ import clients.beans.Company;
 import java.util.List;
 
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 /**

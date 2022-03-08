@@ -1,3 +1,5 @@
+package inProcessTests;
+
 import clients.exceptions.CustomExceptions;
 import clients.beans.Coupon;
 import clients.beans.Customer;
@@ -76,21 +78,13 @@ public class CustomerTests {
 
     @Test
     public void getAllCustomers(){
-        try {
-            List<Customer> customerList = customersDBDAO.getAllCustomers();
-            customerList.forEach(System.out::println);
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-        }
+        List<Customer> customerList = customersDBDAO.getAllCustomers();
+        customerList.forEach(System.out::println);
     }
 
     @Test
     public void getOneCustomer() {
-        try {
-            System.out.println(customersDBDAO.getOneCustomer(4));
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-        }
+        System.out.println(customersDBDAO.getOneCustomer(4));
     }
 
     @Test

@@ -5,7 +5,7 @@ import clients.beans.Category;
 import java.sql.*;
 import java.util.Map;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 

@@ -1,37 +1,45 @@
 package clients.facade;
 
-import clients.exceptions.CustomExceptions;
-import clients.exceptions.EnumExceptions;
 import clients.beans.Company;
 import clients.beans.Customer;
 import clients.dbDao.CompaniesDBDAO;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
+
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
+/**
+ * Class responsible for retrieving to the client the right facade
+ */
 public class LoginManager {
     private static LoginManager instance = null;
-    private static AdminFacade adminFacade;
-    private static CustomerFacade customerFacade;
-    private static CompanyFacade companyFacade;
-    private static CustomersDBDAO customersDBDAO= new CustomersDBDAO();
-    private static CompaniesDBDAO companiesDBDAO= new CompaniesDBDAO();
+    private static AdminFacade adminFacade = new AdminFacade();
+    private static CustomerFacade customerFacade = new CustomerFacade();
+    private static CompanyFacade companyFacade = new CompanyFacade();
+    private static CustomersDBDAO customersDBDAO = new CustomersDBDAO();
+    private static CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
     private static CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-    //todo: use the predicates in the login
-    static Predicate<String> isEmailValid = email -> email.contains("@")
-            && email.contains(".com");
-    static Predicate<String> isPasswordValid = pass -> pass.length() > 4
-            && pass.length() < 10 && pass.contains("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$");
 
+    /**
+     * Empty SINGLETON constructor
+     * private, internal use only
+     */
     private LoginManager() {
     }
 
+    /**
+     * create one instance of LoginManager class only
+     * check to prevent the creation of two instances of the same class
+     *
+     * @return loginManager instance
+     */
     public static LoginManager getInstance() {
         if (instance == null) {
                     instance = new LoginManager();
@@ -39,40 +47,37 @@ public class LoginManager {
         return instance;
         }
 
+    /**
+     *login administrator, opens different facades depending on client type
+     * @param email input by user
+     * @param password input by user
+     * @param clientType input by user
+     * @return facade
+     * @throws CustomExceptions if e-mail or password are not existent in database
+     */
     public ClientFacade login(String email, String password, ClientType clientType) throws CustomExceptions {
-        isEmailValid.test(email);
-        isPasswordValid.test(password);
         switch (clientType) {
             case ADMINISTRATOR:
-                adminFacade = new AdminFacade();
                 if (adminFacade.login(email, password)) {
                     System.out.println("admin connected");
                     return adminFacade;
                 } else {
-                    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+                    throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
                 }
-
             case COMPANY:
-                companiesDBDAO = new CompaniesDBDAO();
-                if (companiesDBDAO.isCompanyExists(email, password)) {
-                    Company company = companiesDBDAO.getAllCompanies().stream()
-                            .filter(item -> Objects.equals(item.getPassword(), password))
-                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
-                    System.out.println(company.getName() + " connected");
-                    return new CompanyFacade(company.getId());
+                if (companyFacade.login(email, password)) {
+                    System.out.println("company number " + companyFacade.getCompanyId() + " is connected");
+                    return companyFacade;
                 } else {
-                    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+                    throw new CustomExceptions(EnumExceptions.FAIL_2_CONNECT);
                 }
             case CUSTOMER:
-                customersDBDAO = new CustomersDBDAO();
-                if (customersDBDAO.isCustomerExist(email, password)) {
-                    Customer customer = customersDBDAO.getAllCustomers().stream()
-                            .filter(item -> Objects.equals(item.getPassword(), password))
-                            .filter(item -> Objects.equals(item.getEmail(), email)).collect(Collectors.toList()).get(0);
-                    System.out.println(customer.getFirstName() + " connected");
-                    return new CustomerFacade(customer.getId());
+
+                if (customerFacade.login(email, password)) {
+                    System.out.println("customer number " + customerFacade.getCustomerID() + " is connected");
+                    return customerFacade;
                 } else {
-                    throw new CustomExceptions(EnumExceptions.INVALID_EMAIL);
+                    throw new CustomExceptions(EnumExceptions.FAIL_2_CONNECT);
                 }
 
             default:

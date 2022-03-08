@@ -1,4 +1,7 @@
+package inProcessTests;
+
 import clients.beans.Category;
+import clients.exceptions.CustomExceptions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -14,7 +17,11 @@ public class TestsCategories {
     public static void createCategories(){
         categories= Arrays.stream(Category.values()).collect(Collectors.toList());
         for (Category item : categories) {
-            addCategory(item);
+            try {
+                addCategory(item);
+            } catch (CustomExceptions customExceptions) {
+                System.out.println(customExceptions.getMessage());
+            }
         }
     }
 

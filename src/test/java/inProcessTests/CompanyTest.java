@@ -1,3 +1,5 @@
+package inProcessTests;
+
 import clients.exceptions.CustomExceptions;
 import clients.beans.Company;
 import clients.beans.Coupon;
@@ -43,7 +45,6 @@ public class CompanyTest {
 
     @Test
     public void updateCompany() {
-        //todo: not working
         company.setPassword("1234");
         try {
             companiesDBDAO.updateCompany(company);

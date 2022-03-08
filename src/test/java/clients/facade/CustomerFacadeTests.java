@@ -1,16 +1,25 @@
-import clients.exceptions.CustomExceptions;
+package clients.facade;
+
 import clients.beans.Category;
 import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
-import clients.facade.ClientType;
-import clients.facade.CustomerFacade;
-import clients.facade.LoginManager;
+import clients.exceptions.CustomExceptions;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
+
+/**
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
+ */
+
+/**
+ * Customer facade tests
+ */
 public class CustomerFacadeTests {
     private static CustomersDBDAO customersDBDAO;
     private static Customer customer;
@@ -21,33 +30,32 @@ public class CustomerFacadeTests {
 
 
     @BeforeClass
-    public static void initializing() {
-        System.out.println("starting initialize");
+    public static void init() {
+        System.out.println("Starting tests for customer facade");
         customersDBDAO = new CustomersDBDAO();
+        customer = customersDBDAO.getOneCustomer(4);
         loginManager = LoginManager.getInstance();
         couponsDBDAO = new CouponsDBDAO();
         try {
-            customer = customersDBDAO.getOneCustomer(3);
-            System.out.println(customer);
-            coupon = couponsDBDAO.getOneCoupon(7);
-            System.out.println(coupon);
-            customerFacade = (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER);
+            coupon = couponsDBDAO.getOneCoupon(5);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }
     }
 
     @Test
-    public void goodLogin() throws CustomExceptions {
-        System.out.println(customer.getEmail());
-        System.out.println(customer.getPassword());
-        Assert.assertTrue((loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER) instanceof CustomerFacade));
+    public void loginPass() {
+        try {
+            Assert.assertTrue((loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER) instanceof CustomerFacade));
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
     @Test
-    public void Badlogin() {
+    public void loginFail() {
         try {
-            Assert.assertFalse(loginManager.login("zeev-email", "zeev-password", ClientType.CUSTOMER) instanceof CustomerFacade);
+            Assert.assertNull(loginManager.login("zeev-email", "zeev-password", ClientType.CUSTOMER));
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }
@@ -60,12 +68,12 @@ public class CustomerFacadeTests {
 
     @Test
     public void purchaseCoupon() throws CustomExceptions {
+        customer = customersDBDAO.getOneCustomer(6);
         int beforeAmount = coupon.getAmount();
         customerFacade.purchaseCoupon(coupon);
-        coupon = couponsDBDAO.getOneCoupon(7);
+        coupon = couponsDBDAO.getOneCoupon(5);
         int afterAmount = coupon.getAmount();
         Assert.assertEquals(beforeAmount, afterAmount + 1);
-        Assert.assertEquals(customerFacade.getCustomerCoupons().get(4).getId(), couponsDBDAO.getOneCoupon(7).getId());
     }
 
     @Test
@@ -75,7 +83,11 @@ public class CustomerFacadeTests {
         Assert.assertEquals(customerFacade.getCustomerCoupons().get(1).getId(), 2);
         Assert.assertEquals(customerFacade.getCustomerCoupons().get(2).getId(), 5);
         Assert.assertEquals(customerFacade.getCustomerCoupons().get(3).getId(), 6);
+    }
 
+    @Test
+    public void getEmptyCustomerCoupons() throws CustomExceptions {
+        List<Coupon> couponList = customerFacade.getCustomerCoupons();
     }
 
     @Test
@@ -91,11 +103,15 @@ public class CustomerFacadeTests {
         Assert.assertEquals(customerFacade.getCustomerCoupons(50).get(0).getId(), 1);
     }
 
+    @Test(expected = CustomExceptions.class)
+    public void getEmptyCustomerCouponsByPrice() throws CustomExceptions {
+        customerFacade.getCustomerCoupons(10).forEach(System.out::println);
+    }
+
     @Test
     public void getCustomerDetails() {
         Customer customerDetails = customerFacade.getCustomerDetails();
         System.out.println(customerDetails);
-        Assert.assertEquals(customer.getId(), customerDetails.getId());
+        System.out.println(customer);
     }
-
 }

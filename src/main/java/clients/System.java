@@ -1,10 +1,16 @@
 package clients;
 
+import clients.beans.Company;
+import clients.beans.Customer;
 import clients.db.ConnectionPool;
+import clients.exceptions.CustomExceptions;
+import clients.facade.*;
 import clients.thread.CouponExpirationDailyJob;
 
+import java.util.ArrayList;
+
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -14,6 +20,12 @@ import clients.thread.CouponExpirationDailyJob;
 public class System {
     private static System instance=null;
     CouponExpirationDailyJob job = null;
+    private static LoginManager loginManager;
+    private static CustomerFacade customerFacade;
+    private static CompanyFacade companyFacade;
+    private static AdminFacade adminFacade;
+    private static Company company = new Company(1, "Shachar", "shachar@yaks.com", "pjj123", new ArrayList<>());
+    private static Customer customer = new Customer(1, "Dana", "Sercovich", "dana@serco.com", "54321", new ArrayList<>());
     //todo: דף 20
 
     /**
@@ -45,15 +57,19 @@ public class System {
     }
 
     /**
-     * Program overall tests
+     * Program overall initializer
      */
-    public static void testAll(){
+    public static void testAll() throws CustomExceptions {
         //system init
         System system = new System();
         system = System.getInstance();
+        loginManager = LoginManager.getInstance();
         //check login for all 3 clients type
+        customerFacade = (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER);
+        companyFacade = (CompanyFacade) loginManager.login(company.getEmail(), company.getPassword(), ClientType.COMPANY);
+        adminFacade = (AdminFacade) loginManager.login("admin@admin.com", "admin", ClientType.ADMINISTRATOR);
 
-        //compile all facade tests here
+        //compile all facade tests (GO TO test->java->FinalTests class)
 
         //end thread
         //close connection to database

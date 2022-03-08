@@ -19,12 +19,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 public class CouponsDBDAO implements CouponsDAO {
     CompaniesDBDAO companiesDBDAO;
-    CustomersDBDAO customersDBDAO;
     CategoryClass categoryClass = new CategoryClass();
 
     /**
@@ -38,6 +37,28 @@ public class CouponsDBDAO implements CouponsDAO {
         try {
             values.put(1, id);
             ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COUPON_BY_ID, values);
+            assert resultSet != null;
+            resultSet.next();
+            return (resultSet.getInt(1) == 1);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Checks if customer already has purchased the coupon in database
+     *
+     * @param customerId input customer ID
+     * @param couponId   input coupon ID
+     * @return true or false
+     */
+    public boolean isCouponPurchased(int customerId, int couponId) {
+        Map<Integer, Object> values = new HashMap<>();
+        try {
+            values.put(1, customerId);
+            values.put(2, couponId);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.IS_COUPON_PURCHASED, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
@@ -68,7 +89,7 @@ public class CouponsDBDAO implements CouponsDAO {
             values.put(9, coupon.getImage());
             DBTools.runQuery(DBManager.CREATE_NEW_COUPON, values);
         } else {
-            throw new CustomExceptions(EnumExceptions.COUPON_ID_EXIST);
+            throw new CustomExceptions(EnumExceptions.COUPON_TITLE_EXIST);
         }
 
     }
@@ -111,7 +132,6 @@ public class CouponsDBDAO implements CouponsDAO {
         if (isCouponExists(couponID)) {
             values.put(1, couponID);
             DBTools.runQuery(DBManager.DELETE_COUPON, values);
-            DBTools.runQuery(DBManager.DELETE_PURCHASED_COUPON_BY_COUPON_ID, values);
         } else {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
@@ -121,10 +141,9 @@ public class CouponsDBDAO implements CouponsDAO {
      * retrieve list of all coupons from database
      *
      * @return list of coupons
-     * @throws CustomExceptions alerts user if database is empty
      */
     @Override
-    public List<Coupon> getAllCoupons() throws CustomExceptions {
+    public List<Coupon> getAllCoupons() {
         List<Coupon> coupons = new ArrayList<>();
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COUPONS, new HashMap<>());
         Coupon coupon = new Coupon();
@@ -149,30 +168,29 @@ public class CouponsDBDAO implements CouponsDAO {
      */
     @Override
     public Coupon getOneCoupon(int coupon_id) throws CustomExceptions {
+        if (!isCouponExists(coupon_id)) {
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+        }
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, coupon_id);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_COUPON, values);
-        if (isCouponExists(coupon_id)) {
-            try {
-                assert resultSet != null;
-                if (resultSet.next()) {
-                    return new Coupon(
-                            resultSet.getInt("id"),
-                            resultSet.getInt("company_id"),
-                            Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
-                            resultSet.getString("title"),
-                            resultSet.getString("description"),
-                            resultSet.getDate("start_date"),
-                            resultSet.getDate("end_date"),
-                            resultSet.getInt("amount"),
-                            resultSet.getDouble("price"),
-                            resultSet.getString("image"));
-                }
-            } catch (SQLException err) {
-                System.out.println(err.getMessage());
+        try {
+            assert resultSet != null;
+            if (resultSet.next()) {
+                return new Coupon(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("company_id"),
+                        Category.valueOf(categoryClass.getCategoryName(resultSet.getInt("category_id"))),
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("start_date"),
+                        resultSet.getDate("end_date"),
+                        resultSet.getInt("amount"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image"));
             }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
         }
         return null;
     }
@@ -180,38 +198,30 @@ public class CouponsDBDAO implements CouponsDAO {
     /**
      * insert into database purchased coupon from customer and updates coupon amount in coupon table
      *
-     * @param customerID input for adding coupon to customer table
-     * @param couponID   input for removing amount from coupon table
-     * @throws CustomExceptions if user tries to purchase a coupon for a second time
+     * @param customerID input for adding coupon to database
+     * @param couponID   input for adding coupon to database
+     * @throws CustomExceptions if user tries to purchase a coupon for a second time or coupon is out of stock
      */
     @Override
     public void addCouponPurchase(int customerID, int couponID) throws CustomExceptions {
-        //todo: check how to merge changes from yoavs version.coupon expired is not in database because thread deletes them
-        Predicate<Coupon> isInYourList = item -> item.getId() == couponID;
-        Predicate<Coupon> outOfStock = item -> item.getAmount()==0;
-        List<Coupon> coupons = getCouponsByCustomerId(customerID).stream()
-                .filter(isInYourList).collect(Collectors.toList());
-        List<Coupon> coupons1=getCouponsByCustomerId(customerID).stream()
-                .filter(outOfStock).collect(Collectors.toList());
-        if (!coupons.isEmpty()) {
-            throw new CustomExceptions(EnumExceptions.COUPON_PURCHASED);
-        } else if(coupons1.isEmpty()){
+        Coupon coupon = getOneCoupon(couponID);
+        if (coupon.getAmount() == 0) {
             throw new CustomExceptions(EnumExceptions.COUPONS_OUT_OF_STOCK);
-        }
-        else {
+        } else if (isCouponPurchased(customerID, couponID)) {
+            throw new CustomExceptions(EnumExceptions.COUPON_PURCHASED);
+        } else {
             Map<Integer, Object> values = new HashMap<>();
             values.put(1, customerID);
             values.put(2, couponID);
             DBTools.runQuery(DBManager.ADD_PURCHASED_COUPON, values);
-            Coupon coupon = getOneCoupon(couponID);
             coupon.setAmount(coupon.getAmount() - 1);
             updateCoupon(coupon);
-            System.out.println("coupon id "+couponID+" successfully purchased by customer "+customerID);
+            System.out.println("coupon id " + couponID + " successfully purchased by customer " + customerID);
         }
     }
 
     /**
-     * removes expired or used coupon from database
+     * removes used coupon from database
      *
      * @param customerID input for removing coupon from customer
      * @param couponID   input for removing coupon by id
@@ -240,6 +250,9 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, companyId);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_COMPANIES, values);
+        if (resultSet ==null){
+            return null;
+        }
         try {
             while (resultSet.next()) {
                 couponsByCompany.add(getOneCoupon(resultSet.getInt("id")));
@@ -261,6 +274,9 @@ public class CouponsDBDAO implements CouponsDAO {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, customerID);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COUPONS_BY_CUSTOMER, values);
+        if (resultSet ==null){
+            return null;
+        }
         try {
             while (resultSet.next()) {
                 Coupon coupon = getOneCoupon(resultSet.getInt("coupon_id"));

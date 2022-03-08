@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Stack;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
- *  * 03.2022
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
  */
 
 /**
@@ -26,7 +26,7 @@ public class ConnectionPool {
      */
     private ConnectionPool() {
         //todo: delete s.out before project submit
-        System.out.println("Instance created...");
+        System.out.println("Connection created...");
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(DBManager.URL, DBManager.SQL_USER, DBManager.SQL_PASS);
@@ -55,7 +55,6 @@ public class ConnectionPool {
     /**
      * create one instance of ConnectionPool class only
      * uses synchronized to the entire class to prevent use of other methods while this is in process
-     * double check to prevent the creation of two instances
      *
      * @return connection to database
      */

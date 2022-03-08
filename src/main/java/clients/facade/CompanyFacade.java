@@ -1,16 +1,22 @@
 package clients.facade;
 
-import clients.exceptions.CustomExceptions;
-import clients.exceptions.EnumExceptions;
 import clients.beans.Category;
 import clients.beans.Company;
 import clients.beans.Coupon;
-import clients.dbDao.CouponsDBDAO;
+import clients.db.DBManager;
+import clients.db.DBTools;
+import clients.dbDao.CompaniesDBDAO;
+import clients.exceptions.CustomExceptions;
+import clients.exceptions.EnumExceptions;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 /**
- * @author Yoav Chachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -19,14 +25,20 @@ import java.util.stream.Collectors;
  */
 public class CompanyFacade extends ClientFacade {
     private int companyId;
-    private CouponsDBDAO couponsDBDAO;
+    private CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
 
     /**
-     * company constructor
-     *
-     * @param companyId
+     * Empty company constructor
+
      */
-    public CompanyFacade(int companyId) {
+    public CompanyFacade() {
+    }
+
+    public int getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(int companyId) {
         this.companyId = companyId;
     }
 
@@ -39,44 +51,62 @@ public class CompanyFacade extends ClientFacade {
      */
     @Override
     public boolean login(String email, String password) {
-        //todo: check if customerFacade login method is better
-        String pas = null;
-        String mail = null;
-        try {
-            pas = companiesDBDAO.getOneCompany(companyId).getPassword();
-            mail = companiesDBDAO.getOneCompany(companyId).getEmail();
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
+        if (companiesDBDAO.isCompanyExists(email, password)) {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, email);
+            values.put(2, password);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_COMPANY_ID_BY_EMAIL_AND_PASSWORD, values);
+            int id = 0;
+            try {
+                resultSet.next();
+                id = resultSet.getInt("id");
+            } catch (SQLException err) {
+                System.out.println(err.getMessage());
+            }
+            setCompanyId(id);
+            return true;
         }
-        return email.equals(mail) && password.equals(pas);
+        return false;
     }
 
-    public void addCoupon(Coupon coupon) {
-        List<Coupon> couponList;
-        try {
-            couponList = companiesDBDAO.getCompanyCoupons(companyId).stream()
+    public void addCoupon(Coupon coupon) throws CustomExceptions{
+        if (coupon.getCompanyId() == companyId) {
+            List<Coupon> couponList;
+            couponList = couponsDBDAO.getCouponsByCompanyId(companyId).stream()
                     .filter(item -> item.getTitle().equals(coupon.getTitle())).collect(Collectors.toList());
             if (couponList.size() == 0) {
                 couponsDBDAO.addCoupon(coupon);
+            }else {
+                throw new CustomExceptions(EnumExceptions.COUPON_TITLE_EXIST);
             }
-        } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.COUPON_TITLE_EXIST);
+        }else {
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
     }
 
-    public void updateCoupon(Coupon coupon) {
-        try {
-            couponsDBDAO.updateCoupon(coupon);
-        } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
+    public void updateCoupon(Coupon coupon) throws CustomExceptions {
+        if (coupon.getCompanyId() == companyId) {
+            if (!couponsDBDAO.isCouponExists(coupon.getId())) {
+                throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+            } else if (coupon.getCompanyId() != companyId) {
+                throw new CustomExceptions(EnumExceptions.COMPANY_DOES_NOT_HAVE_THIS_COUPON);
+            } else {
+                couponsDBDAO.updateCoupon(coupon);
+            }
+        }else {
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
     }
 
-    public void deleteCoupon(int couponId) {
-        try {
-            couponsDBDAO.deleteCoupon(couponId);
-        } catch (CustomExceptions e) {
-            System.out.println(EnumExceptions.ID_NOT_EXIST);
+    public void deleteCoupon(int couponId) throws CustomExceptions {
+        if (couponsDBDAO.getOneCoupon(couponId).getCompanyId()==companyId) {
+            try {
+                couponsDBDAO.deleteCoupon(couponId);
+            } catch (CustomExceptions customExceptions) {
+                System.out.println(customExceptions.getMessage());
+            }
+        }else {
+            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
     }
 
@@ -98,8 +128,8 @@ public class CompanyFacade extends ClientFacade {
     public Company getCompanyDetails() {
         try {
             return companiesDBDAO.getOneCompany(companyId);
-        } catch (CustomExceptions e) {
-            System.out.println(e.getMessage());
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
             return null;
         }
     }

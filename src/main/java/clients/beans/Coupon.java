@@ -6,7 +6,8 @@ import clients.exceptions.EnumExceptions;
 import java.sql.Date;
 
 /**
- * @author Yoav, Guy and Geri
+ * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * 03.2022
  */
 
 /**
