@@ -14,7 +14,7 @@ public class DBManager {
     public static final String SQL_USER = "root";
     public static final String SQL_PASS = "12345678";
 
-    public static final String CREATED_DB = "CREATE SCHEMA `coupons_project` ;";
+    public static final String CREATED_DB = "CREATE SCHEMA IF NOT EXISTS `coupons_project` ;";
     public static final String DROP_DB = "DROP SCHEMA `coupons_project`";
 
     public static final String CREATE_COMPANY_TABLE =
@@ -148,6 +148,9 @@ public class DBManager {
     public static final String COUNT_COMPANY_BY_ID =
             "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE `id` = ?;";
 
+    public static final String COUNT_COMPANY_BY_EMAIL =
+            "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE `email` = ?;";
+
     public static final String COUNT_COMPANY_BY_NAME =
             "SELECT COUNT(*) FROM `coupons_project`.`companies` WHERE `name` = ?;";
 
@@ -159,7 +162,7 @@ public class DBManager {
                     "VALUES (?,?,?,?);";
 
     public static final String UPDATE_CUSTOMER =
-            "UPDATE `coupons_project`.`customer` SET `first_name` = ?, `last_name` = ?, `email` = ? `password` = ? " +
+            "UPDATE `coupons_project`.`customers` SET `first_name`= ?, `last_name`=?, `email` = ?, `password` = ? " +
                     "WHERE (`id` = ?);";
 
     public static final String DELETE_CUSTOMER =

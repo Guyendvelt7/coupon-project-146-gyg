@@ -1,8 +1,8 @@
 import clients.facade.AdminFacadeTests;
 import clients.facade.CompanyFacadeTests;
 import clients.facade.CustomerFacadeTests;
+import inProcessTests.TestTablesCreation;
 import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -16,14 +16,14 @@ import org.junit.Test;
 
 public class FinalTests {
     @BeforeClass
-    public static void message(){
+    public static void init(){
         System.out.println("Starting all tests");
+        new TestSuite(TestTablesCreation.class);
     }
 
-
     @Test
-    public void customerFacadeTests(){
-        new TestSuite(CustomerFacadeTests.class);
+    public void adminFacadeTest(){
+        new TestSuite(AdminFacadeTests.class);
     }
 
     @Test
@@ -32,7 +32,8 @@ public class FinalTests {
     }
 
     @Test
-    public void adminFacadeTest(){
-        new TestSuite(AdminFacadeTests.class);
+    public void customerFacadeTests(){
+        new TestSuite(CustomerFacadeTests.class);
     }
+
 }

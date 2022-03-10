@@ -30,6 +30,11 @@ public enum EnumExceptions {
      */
     NO_COMPANY("No company with this ID in database."),
     COMPANY_DOES_NOT_HAVE_THIS_COUPON("Company doesn't have this coupon."),
+
+    /**
+     * customer exceptions
+     */
+    NO_CUSTOMER("No customer with this ID in database."),
     /**
      * category exceptions
      */

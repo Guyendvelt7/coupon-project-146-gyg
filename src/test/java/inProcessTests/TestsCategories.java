@@ -13,8 +13,8 @@ import static clients.beans.CategoryClass.addCategory;
 
 public class TestsCategories {
     private static List<Category> categories;
-    @BeforeClass
-    public static void createCategories(){
+    @Test
+    public void createCategories(){
         categories= Arrays.stream(Category.values()).collect(Collectors.toList());
         for (Category item : categories) {
             try {

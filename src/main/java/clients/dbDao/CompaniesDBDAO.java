@@ -72,7 +72,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, email);
-            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_NAME, values);
+            ResultSet resultSet = DBTools.runQueryForResult(DBManager.COUNT_COMPANY_BY_EMAIL, values);
             assert resultSet != null;
             resultSet.next();
             return (resultSet.getInt(1) == 1);
@@ -137,13 +137,12 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public void updateCompany(Company company) throws CustomExceptions {
         if (!isCompanyExistsById(company.getId())) {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
-        } else if (isCompanyExistsByEmail(company.getEmail())) {
-            throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
-        } else {
+        }else {
             Map<Integer, Object> values = new HashMap<>();
             values.put(1, company.getName());
             values.put(2, company.getEmail());
             values.put(3, company.getPassword());
+            values.put(4,company.getId());
             DBTools.runQuery(DBManager.UPDATE_COMPANY, values);
         }
     }

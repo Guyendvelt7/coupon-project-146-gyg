@@ -84,7 +84,11 @@ public class CustomerTests {
 
     @Test
     public void getOneCustomer() {
-        System.out.println(customersDBDAO.getOneCustomer(4));
+        try {
+            System.out.println(customersDBDAO.getOneCustomer(4));
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
     @Test

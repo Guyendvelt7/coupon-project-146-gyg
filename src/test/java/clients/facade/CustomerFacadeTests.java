@@ -30,13 +30,13 @@ public class CustomerFacadeTests {
 
 
     @BeforeClass
-    public static void init() {
+    public static void init()  {
         System.out.println("Starting tests for customer facade");
         customersDBDAO = new CustomersDBDAO();
+        try {
         customer = customersDBDAO.getOneCustomer(4);
         loginManager = LoginManager.getInstance();
         couponsDBDAO = new CouponsDBDAO();
-        try {
             coupon = couponsDBDAO.getOneCoupon(5);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
@@ -110,8 +110,13 @@ public class CustomerFacadeTests {
 
     @Test
     public void getCustomerDetails() {
-        Customer customerDetails = customerFacade.getCustomerDetails();
+        Customer customerDetails = null;
+        try {
+            customerDetails = customerFacade.getCustomerDetails();
         System.out.println(customerDetails);
         System.out.println(customer);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 }

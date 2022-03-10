@@ -100,7 +100,7 @@ public class CustomerFacade extends ClientFacade {
         return priceList;
     }
 
-    public Customer getCustomerDetails() {
+    public Customer getCustomerDetails() throws CustomExceptions {
         return customersDBDAO.getOneCustomer(customerID);
     }
 

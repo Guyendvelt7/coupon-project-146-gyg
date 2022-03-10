@@ -50,7 +50,7 @@ public class CustomersDBDAO implements CustomersDAO {
      * @param email input customer email
      * @return true or false
      */
-    public boolean isCustomerExistsById(String email) {
+    public boolean isCustomerExistsByMail(String email) {
         Map<Integer, Object> values = new HashMap<>();
         try {
             values.put(1, email);
@@ -77,7 +77,7 @@ public class CustomersDBDAO implements CustomersDAO {
         values.put(2, customer.getLastName());
         values.put(3, customer.getEmail());
         values.put(4, customer.getPassword());
-        if (this.isCustomerExistsById(customer.getEmail())) {
+        if (this.isCustomerExistsByMail(customer.getEmail())) {
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
         } else {
             DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
@@ -134,7 +134,7 @@ public class CustomersDBDAO implements CustomersDAO {
                 Customer customer = getOneCustomer(resultSet.getInt("id"));
                 customers.add(customer);
             }
-        } catch (SQLException err) {
+        } catch (SQLException | CustomExceptions err) {
             System.out.println(err.getMessage());
         }
         return customers;
@@ -147,17 +147,18 @@ public class CustomersDBDAO implements CustomersDAO {
      * @return customer object info
      */
     @Override
-    public Customer getOneCustomer(int customerID) {
+    public Customer getOneCustomer(int customerID) throws CustomExceptions {
+        Customer customer = null;
         couponsDBDAO = new CouponsDBDAO();
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, customerID);
         ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ONE_CUSTOMER, values);
         if (resultSet == null) {
-            return null;
+            throw new CustomExceptions(EnumExceptions.NO_CUSTOMER);
         }
         try {
             resultSet.next();
-            return new Customer(
+            customer= new Customer(
                     resultSet.getInt("id"),
                     resultSet.getString("first_name"),
                     resultSet.getString("last_name"),
@@ -169,5 +170,6 @@ public class CustomersDBDAO implements CustomersDAO {
             System.out.println(err.getMessage());
             return null;
         }
+        return customer;
     }
 }

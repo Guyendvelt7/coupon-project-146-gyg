@@ -28,7 +28,7 @@ public class CategoryClass {
     public static void addCategory(Category category) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, Category.valueOf(category.name()));
-        if(getCategoryId(category)>0){
+        if (getCategoryId(category) > 0) {
             throw new CustomExceptions(EnumExceptions.CATEGORY_EXIST);
         }
         DBTools.runQuery(DBManager.ADD_CATEGORY, values);
@@ -39,10 +39,10 @@ public class CategoryClass {
      *
      * @param categoryId input category ID
      */
-    public void deleteCategory(int categoryId) throws CustomExceptions{
+    public void deleteCategory(int categoryId) throws CustomExceptions {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, categoryId);
-        if(getCategoryName(categoryId).isEmpty()){
+        if (getCategoryName(categoryId).isEmpty()) {
             throw new CustomExceptions(EnumExceptions.CATEGORY_NOT_EXIST);
         }
         DBTools.runQuery(DBManager.DELETE_CATEGORY, values);
@@ -54,7 +54,7 @@ public class CategoryClass {
      * @param category input category from interface
      * @return category id integer
      */
-    public static int getCategoryId(Category category) throws CustomExceptions{
+    public static int getCategoryId(Category category) {
         int categoryId = 0;
         Map<Integer, Object> value = new HashMap<>();
         try {
@@ -63,8 +63,6 @@ public class CategoryClass {
             assert resultSet != null;
             if (resultSet.next()) {
                 categoryId = resultSet.getInt("id");
-            }else {
-                throw new CustomExceptions(EnumExceptions.CATEGORY_NOT_EXIST);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -72,7 +70,7 @@ public class CategoryClass {
         return categoryId;
     }
 
-    public String getCategoryName(int categoryId) throws CustomExceptions {
+    public String getCategoryName(int categoryId) {
         Map<Integer, Object> values = new HashMap<>();
         values.put(1, categoryId);
         try {
@@ -80,8 +78,6 @@ public class CategoryClass {
             assert resultSet != null;
             if (resultSet.next()) {
                 return resultSet.getString("name");
-            }else {
-                throw new CustomExceptions(EnumExceptions.CATEGORY_NOT_EXIST);
             }
         } catch (SQLException err) {
             System.out.println(err.getMessage());

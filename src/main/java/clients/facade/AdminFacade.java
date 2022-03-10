@@ -18,8 +18,8 @@ import java.util.UUID;
  * incorporation of all accessible methods to an administrator
  */
 public class AdminFacade extends ClientFacade {
-    private String id = "0";
-    private final String uniqueId = UUID.randomUUID().toString();
+//    private String id = "0";
+//    private final String uniqueId = UUID.randomUUID().toString();
 
 
     /**
@@ -38,131 +38,137 @@ public class AdminFacade extends ClientFacade {
     @Override
     public boolean login(String email, String password) {
         if (email.equals("admin@admin.com") && password.equals("admin")) {
-            this.id = uniqueId;
+            //this.id = uniqueId;
             return true;
         }
         return false;
     }
 
     public void addCompany(Company company) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                this.companiesDBDAO.addCompany(company);
-            } catch (CustomExceptions e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        // if (Objects.equals(this.id, uniqueId)) {
+        try {
+            this.companiesDBDAO.addCompany(company);
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public void updateCompany(Company company) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                this.companiesDBDAO.updateCompany(company);
-            } catch (CustomExceptions customExceptions) {
-                System.out.println(customExceptions.getMessage());
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        //if (Objects.equals(this.id, uniqueId)) {
+        try {
+            this.companiesDBDAO.updateCompany(company);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
-    public void deleteCompany(int companyID) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                this.companiesDBDAO.deleteCompany(companyID);
-            } catch (CustomExceptions e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+    public void deleteCompany(int companyID) {
+        //if (Objects.equals(this.id, uniqueId)) {
+        try {
+            this.companiesDBDAO.deleteCompany(companyID);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public List<Company> getAllCompanies() throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                return this.companiesDBDAO.getAllCompanies();
-            } catch (CustomExceptions e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        //if (Objects.equals(this.id, uniqueId)) {
+        try {
+            return this.companiesDBDAO.getAllCompanies();
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
+            return null;
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public Company getOneCompany(int companyID) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            Company comp = null;
-            try {
-                comp = this.companiesDBDAO.getOneCompany(companyID);
-
-                assert comp != null;
-                comp.setCoupons(this.couponsDBDAO.getCouponsByCompanyId(companyID));
-            } catch (CustomExceptions e) {
-                System.out.println(e.getMessage());
-            }
-            return comp;
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        //if (Objects.equals(this.id, uniqueId)) {
+        Company comp = null;
+        try {
+            comp = this.companiesDBDAO.getOneCompany(companyID);
+            assert comp != null;
+            comp.setCoupons(this.couponsDBDAO.getCouponsByCompanyId(companyID));
+        } catch (CustomExceptions e) {
+            System.out.println(e.getMessage());
         }
+        return comp;
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public void addCustomer(Customer customer) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                this.customersDBDAO.addCustomer(customer);
-            } catch (CustomExceptions customExceptions) {
-                System.out.println(customExceptions.getMessage());
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        //if (Objects.equals(this.id, uniqueId)) {
+        try {
+            this.customersDBDAO.addCustomer(customer);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public void updateCustomer(Customer customer) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                this.customersDBDAO.updateCustomer(customer);
-            } catch (CustomExceptions customExceptions) {
-                System.out.println(customExceptions.getMessage());
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        //if (Objects.equals(this.id, uniqueId)) {
+        try {
+            this.customersDBDAO.updateCustomer(customer);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public void deleteCustomer(int customerID) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            try {
-                this.customersDBDAO.deleteCustomer(customerID);
-            } catch (CustomExceptions customExceptions) {
-                System.out.println(customExceptions.getMessage());
-            }
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        //if (Objects.equals(this.id, uniqueId)) {
+        try {
+            this.customersDBDAO.deleteCustomer(customerID);
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
         }
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
     public List<Customer> getAllCustomers() throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            List<Customer> customerList = new ArrayList<>();
-            customerList = this.customersDBDAO.getAllCustomers();
-            return customerList;
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
-        }
+        //if (Objects.equals(this.id, uniqueId)) {
+        List<Customer> customerList = new ArrayList<>();
+        customerList = this.customersDBDAO.getAllCustomers();
+        return customerList;
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
 
-    public Customer getOneCustomer(int customerID) throws CustomExceptions {
-        if (Objects.equals(this.id, uniqueId)) {
-            Customer customer = null;
+    public Customer getOneCustomer(int customerID) {
+        //if (Objects.equals(this.id, uniqueId)) {
+        Customer customer = null;
+        try {
             customer = this.customersDBDAO.getOneCustomer(customerID);
-            return customer;
-        } else {
-            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+        assert customer != null;
+        customer.setCoupons(this.couponsDBDAO.getCouponsByCustomerId(customerID));
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
         }
+        return customer;
+//        } else {
+//            throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
+//        }
     }
-}
+
+    }
