@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class CompanyFacade extends ClientFacade {
     private int companyId;
-    private CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
+    //private CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
 
     /**
      * Empty company constructor

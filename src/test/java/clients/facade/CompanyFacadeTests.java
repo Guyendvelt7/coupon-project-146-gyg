@@ -30,6 +30,11 @@ public class CompanyFacadeTests {
                 new Date(System.currentTimeMillis()),
                 new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000), 150, 25, "image");
         loginManager = LoginManager.getInstance();
+        try {
+            companyFacade=(CompanyFacade)loginManager.login("sam@sung.com", "s2m5un6", ClientType.COMPANY );
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
     @Test
@@ -43,11 +48,7 @@ public class CompanyFacadeTests {
 
     @Test(expected = CustomExceptions.class)
     public void loginFail() throws CustomExceptions {
-        try {
             Assert.assertTrue(loginManager.login("shachar@yaks.com", "pjj123", ClientType.CUSTOMER)instanceof CompanyFacade);
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-        }
     }
 
     @Test
