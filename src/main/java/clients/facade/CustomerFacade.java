@@ -66,7 +66,7 @@ public class CustomerFacade extends ClientFacade {
 
     public void purchaseCoupon(Coupon coupon) {
         try {
-            couponsDBDAO.addCouponPurchase(customerID, coupon.getId());
+            couponsDBDAO.addCouponPurchase(this.customerID, coupon.getId());
         } catch (CustomExceptions customException) {
             System.out.println(customException.getMessage());
         }

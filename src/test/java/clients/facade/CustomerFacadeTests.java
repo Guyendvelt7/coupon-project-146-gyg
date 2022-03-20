@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -32,18 +32,19 @@ public class CustomerFacadeTests {
 
 
     @BeforeClass
-    public static void init()  {
+    public static void init() throws CustomExceptions {
         System.out.println("Starting tests for customer facade");
         customerFacade = new CustomerFacade();
         customersDBDAO = new CustomersDBDAO();
-        AdminFacade adminFacade = new AdminFacade();
-        customer=new Customer(6, "Oren", "Levi", "oren@gmail.com", "8521", new ArrayList<>());
+//        AdminFacade adminFacade = new AdminFacade();
+//        customer = customersDBDAO.getOneCustomer(1);
+//        customer=new Customer(6, "Oren", "Levi", "oren@gmail.com", "8521", new ArrayList<>());
         loginManager = LoginManager.getInstance();
         couponsDBDAO = new CouponsDBDAO();
         try {
-            adminFacade.addCustomer(customer);
+//            adminFacade.addCustomer(customer);
         coupon = couponsDBDAO.getOneCoupon(1);
-            customerFacade = (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER);
+            customerFacade = (CustomerFacade) loginManager.login("taltul@gmail.com", "101010", ClientType.CUSTOMER);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }
@@ -74,10 +75,11 @@ public class CustomerFacadeTests {
 
     @Test
     public void purchaseCoupon() throws CustomExceptions {
-        customer = customersDBDAO.getOneCustomer(6);
+        System.out.println(customerFacade.getCustomerID());
+//        customer = customersDBDAO.getOneCustomer(1);
         //int beforeAmount = coupon.getAmount();
+//        coupon = couponsDBDAO.getOneCoupon(1);
         customerFacade.purchaseCoupon(coupon);
-        coupon = couponsDBDAO.getOneCoupon(1);
         //int afterAmount = coupon.getAmount();
         //Assert.assertEquals(beforeAmount, afterAmount + 1);
     }
@@ -94,6 +96,7 @@ public class CustomerFacadeTests {
     @Test
     public void getEmptyCustomerCoupons() throws CustomExceptions {
         List<Coupon> couponList = customerFacade.getCustomerCoupons();
+        System.out.println(couponList);
     }
 
     @Test

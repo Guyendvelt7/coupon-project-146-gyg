@@ -96,7 +96,7 @@ public class CouponsDBDAO implements CouponsDAO {
     public void addCoupon(Coupon coupon) throws CustomExceptions {
         if (isCouponExists(coupon.getId())) {
             throw new CustomExceptions(EnumExceptions.COUPON_ALREADY_EXIST);
-        }else if (isTitleExist(getOneCoupon(coupon.getId()).getTitle())){
+        }else if (isTitleExist(coupon.getTitle())){
             throw new CustomExceptions(EnumExceptions.COUPON_TITLE_EXIST);
         } else {
             Map<Integer, Object> values = new HashMap<>();
