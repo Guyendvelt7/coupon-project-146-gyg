@@ -25,8 +25,6 @@ public class ConnectionPool {
      * initialize communication to database
      */
     private ConnectionPool() {
-        //todo: delete s.out before project submit
-        System.out.println("Connection created...");
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(DBManager.URL, DBManager.SQL_USER, DBManager.SQL_PASS);

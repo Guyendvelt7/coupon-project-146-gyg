@@ -24,7 +24,5 @@ public class TestTablesCreation {
         assertTrue(DBTools.runQuery(DBManager.CREATE_COUPONS_TABLE));
         System.out.println("Creating customerVsCoupon table");
         assertTrue(DBTools.runQuery(DBManager.CREATE_CUSTOMER_VS_COUPONS_TABLE));
-
-
     }
 }
