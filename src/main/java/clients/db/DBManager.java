@@ -1,7 +1,7 @@
 package clients.db;
 
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -16,6 +16,12 @@ public class DBManager {
 
     public static final String CREATED_DB = "CREATE SCHEMA IF NOT EXISTS `coupons_project` ;";
     public static final String DROP_DB = "DROP SCHEMA `coupons_project`";
+
+    public static final String DROP_CUSTOMER_VS_COUPONS_TABLE = "DROP TABLE `coupons_project`.`customers_vs_coupons`;";
+    public static final String DROP_COMPANY_TABLE = "DROP TABLE `coupons_project`.`companies`;";
+    public static final String DROP_CATEGORIES_TABLE = "DROP TABLE `coupons_project`.`categories`;";
+    public static final String DROP_CUSTOMERS_TABLE = "DROP TABLE `coupons_project`.`customers`;";
+    public static final String DROP_COUPONS_TABLE = "DROP TABLE `coupons_project`.`coupons`;";
 
     public static final String CREATE_COMPANY_TABLE =
             "CREATE TABLE IF NOT EXISTS `coupons_project`.`companies` (" +
@@ -196,5 +202,6 @@ public class DBManager {
     public static final String GET_CUSTOMER_ID_BY_EMAIL_AND_PASSWORD =
             "SELECT `id` FROM `coupons_project`.`customers` WHERE `email` = ? AND `password` = ?;";
 
+    public static final String COUNT_TITLE_OF_COUPONS = "SELECT COUNT(*) FROM `coupons_project`.`coupons` WHERE `title` = ? ;";
 }
 

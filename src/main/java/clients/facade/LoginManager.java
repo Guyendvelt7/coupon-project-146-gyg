@@ -11,7 +11,7 @@ import clients.exceptions.EnumExceptions;
 import java.util.Objects;
 import java.util.stream.Collectors;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -23,9 +23,6 @@ public class LoginManager {
     private static AdminFacade adminFacade = new AdminFacade();
     private static CustomerFacade customerFacade = new CustomerFacade();
     private static CompanyFacade companyFacade = new CompanyFacade();
-    private static CustomersDBDAO customersDBDAO = new CustomersDBDAO();
-    private static CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
-    private static CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
     /**
      * Empty SINGLETON constructor

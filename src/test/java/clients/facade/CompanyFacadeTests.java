@@ -53,21 +53,13 @@ public class CompanyFacadeTests {
 
     @Test
     public void addCoupon() {
-        try {
-            companyFacade.addCoupon(coupon);
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-        }
+        companyFacade.addCoupon(coupon);
     }
 
     @Test
     public void addCouponException() {
-        try {
-            companyFacade.addCoupon(coupon);
-            companyFacade.addCoupon(coupon);
-        } catch (CustomExceptions customExceptions) {
-            System.out.println(customExceptions.getMessage());
-        }
+        companyFacade.addCoupon(coupon);
+        companyFacade.addCoupon(coupon);
     }
 
     @Test

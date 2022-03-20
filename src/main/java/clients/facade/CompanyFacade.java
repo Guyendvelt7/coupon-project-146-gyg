@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -24,12 +24,10 @@ import java.util.stream.Collectors;
  * incorporation of all accessible methods to a company
  */
 public class CompanyFacade extends ClientFacade {
-    private int companyId;
-    //private CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
+    private int companyId=0;
 
     /**
      * Empty company constructor
-
      */
     public CompanyFacade() {
     }
@@ -38,9 +36,6 @@ public class CompanyFacade extends ClientFacade {
         return companyId;
     }
 
-    public void setCompanyId(int companyId) {
-        this.companyId = companyId;
-    }
 
     /**
      * login verification
@@ -63,38 +58,31 @@ public class CompanyFacade extends ClientFacade {
             } catch (SQLException err) {
                 System.out.println(err.getMessage());
             }
-            setCompanyId(id);
+            this.companyId=id;
             return true;
         }
         return false;
     }
 
-    public void addCoupon(Coupon coupon) throws CustomExceptions{
+    public void addCoupon(Coupon coupon) {
         if (coupon.getCompanyId() == companyId) {
-            List<Coupon> couponList;
-            couponList = couponsDBDAO.getCouponsByCompanyId(companyId).stream()
-                    .filter(item -> item.getTitle().equals(coupon.getTitle())).collect(Collectors.toList());
-            if (couponList.size() == 0) {
+            try {
                 couponsDBDAO.addCoupon(coupon);
-            }else {
-                throw new CustomExceptions(EnumExceptions.COUPON_TITLE_EXIST);
+            } catch (CustomExceptions customExceptions) {
+                System.out.println(customExceptions.getMessage());
             }
-        }else {
-            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
     }
 
     public void updateCoupon(Coupon coupon) throws CustomExceptions {
-        if (coupon.getCompanyId() == companyId) {
-            if (!couponsDBDAO.isCouponExists(coupon.getId())) {
-                throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
-            } else if (coupon.getCompanyId() != companyId) {
-                throw new CustomExceptions(EnumExceptions.COMPANY_DOES_NOT_HAVE_THIS_COUPON);
-            } else {
+        if (coupon.getCompanyId() != companyId) {
+            throw new CustomExceptions(EnumExceptions.COMPANY_DOES_NOT_HAVE_THIS_COUPON);
+        } else {
+            try {
                 couponsDBDAO.updateCoupon(coupon);
+            } catch (CustomExceptions customExceptions) {
+                System.out.println(customExceptions.getMessage());
             }
-        }else {
-            throw new CustomExceptions(EnumExceptions.NO_COUPONS);
         }
     }
 

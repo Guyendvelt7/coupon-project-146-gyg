@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 public class CompaniesDBDAO implements CompaniesDAO {
@@ -113,15 +113,15 @@ public class CompaniesDBDAO implements CompaniesDAO {
      */
     @Override
     public void addCompany(Company company) throws CustomExceptions {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, company.getName());
-        values.put(2, company.getEmail());
-        values.put(3, company.getPassword());
         if (isCompanyExistsByName(company.getName())) {
             throw new CustomExceptions(EnumExceptions.NAME_EXIST);
         } else if (isCompanyExistsByEmail(company.getEmail())) {
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
         } else {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, company.getName());
+            values.put(2, company.getEmail());
+            values.put(3, company.getPassword());
             DBTools.runQuery(DBManager.ADD_COMPANY, values);
         }
     }
@@ -155,11 +155,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
      */
     @Override
     public void deleteCompany(int companyId) throws CustomExceptions {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, companyId);
         if (getOneCompany(companyId) == null) {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
         }
+        Map<Integer, Object> values = new HashMap<>();
+        values.put(1, companyId);
         DBTools.runQuery(DBManager.DELETE_COMPANY, values);
     }
 
@@ -171,7 +171,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
      */
     public List<Company> getAllCompanies() throws CustomExceptions {
         List<Company> allCompanies = new ArrayList<>();
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES, new HashMap<>());
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_COMPANIES);
         try {
             while (resultSet.next()) {
                 Company company = getOneCompany(resultSet.getInt("id"));
@@ -219,23 +219,4 @@ public class CompaniesDBDAO implements CompaniesDAO {
         }
     }
 
-//    /**
-//     * retrieve list of company coupons from database by id
-//     *
-//     * @param companyId input company ID
-//     * @return list of coupons
-//     */
-//    public List<Coupon> getCompanyCoupons(int companyId) {
-//        Map<Integer, Object> value = new HashMap<>();
-//        value.put(1, companyId);
-//        try {
-//            if (couponsDBDAO.getCouponsByCompanyId(companyId) == null) {
-//                throw new CustomExceptions(EnumExceptions.NO_COUPONS);
-//            }
-//            return couponsDBDAO.getCouponsByCompanyId(companyId);
-//        } catch (CustomExceptions customExceptions) {
-//            System.out.println(customExceptions.getMessage());
-//            return null;
-//        }
-//    }
 }

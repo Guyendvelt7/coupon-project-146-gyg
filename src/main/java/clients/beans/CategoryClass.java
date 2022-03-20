@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 

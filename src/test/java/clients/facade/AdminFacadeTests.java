@@ -42,6 +42,11 @@ public class AdminFacadeTests {
     public static void init() {
         adminFacade = new AdminFacade();
         loginManager = LoginManager.getInstance();
+        try {
+            adminFacade=(AdminFacade) loginManager.login("admin@admin.com", "admin", ClientType.ADMINISTRATOR );
+        } catch (CustomExceptions customExceptions) {
+            System.out.println(customExceptions.getMessage());
+        }
     }
 
     @Test
@@ -95,7 +100,7 @@ public class AdminFacadeTests {
     }
 
     @Test
-    public void deleteCompanyPass() {
+    public void deleteCompanyPass() throws CustomExceptions {
         adminFacade.deleteCompany(companies[4].getId());
     }
 
@@ -195,12 +200,12 @@ public class AdminFacadeTests {
     }
 
     @Test
-    public void getOneCustomerPass() {
+    public void getOneCustomerPass() throws CustomExceptions {
         System.out.println(adminFacade.getOneCustomer(3));
     }
 
     @Test
-    public void getOneCustomerFail() {
+    public void getOneCustomerFail() throws CustomExceptions {
         System.out.println(adminFacade.getOneCustomer(2));
     }
 }

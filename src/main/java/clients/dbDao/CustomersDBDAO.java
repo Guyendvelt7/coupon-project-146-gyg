@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 public class CustomersDBDAO implements CustomersDAO {
@@ -72,14 +72,14 @@ public class CustomersDBDAO implements CustomersDAO {
      */
     @Override
     public void addCustomer(Customer customer) throws CustomExceptions {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customer.getFirstName());
-        values.put(2, customer.getLastName());
-        values.put(3, customer.getEmail());
-        values.put(4, customer.getPassword());
-        if (this.isCustomerExistsByMail(customer.getEmail())) {
+        if (isCustomerExistsByMail(customer.getEmail())) {
             throw new CustomExceptions(EnumExceptions.EMAIL_EXIST);
         } else {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, customer.getFirstName());
+            values.put(2, customer.getLastName());
+            values.put(3, customer.getEmail());
+            values.put(4, customer.getPassword());
             DBTools.runQuery(DBManager.ADD_CUSTOMER, values);
         }
     }
@@ -92,16 +92,17 @@ public class CustomersDBDAO implements CustomersDAO {
      */
     @Override
     public void updateCustomer(Customer customer) throws CustomExceptions {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customer.getFirstName());
-        values.put(2, customer.getLastName());
-        values.put(3, customer.getEmail());
-        values.put(4, customer.getPassword());
-        values.put(5, customer.getId());
         if (getOneCustomer(customer.getId()) == null) {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }else {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, customer.getFirstName());
+            values.put(2, customer.getLastName());
+            values.put(3, customer.getEmail());
+            values.put(4, customer.getPassword());
+            values.put(5, customer.getId());
+            DBTools.runQuery(DBManager.UPDATE_CUSTOMER, values);
         }
-        DBTools.runQuery(DBManager.UPDATE_CUSTOMER, values);
     }
 
     /**
@@ -112,12 +113,13 @@ public class CustomersDBDAO implements CustomersDAO {
      */
     @Override
     public void deleteCustomer(int customerID) throws CustomExceptions {
-        Map<Integer, Object> values = new HashMap<>();
-        values.put(1, customerID);
         if (getOneCustomer(customerID) == null) {
             throw new CustomExceptions(EnumExceptions.ID_NOT_EXIST);
+        }else {
+            Map<Integer, Object> values = new HashMap<>();
+            values.put(1, customerID);
+            DBTools.runQuery(DBManager.DELETE_CUSTOMER, values);
         }
-        DBTools.runQuery(DBManager.DELETE_CUSTOMER, values);
     }
 
     /**
@@ -127,7 +129,7 @@ public class CustomersDBDAO implements CustomersDAO {
      */
     @Override
     public List<Customer> getAllCustomers() {
-        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS, new HashMap<>());
+        ResultSet resultSet = DBTools.runQueryForResult(DBManager.GET_ALL_CUSTOMERS);
         List<Customer> customers = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -158,7 +160,7 @@ public class CustomersDBDAO implements CustomersDAO {
         }
         try {
             resultSet.next();
-            customer= new Customer(
+            customer = new Customer(
                     resultSet.getInt("id"),
                     resultSet.getString("first_name"),
                     resultSet.getString("last_name"),

@@ -2,7 +2,7 @@ package clients.beans;
 
 import java.util.Arrays;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 

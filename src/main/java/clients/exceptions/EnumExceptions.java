@@ -1,6 +1,6 @@
 package clients.exceptions;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  *  * 03.2022
  */
 
@@ -19,6 +19,7 @@ public enum EnumExceptions {
     /**
      * coupons exceptions
      */
+    COUPON_ALREADY_EXIST("Cannot add coupon, coupon already exist."),
     COUPON_TITLE_EXIST("Cannot add coupon, title already exist."),
     COUPON_PURCHASED("Cannot purchase this item, already in your list."),
     NO_COUPONS("No coupons in database."),

@@ -5,7 +5,7 @@ import clients.beans.Customer;
 
 import java.util.List;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 /**

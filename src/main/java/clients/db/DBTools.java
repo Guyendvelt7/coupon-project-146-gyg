@@ -5,7 +5,7 @@ import clients.beans.Category;
 import java.sql.*;
 import java.util.Map;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -113,12 +113,13 @@ public class DBTools {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = null;
-            preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             return preparedStatement.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
+        }finally {
+            ConnectionPool.getInstance().restoreConnection(connection);
         }
     }
 

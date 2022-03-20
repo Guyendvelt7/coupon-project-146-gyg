@@ -3,6 +3,8 @@ package clients;
 import clients.beans.Company;
 import clients.beans.Customer;
 import clients.db.ConnectionPool;
+import clients.db.DBManager;
+import clients.db.DBTools;
 import clients.exceptions.CustomExceptions;
 import clients.facade.*;
 import clients.thread.CouponExpirationDailyJob;
@@ -10,7 +12,7 @@ import clients.thread.CouponExpirationDailyJob;
 import java.util.ArrayList;
 
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -26,7 +28,6 @@ public class System {
     private static AdminFacade adminFacade;
     private static Company company = new Company(1, "Shachar", "shachar@yaks.com", "pjj123", new ArrayList<>());
     private static Customer customer = new Customer(1, "Dana", "Sercovich", "dana@serco.com", "54321", new ArrayList<>());
-    //todo: דף 20
 
     /**
      * singleton. constructor for thread init
@@ -61,8 +62,7 @@ public class System {
      */
     public static void testAll() throws CustomExceptions {
         //system init
-        System system = new System();
-        system = System.getInstance();
+        System system =  System.getInstance();
         loginManager = LoginManager.getInstance();
         //check login for all 3 clients type
         adminFacade = (AdminFacade) loginManager.login("admin@admin.com", "admin", ClientType.ADMINISTRATOR);
@@ -70,11 +70,23 @@ public class System {
         adminFacade.addCustomer(customer);
         customerFacade = (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER);
         companyFacade = (CompanyFacade) loginManager.login(company.getEmail(), company.getPassword(), ClientType.COMPANY);
-
-        //compile all facade tests (GO TO test->java->FinalTests class)
-
         //end thread
         //close connection to database
         system.stopAll();
+    }
+
+    /**
+     *start over new clean sheet
+     */
+    public static void cleanDataBase(){
+        DBTools.runQuery(DBManager.DROP_CUSTOMER_VS_COUPONS_TABLE);
+        DBTools.runQuery(DBManager.DROP_COUPONS_TABLE);
+        DBTools.runQuery(DBManager.DROP_COMPANY_TABLE);
+        DBTools.runQuery(DBManager.DROP_CUSTOMERS_TABLE);
+
+        DBTools.runQuery(DBManager.CREATE_COMPANY_TABLE);
+        DBTools.runQuery(DBManager.CREATE_CUSTOMER_TABLE);
+        DBTools.runQuery(DBManager.CREATE_COUPONS_TABLE);
+        DBTools.runQuery(DBManager.CREATE_CUSTOMER_VS_COUPONS_TABLE);
     }
 }

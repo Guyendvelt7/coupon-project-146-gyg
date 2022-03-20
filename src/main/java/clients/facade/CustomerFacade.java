@@ -5,6 +5,7 @@ import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.db.DBManager;
 import clients.db.DBTools;
+import clients.dbDao.CouponsDBDAO;
 import clients.dbDao.CustomersDBDAO;
 import clients.exceptions.CustomExceptions;
 import clients.exceptions.EnumExceptions;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 /**
- * @author Yoav Hachmon, Guy Endvelt and Gery Glazer
+ * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
  */
 
@@ -24,8 +25,7 @@ import java.util.stream.Collectors;
  * incorporation of all accessible methods to a customer
  */
 public class CustomerFacade extends ClientFacade {
-    private int customerID;
-    CustomersDBDAO customersDBDAO = new CustomersDBDAO();
+    private int customerID=0;
 
     /**
      * Empty Customer constructor
@@ -35,10 +35,6 @@ public class CustomerFacade extends ClientFacade {
 
     public int getCustomerID() {
         return customerID;
-    }
-
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
     }
 
     /**
@@ -62,7 +58,7 @@ public class CustomerFacade extends ClientFacade {
             } catch (SQLException err) {
                 System.out.println(err.getMessage());
             }
-            setCustomerID(id);
+            this.customerID=id;
             return true;
         }
         return false;
