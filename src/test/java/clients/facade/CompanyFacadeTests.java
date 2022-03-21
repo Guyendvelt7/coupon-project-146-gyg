@@ -26,7 +26,7 @@ public class CompanyFacadeTests {
     public static void init() {
         System.out.println("Starting tests for company facade");
         companyFacade = new CompanyFacade();
-        coupon = new Coupon(1, 1, Category.ELECTRICITY, "bibi's coupon'S", "dont know",
+        coupon = new Coupon(1, 2, Category.ELECTRICITY, "bibi's coupon'S", "dont know",
                 new Date(System.currentTimeMillis()),
                 new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000), 150, 25, "image");
         loginManager = LoginManager.getInstance();
@@ -57,8 +57,7 @@ public class CompanyFacadeTests {
     }
 
     @Test
-    public void addCouponException() {
-        companyFacade.addCoupon(coupon);
+    public void addCouponException(){
         companyFacade.addCoupon(coupon);
     }
 

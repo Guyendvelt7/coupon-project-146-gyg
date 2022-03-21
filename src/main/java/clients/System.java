@@ -1,5 +1,6 @@
 package clients;
 
+import clients.beans.Category;
 import clients.beans.Company;
 import clients.beans.Customer;
 import clients.db.ConnectionPool;
@@ -10,6 +11,11 @@ import clients.facade.*;
 import clients.thread.CouponExpirationDailyJob;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static clients.beans.CategoryClass.addCategory;
 
 /**
  * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
@@ -28,6 +34,7 @@ public class System {
     private static AdminFacade adminFacade;
     private static Company company = new Company(1, "Shachar", "shachar@yaks.com", "pjj123", new ArrayList<>());
     private static Customer customer = new Customer(1, "Dana", "Sercovich", "dana@serco.com", "54321", new ArrayList<>());
+    private static List<Category> categories;
 
     /**
      * singleton. constructor for thread init
@@ -88,5 +95,27 @@ public class System {
         DBTools.runQuery(DBManager.CREATE_CUSTOMER_TABLE);
         DBTools.runQuery(DBManager.CREATE_COUPONS_TABLE);
         DBTools.runQuery(DBManager.CREATE_CUSTOMER_VS_COUPONS_TABLE);
+    }
+
+    /**
+     * create databases for beginning
+     */
+    public static void createDataBases(){
+        DBTools.runQuery(DBManager.CREATE_CATEGORIES_TABLE);
+        DBTools.runQuery(DBManager.CREATE_COMPANY_TABLE);
+        DBTools.runQuery(DBManager.CREATE_CUSTOMER_TABLE);
+        DBTools.runQuery(DBManager.CREATE_COUPONS_TABLE);
+        DBTools.runQuery(DBManager.CREATE_CUSTOMER_VS_COUPONS_TABLE);
+        createCategories();
+    }
+    public static void createCategories(){
+        categories= Arrays.stream(Category.values()).collect(Collectors.toList());
+        for (Category item : categories) {
+            try {
+                addCategory(item);
+            } catch (CustomExceptions customExceptions) {
+                java.lang.System.out.println(customExceptions.getMessage());
+            }
+        }
     }
 }

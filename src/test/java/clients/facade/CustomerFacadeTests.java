@@ -36,13 +36,10 @@ public class CustomerFacadeTests {
         System.out.println("Starting tests for customer facade");
         customerFacade = new CustomerFacade();
         customersDBDAO = new CustomersDBDAO();
-//        AdminFacade adminFacade = new AdminFacade();
-//        customer = customersDBDAO.getOneCustomer(1);
-//        customer=new Customer(6, "Oren", "Levi", "oren@gmail.com", "8521", new ArrayList<>());
         loginManager = LoginManager.getInstance();
         couponsDBDAO = new CouponsDBDAO();
+        customer = customersDBDAO.getOneCustomer(2);
         try {
-//            adminFacade.addCustomer(customer);
         coupon = couponsDBDAO.getOneCoupon(1);
             customerFacade = (CustomerFacade) loginManager.login("taltul@gmail.com", "101010", ClientType.CUSTOMER);
         } catch (CustomExceptions customExceptions) {
@@ -76,27 +73,13 @@ public class CustomerFacadeTests {
     @Test
     public void purchaseCoupon() throws CustomExceptions {
         System.out.println(customerFacade.getCustomerID());
-//        customer = customersDBDAO.getOneCustomer(1);
-        //int beforeAmount = coupon.getAmount();
-//        coupon = couponsDBDAO.getOneCoupon(1);
         customerFacade.purchaseCoupon(coupon);
-        //int afterAmount = coupon.getAmount();
-        //Assert.assertEquals(beforeAmount, afterAmount + 1);
     }
 
     @Test
     public void getCustomerCoupons() throws CustomExceptions {
         customerFacade.getCustomerCoupons().forEach(System.out::println);
-//        Assert.assertEquals(customerFacade.getCustomerCoupons().get(0).getId(), 1);
-//        Assert.assertEquals(customerFacade.getCustomerCoupons().get(1).getId(), 2);
-//        Assert.assertEquals(customerFacade.getCustomerCoupons().get(2).getId(), 5);
-//        Assert.assertEquals(customerFacade.getCustomerCoupons().get(3).getId(), 6);
-    }
-
-    @Test
-    public void getEmptyCustomerCoupons() throws CustomExceptions {
-        List<Coupon> couponList = customerFacade.getCustomerCoupons();
-        System.out.println(couponList);
+        Assert.assertEquals(customerFacade.getCustomerCoupons().get(0).getId(), 1);
     }
 
     @Test

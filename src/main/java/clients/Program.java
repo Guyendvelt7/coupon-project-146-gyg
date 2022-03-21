@@ -2,8 +2,7 @@ package clients;
 
 import clients.exceptions.CustomExceptions;
 
-import static clients.System.cleanDataBase;
-import static clients.System.testAll;
+import static clients.System.*;
 /**
  * @author Yoav Hacmon, Guy Endvelt and Gery Glazer
  * 03.2022
@@ -17,6 +16,7 @@ import static clients.System.testAll;
 public class Program {
 
     public static void main(String[] args) {
+        createDataBases();
         cleanDataBase();
         try {
             testAll();
