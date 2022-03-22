@@ -24,9 +24,9 @@ public class CouponExpirationDailyJob implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Daily job started");
         while (!quit) {
             try {
-                System.out.println("Daily job started");
                 for (Coupon item : myCoupons.getAllCoupons()) {
                     if(item.getEndDate().getTime()<System.currentTimeMillis()){
                         myCoupons.deleteCoupon(item.getId());;

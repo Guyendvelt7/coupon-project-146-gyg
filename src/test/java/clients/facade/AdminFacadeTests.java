@@ -126,7 +126,7 @@ public class AdminFacadeTests {
     @Test
     public void getOneCompanyFail() {
         try {
-            System.out.println(adminFacade.getOneCompany(10));
+            adminFacade.getOneCompany(10);
         } catch (CustomExceptions customExceptions) {
             System.out.println(customExceptions.getMessage());
         }
@@ -205,6 +205,6 @@ public class AdminFacadeTests {
 
     @Test
     public void getOneCustomerFail() throws CustomExceptions {
-        System.out.println(adminFacade.getOneCustomer(4));
+        adminFacade.getOneCustomer(4);
     }
 }
