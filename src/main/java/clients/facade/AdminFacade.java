@@ -36,12 +36,12 @@ public class AdminFacade extends ClientFacade {
      * @return verification result
      */
     @Override
-    public boolean login(String email, String password) {
+    public boolean login(String email, String password) throws CustomExceptions {
         if (email.equals("admin@admin.com") && password.equals("admin")) {
             this.id = uid;
             return true;
         }
-        return false;
+        throw new CustomExceptions(EnumExceptions.NOT_ADMIN);
     }
 
     public void addCompany(Company company) throws CustomExceptions {

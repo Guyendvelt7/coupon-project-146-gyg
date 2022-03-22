@@ -2,6 +2,7 @@ package clients;
 
 import clients.beans.Category;
 import clients.beans.Company;
+import clients.beans.Coupon;
 import clients.beans.Customer;
 import clients.db.ConnectionPool;
 import clients.db.DBManager;
@@ -10,6 +11,7 @@ import clients.exceptions.CustomExceptions;
 import clients.facade.*;
 import clients.thread.CouponExpirationDailyJob;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +35,10 @@ public class System {
     private static CompanyFacade companyFacade;
     private static AdminFacade adminFacade;
     private static Company company = new Company(1, "Shachar", "shachar@yaks.com", "pjj123", new ArrayList<>());
-    private static Customer customer = new Customer(1, "Dana", "Sercovich", "dana@serco.com", "54321", new ArrayList<>());
+    private static Customer customer = new Customer(1, "Dan", "Serc", "dan@serc.com", "54321", new ArrayList<>());
+    private static Coupon coupon = new Coupon(1, 1,Category.FOOD, "bibi's coupon'S", "dont know",
+            new Date(java.lang.System.currentTimeMillis()),
+            new Date(java.lang.System.currentTimeMillis()), 150, 25, "image");
     private static List<Category> categories;
 
     /**
@@ -72,14 +77,16 @@ public class System {
         System system =  System.getInstance();
         loginManager = LoginManager.getInstance();
         //check login for all 3 clients type
+
         adminFacade = (AdminFacade) loginManager.login("admin@admin.com", "admin", ClientType.ADMINISTRATOR);
         adminFacade.addCompany(company);
         adminFacade.addCustomer(customer);
         customerFacade = (CustomerFacade) loginManager.login(customer.getEmail(), customer.getPassword(), ClientType.CUSTOMER);
         companyFacade = (CompanyFacade) loginManager.login(company.getEmail(), company.getPassword(), ClientType.COMPANY);
+        companyFacade.addCoupon(coupon);
         //end thread
         //close connection to database
-        system.stopAll();
+        //system.stopAll();
     }
 
     /**

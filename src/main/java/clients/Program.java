@@ -16,8 +16,8 @@ import static clients.System.*;
 public class Program {
 
     public static void main(String[] args) {
-        createDataBases();
-        cleanDataBase();
+        //createDataBases(); //for first time - create
+        cleanDataBase();  //if you already have tables - clean
         try {
             testAll();
         } catch (CustomExceptions customExceptions) {

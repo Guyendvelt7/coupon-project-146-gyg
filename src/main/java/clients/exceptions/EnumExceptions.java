@@ -31,6 +31,7 @@ public enum EnumExceptions {
      */
     NO_COMPANY("No company with this ID in database."),
     COMPANY_DOES_NOT_HAVE_THIS_COUPON("Company doesn't have this coupon."),
+    INVALID_PERMITION("you are not allowed to do this"),
 
     /**
      * customer exceptions
